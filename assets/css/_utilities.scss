@@ -1,0 +1,10 @@
+// Variables personalizadas primero para sobreescribir las predeterminadas de Bootstrap
+@import 'components/custom-variables'; 
+
+// Importa el framework Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Estilos personalizados globales
+@import 'components/custom-styles';
+
+

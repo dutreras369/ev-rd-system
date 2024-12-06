@@ -1,0 +1,61 @@
+
+// Aplicar las fuentes globalmente
+body {
+    font-family: $font-family-base !important;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #333; // Ajusta según la identidad de tu marca
+}
+
+// Aplicar la fuente de títulos a todos los encabezados
+h1, h2, h3, h4, h5, h6 {
+    font-family: $headings-font-family !important;
+    font-weight: $headings-font-weight !important; // Asegúrate de que la fuente esté bien visible
+}
+
+// Forzar la fuente en párrafos y enlaces si aún no toma la correcta
+p, a {
+    font-family: $font-family-base !important;
+    font-weight: 400;
+}
+
+// Wsp Button
+.whatsapp-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 60px;
+    height: 60px;
+    background-color: #25D366;
+    border-radius: 50%;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    i {
+        font-size: 30px;
+        color: white;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .whatsapp-button {
+        width: 50px;
+        height: 50px;
+        bottom: 15px;
+        right: 15px;
+
+        i {
+            font-size: 24px;
+        }
+    }
+}
+                                                                                                                                        

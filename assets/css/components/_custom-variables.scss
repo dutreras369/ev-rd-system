@@ -1,0 +1,65 @@
+// Custom Variables Overrides
+$primary: rgb(0, 31, 63); // azul claro #001f3f
+$primary-opacity-8: rgb(0, 31, 63, 0.8);
+$gray: #6C757D; // Gris neutro para bordes y elementos secundarios
+$gold: #FFB703; // Amarillo para advertencias
+$info: #00a8e8; // Azul oscuro para informacion
+$secondary: #0077B6; // Azul oscuro para botones y acentos
+$blue: #001f3f; // Azul claro para fondos suaves
+$red: #535050; // Rojo para notificaciones de emergencia
+$selector: #FF6F00; // Naranjo para representar vialidad
+$success: #8AC926; // Naranjo para representar vialidad
+$gray-shine: #F0F0F0;
+$warning: #E63946;
+$white: #FFFF;
+$purple: #6f42c1;
+
+
+// Fonts
+$headings-font-family:  "Montserrat", sans-serif;
+$headings-font-weight: 800;
+$font-family-base: "Open Sans", sans-serif;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Theme Colors Map
+$theme-colors: (
+    "primary": $primary,
+    "secondary": $secondary,
+    "primary-opacity-8": $primary-opacity-8,
+    "selector": $selector,
+    "gold": $gold,
+    "gray": $gray,
+    "info": $info,
+    "success": $success,
+    "warning": $warning,
+    "gray-shine": $gray-shine,
+    "white": $white,
+    "purple": $purple
+);
+
+// Custom Colors
+$custom-color: (
+    "icon-background": rgb(255, 0, 0)
+);
+
+// Merge Custom Colors into Theme Colors
+$theme-colors: map-merge($theme-colors, $custom-color);
+
+// Utilities for Border Radius
+$utilities: (
+    "rounded": (
+        property: border-radius,
+        class: rounded,
+        values: (
+            null: 1rem,
+            circle: 50%
+        )
+    )
+);
+
+

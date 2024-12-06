@@ -1,0 +1,28 @@
+
+/* Slider */
+.carousel {
+    .carousel-control-prev, .carousel-control-next {
+        width: 9%;
+    }
+    .carousel-item {
+        .carousel-img {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            width: 100%; /* Cambiado de 800px a 100% */
+            max-height: 600px;
+            object-fit: cover; /* Mantener aspecto */
+            object-position: center; /* Centrar la imagen */
+        } 
+        @include media-breakpoint-up(md){
+            .carousel-img {
+                height: 500px; /* Ajusta la altura para dispositivos medianos */
+            }
+        }
+        @include media-breakpoint-up(sm){
+            .carousel-img {
+                height: 300px; /* Ajusta la altura para dispositivos pequeños */
+            }
+        }
+    }
+}

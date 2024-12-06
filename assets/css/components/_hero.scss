@@ -1,0 +1,147 @@
+#hero {
+  height: 60vh; // Cambié la altura a un valor fijo para que sea más consistente con las presentaciones
+  position: relative;
+  background-color: #1a1a1a;
+  overflow: hidden;
+
+  .carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    width: 100%;
+    z-index: 10;
+    margin: 0;
+    justify-content: center;
+
+    button {
+      background-color: #fff;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin: 0 5px;
+
+      &.active {
+        background-color: var(--selector, #ff6f00); // Naranja representativo
+      }
+
+      &:hover {
+        background-color: #ffd700;
+      }
+    }
+  }
+
+  .carousel-inner {
+    position: relative;
+    height: 100%;
+
+    .carousel-item {
+      position: relative;
+      height: 100%;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(60%) sepia(20%);
+      }
+
+      .carousel-caption {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        width: 100%;
+        height: 100%;
+        transition: box-shadow 0.3s ease;
+
+        &:hover {
+          box-shadow: 0px 0px 20px 10px rgba(255, 215, 0, 0.7);
+        }
+
+        h5,
+        p {
+          color: #fff;
+          text-align: center;
+        }
+        a.btn.btn-selector {
+          text-decoration: none; // Elimina subrayado por defecto
+          color: inherit; // Mantiene el color original del botón
+
+          &:hover,
+          &:focus {
+            text-decoration: none; // Sin subrayado en hover y focus
+          }
+
+          &:visited {
+            color: inherit; // Mantiene el color original cuando está visitado
+            text-decoration: none; // Sin subrayado en visitado
+          }
+        }
+
+        // Estilo del botón 'Ir a la Experiencia'
+        a.btn-experiencia {
+          background-color: var(--selector, #ff6f00); // Naranja representativo
+          color: #fff;
+          width: auto; // Ancho automático para que se ajuste al texto
+          height: auto; // Alto automático para que se ajuste al texto
+          padding: 15px 30px; // Mayor espacio interno para hacerlo más grande
+          font-size: 1.5rem; // Fuente grande para destacar el texto
+          font-weight: bold; // Negrita para el texto del botón
+          border: none;
+          border-radius: 10px; // Bordes redondeados para darle suavidad
+          margin: 10px 0; // Márgenes para separación vertical
+          transition: all 0.3s ease; // Transición suave para hover
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); // Sombra para dar profundidad
+
+          &.active {
+            background-color: var(--selector, #ff6f00); // Naranja representativo cuando está activo
+          }
+
+          &:hover {
+            background-color: #ffd700; // Cambia a dorado al pasar el ratón
+            color: #000; // Cambia el color del texto al negro para mejor contraste
+            transform: translateY(-5px); // Movimiento hacia arriba al hacer hover
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); // Incrementar la sombra para darle un efecto elevado
+          }
+
+          &:active {
+            transform: scale(0.95); // Reduce el tamaño cuando se presiona para un efecto de clic
+            box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.3); // Sombra reducida al hacer clic
+          }
+        }
+      }
+    }
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    filter: brightness(0) invert(1);
+  }
+
+  @media (max-width: 768px) {
+    .carousel-item {
+      img {
+        height: 50vh; // Ajuste de altura para dispositivos móviles
+      }
+
+      .carousel-caption {
+        padding: 1rem;
+      }
+
+      a .btn-experiencia {
+        font-size: 1.2rem; // Ajustar el tamaño del botón en dispositivos móviles
+        padding: 15px 30px; // Ajustar el padding del botón en móvil
+      }
+    }
+  }
+}

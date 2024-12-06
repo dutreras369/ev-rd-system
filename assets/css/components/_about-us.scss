@@ -1,0 +1,110 @@
+#about-me {
+    background-color: #f8f9fa; // Fondo claro
+    padding: 3rem 0;
+
+    h1, h2 {
+        color: #003366; // Color principal
+        font-weight: 700;
+    }
+
+    p {
+        font-size: 1.2rem;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    // Añadir sombra a las secciones
+    .row {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15); // Sombra más pronunciada en hover
+        }
+    }
+}
+
+#skills, #vision {
+    background-color: #003366; // Fondo oscuro
+    color: #fff;
+    padding: 3rem 0;
+    
+    h2, h3 {
+        color: #FFD700; // Títulos en dorado
+        font-weight: 700;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); // Sombra en los títulos
+    }
+
+    ul {
+        list-style-type: none;
+        padding-left: 0;
+
+        li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+
+            &:before {
+                content: "\f058"; // Bootstrap check icon
+                font-family: 'Bootstrap Icons';
+                position: absolute;
+                left: 0;
+                color: #FFD700; // Dorado para el icono
+                font-size: 1.2rem;
+            }
+
+            &:hover {
+                color: #FFD700; // Cambiar el color del texto al pasar el mouse
+                transform: translateX(5px); // Mover el texto ligeramente
+            }
+        }
+    }
+
+    // Efecto hover en los íconos
+    i {
+        transition: color 0.3s ease-in-out;
+        &:hover {
+            color: #FFD700; // Cambiar el color de los íconos al dorado en hover
+        }
+    }
+}
+
+#projects {
+    padding: 3rem 0;
+    background-color: #f8f9fa; // Fondo claro
+
+    h3 {
+        color: #003366;
+        font-weight: 700;
+        transition: color 0.3s ease-in-out;
+
+        &:hover {
+            color: #FFD700; // Cambiar el color del título al dorado en hover
+        }
+    }
+
+    .row {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+        }
+    }
+}
+
+.icon {
+    font-size: 2rem;
+    margin-right: 10px;
+    color: #FFD700; // Color dorado para los íconos
+
+    // Efecto hover en los íconos
+    &:hover {
+        color: #FFC107; // Cambiar a un tono más claro en hover
+        transform: scale(1.1); // Efecto de agrandamiento
+    }
+}

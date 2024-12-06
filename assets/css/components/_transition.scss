@@ -1,0 +1,122 @@
+/* Transition */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    z-index: -10;
+}
+
+.container_tsn {
+    display: flex;
+    height: 100vh;
+    justify-content: space-around;
+    align-items: center;
+    color:black;
+    animation: expand .8s ease forwards;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    transition: all .8s ease;
+
+    @media (max-width: $breakpoint-sm) {
+        flex-direction: column; 
+        align-items: center;
+    }
+}
+  
+.container_content {
+    width: 50%;
+    @media (max-width: $breakpoint-sm) {
+        width: 100%; 
+    }
+}
+
+.container_content_inner {
+    width: 80%;
+    margin-left: 80px;
+    @media (max-width: $breakpoint-sm) {
+        margin-left: 20px; 
+    }
+}
+  
+.container_outer_img {
+    margin: 10px 50px 10px 50px;
+    width: 50%;
+    overflow: hidden;
+    @media (max-width: $breakpoint-sm) {
+        margin: 10px 0; 
+        width: 100%;
+    }
+}   
+      
+.container_img {
+    width: 100%;
+    animation: slideIn 1.5s ease-in-out forwards;
+}
+  
+.par {
+    height: auto;
+    overflow: hidden;
+}
+  
+.p-tsn{
+    line-height: 28px;
+    transform: translateY(300px);
+    animation: slideUp .8s ease-in-out forwards .8s;
+}
+.title {
+    overflow: hidden;
+    height: auto;
+}
+  
+.h1_tsn {
+    font-size: 26px;
+    color: $primary;
+    margin-bottom: 20px;
+    transform: translateY(100px);
+    animation: slideUp .8s ease forwards .5s;
+  
+    @include media-breakpoint-up(sm) {
+      font-size: 30px; 
+    }
+    @include media-breakpoint-up(md) {
+      font-size: 35px; 
+    }  
+    @include media-breakpoint-up(lg) {
+      font-size: 40px; 
+    }
+  
+    @include media-breakpoint-up(xl) {
+      font-size: 45px;
+    }
+}
+
+ 
+@keyframes slideIn {
+    0% {
+        transform: translateX(500px) scale(.2);
+    }
+    100% {
+        transform: translateX(0px) scale(1);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(300px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes expand {
+    0% {
+        transform: translateX(1400px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}

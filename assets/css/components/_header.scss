@@ -1,0 +1,266 @@
+/* Barra de anuncios */
+/* Barra de anuncios */
+.announcement-bar {
+    font-size: 0.85rem;
+    background-color: #001f3f;
+    color: var(--bs-light);
+    padding: 0.5rem 0;
+    text-align: center;
+
+    &__list {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+        display: inline-flex;
+        gap: 1rem; /* Espacio entre iconos */
+
+        li {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .bi {
+                background-color: rgb(0, 51, 102, 0.1); /* Fondo translúcido */
+                color: var(--bs-white);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                transition:
+                    background-color 0.3s ease,
+                    transform 0.3s ease;
+
+                &:hover {
+                    background-color: var(--bs-selector); /* Cambio de color al pasar el ratón */
+                    transform: scale(1.1); /* Efecto de crecimiento suave */
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(lg) {
+        display: none; /* Ocultar en dispositivos móviles */
+    }
+}
+/* Estilo del Botón de apertura/cierre del Sidebar */
+.sidebar-toggle {
+    position: relative;
+    background: none;
+    border: none;
+    color: var(--bs-white);
+    font-size: 1.8rem;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: var(--bs-selector);
+        color: var(--bs-white);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* Ajustar el ícono para estar centrado */
+.sidebar-toggle i {
+    display: block;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+
+/*** Header ***/
+/* Estilos del header */
+.site-header {
+    height: auto;
+    min-height: 90px; /* Asegura que el header tenga suficiente altura */
+    padding: 1rem 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil debajo del header */
+    position: relative;
+    z-index: 10;
+
+    /* Logo */
+    &__logo {
+        .custom-logo-link {
+            img {
+                width: 8rem; /* Tamaño del logo ligeramente mayor */
+                filter: brightness(0.9); /* Oscurecer ligeramente el logo */
+                transition: filter 0.3s ease;
+
+                &:hover {
+                    filter: brightness(1); /* Restaurar brillo al pasar el ratón */
+                }
+            }
+        }
+    }
+
+    /* Menú de Navegación Principal */
+    .main-navigation {
+        background-color: transparent; /* Fondo transparente para el contenedor principal del menú */
+        text-align: center;
+
+        .nav {
+            padding: 0;
+            margin: 0;
+            display: flex;
+
+            li {
+                display: inline-block; /* Mostrar los ítems en línea */
+                position: relative; /* Posicionamiento relativo para manejar dropdowns */
+                padding: 0.5rem 0; /* Añadir algo de padding superior e inferior */
+                margin: 0; /* Eliminar margen */
+            
+                a {
+                    text-decoration: none; /* Quitar subrayado de los links */
+                    color: var(--bs-selector); /* Color del enlace en estado normal */
+                    font-family: "Cormorant Garamond", serif; /* Tipografía elegante */
+                    font-size: 1.1rem; /* Tamaño de texto */
+                    font-weight: 800; /* Peso del texto */
+                    padding: 0.5rem 1rem; /* Espaciado interno del enlace */
+                    transition: color 0.3s ease, border-bottom 0.3s ease; /* Transición suave para hover */
+                
+                    &:hover,
+                    &:focus {
+                        color: var(--bs-primary); /* Cambia el color al primary cuando se hace hover o focus */
+                        border-bottom: 2px solid var(--bs-primary); /* Subrayado con color primary al hacer hover o focus */
+                    }
+                }
+                
+                /* Estilo para el ítem activo */
+                &.current-menu-item > a {
+                    color: var(--bs-primary); /* Color diferente para el ítem activo */
+                    border-bottom: 2px solid var(--bs-primary); /* Subrayado para el ítem activo */
+                }
+            }
+            
+        }
+
+        /* Ocultar el menú en pantallas pequeñas y mostrar con el toggle */
+        @include media-breakpoint-down(md) {
+            ul {
+                display: none; /* Ocultar el menú en móvil */
+                flex-direction: column; /* Colocar los ítems del menú en columna */
+                background-color: rgba(0, 0, 0, 0.9); /* Fondo oscuro */
+                position: absolute;
+                width: 100%;
+                left: 0;
+                top: 100%;
+                z-index: 9999;
+                padding: 1rem;
+            }
+
+            &.menu-open ul {
+                display: flex !important; /* Mostrar el menú en dispositivos móviles cuando está abierto */
+            }
+        }
+
+        /* Botón de menú en dispositivos móviles */
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: #001f3f;
+            font-size: 2rem;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: var(--bs-secondary);
+            }
+
+            @include media-breakpoint-up(md) {
+                display: none; /* Ocultar botón en pantallas más grandes */
+            }
+        }
+
+
+        @include media-breakpoint-up(lg) {
+            display: none; /* Ocultar el botón en pantallas más grandes */
+        }
+    
+
+        /* Estilo para el formulario de búsqueda */
+        .search-form {
+            position: relative;
+            padding: 0.3rem; /* Reducir el padding para que se vea más delgado */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Sombra más sutil */
+            border-radius: 0.4rem; /* Bordes más pequeños para menor volumen */
+            background-color: var(--bs-gray-shine);
+            transition:
+                box-shadow 0.3s ease,
+                transform 0.3s ease;
+
+            &:hover {
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Sombra menos intensa */
+                transform: translateY(-1px); /* Menor movimiento hacia arriba */
+            }
+        }
+
+        /* Estilo para el campo de búsqueda */
+        .search-input {
+            border: none;
+            background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco con un poco más de transparencia */
+            color: var(--bs-primary);
+            padding: 0.3rem 0.8rem; /* Reducir el padding para un aspecto más delgado */
+            border-radius: 0.2rem; /* Bordes menos redondeados para darle una apariencia más compacta */
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08); /* Sombra interna más sutil */
+            transition:
+                background-color 0.3s ease,
+                box-shadow 0.3s ease;
+
+            &:focus {
+                background-color: rgba(255, 255, 255, 1);
+                box-shadow: 0 0 6px var(--bs-primary); /* Sombra menos intensa al enfocar */
+                outline: none;
+            }
+        }
+
+        .bi {
+            background-color: #001f3f; /* Fondo translúcido */
+            color: var(--bs-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition:
+                background-color 0.3s ease,
+                transform 0.3s ease;
+
+            &:hover {
+                background-color: var(--bs-selector); /* Cambio de color al pasar el ratón */
+                transform: scale(1.1); /* Efecto de crecimiento suave */
+            }
+        }
+
+        @include media-breakpoint-down(md) {
+            ul {
+                display: none; /* Ocultar el menú en móvil */
+                flex-direction: column; /* Colocar los ítems del menú en columna */
+                background-color: var(--bs-primary);
+                position: absolute;
+                width: 100%;
+                left: 0;
+                top: 100%;
+                z-index: 9999;
+                padding: 1rem;
+            }
+    
+            /* Mostrar el menú cuando se activa el toggle */
+            &.menu-open ul {
+                display: flex !important; /* Mostrar el menú en dispositivos móviles cuando está abierto */
+            }
+        }
+
+    }
+}

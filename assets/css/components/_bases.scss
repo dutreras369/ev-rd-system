@@ -1,0 +1,43 @@
+#documentosTab {
+    .nav-link {
+        color: #6c757d;
+        font-weight: bold;
+        border: 1px solid #dee2e6;
+        border-bottom: none;
+        margin: 0 5px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #f8f9fa;
+            color: #007bff;
+        }
+
+        &.active {
+            color: #fff;
+            background-color: #007bff;
+        }
+    }
+}
+
+.tab-content {
+    .list-group {
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 5px;
+
+            a {
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                    color: #0056b3;
+                }
+            }
+        }
+    }
+}
