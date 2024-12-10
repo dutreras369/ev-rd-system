@@ -1,18 +1,29 @@
-// Custom Variables Overrides
-$primary: rgb(0, 31, 63); // azul claro #001f3f
-$primary-opacity-8: rgb(0, 31, 63, 0.8);
-$gray: #6C757D; // Gris neutro para bordes y elementos secundarios
-$gold: #FFB703; // Amarillo para advertencias
-$info: #00a8e8; // Azul oscuro para informacion
-$secondary: #0077B6; // Azul oscuro para botones y acentos
-$blue: #001f3f; // Azul claro para fondos suaves
-$red: #535050; // Rojo para notificaciones de emergencia
-$selector: #FF6F00; // Naranjo para representar vialidad
-$success: #8AC926; // Naranjo para representar vialidad
-$gray-shine: #F0F0F0;
-$warning: #E63946;
-$white: #FFFF;
-$purple: #6f42c1;
+// Colores Primarios
+$primary: #001f3f; // Azul profundo para elementos principales
+$primary-light: rgba(0, 31, 63, 0.8); // Versión translúcida del azul principal
+
+// Colores Secundarios
+$secondary: #0077b6; // Azul oscuro para botones y acentos
+$accent: #00a8e8; // Azul claro para resaltados e información
+
+// Colores Funcionales
+$success: #8ac926; // Verde brillante para estados de éxito
+$warning: #ffb703; // Amarillo para advertencias y alertas
+$danger: #e63946; // Rojo vibrante para errores o estados críticos
+$info: #6c757d; // Gris neutro para información secundaria
+
+// Colores de Fondo y Bordes
+$background: #f0f0f0; // Gris claro para fondos
+$foreground: #ffffff; // Blanco para textos o elementos destacados
+$border: #d6d6d6; // Gris suave para bordes y divisores
+
+// Colores de Notificación
+$highlight: #ff6f00; // Naranja para indicadores importantes o notificaciones
+$emergency: #535050; // Gris oscuro para estados críticos alternativos
+
+// Otros Colores Utilitarios
+$text: #343a40; // Negro suave para textos principales
+$muted: #adb5bd; // Gris apagado para textos secundarios
 
 
 // Fonts
@@ -28,18 +39,21 @@ $breakpoint-xl: 1200px;
 
 // Theme Colors Map
 $theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary,
-    "primary-opacity-8": $primary-opacity-8,
-    "selector": $selector,
-    "gold": $gold,
-    "gray": $gray,
-    "info": $info,
-    "success": $success,
-    "warning": $warning,
-    "gray-shine": $gray-shine,
-    "white": $white,
-    "purple": $purple
+    "primary": $primary,                 // Azul profundo para elementos principales
+    "primary-light": $primary-light,     // Versión translúcida del azul principal
+    "secondary": $secondary,             // Azul oscuro para botones y acentos
+    "accent": $accent,                   // Azul claro para resaltados e información
+    "success": $success,                 // Verde brillante para estados de éxito
+    "warning": $warning,                 // Amarillo para advertencias
+    "danger": $danger,                   // Rojo vibrante para errores o estados críticos
+    "info": $info,                       // Gris neutro para información secundaria
+    "highlight": $highlight,             // Naranja para indicadores importantes
+    "emergency": $emergency,             // Gris oscuro para estados críticos alternativos
+    "background": $background,           // Gris claro para fondos
+    "foreground": $foreground,           // Blanco para textos o elementos destacados
+    "border": $border,                   // Gris suave para bordes y divisores
+    "text": $text,                       // Negro suave para textos principales
+    "muted": $muted,                     // Gris apagado para textos secundarios
 );
 
 // Custom Colors

@@ -1,5 +1,4 @@
 /* Barra de anuncios */
-/* Barra de anuncios */
 .announcement-bar {
     font-size: 0.85rem;
     background-color: #001f3f;
@@ -78,7 +77,6 @@
     pointer-events: none;
 }
 
-
 /*** Header ***/
 /* Estilos del header */
 .site-header {
@@ -90,16 +88,21 @@
     z-index: 10;
 
     /* Logo */
-    &__logo {
-        .custom-logo-link {
-            img {
-                width: 8rem; /* Tamaño del logo ligeramente mayor */
-                filter: brightness(0.9); /* Oscurecer ligeramente el logo */
-                transition: filter 0.3s ease;
+    .logo {
+        display: flex;
+        align-items: center;
 
-                &:hover {
-                    filter: brightness(1); /* Restaurar brillo al pasar el ratón */
-                }
+        img {
+            width: 3rem; /* Ajusta el tamaño del logo (pequeño) */
+            height: auto; /* Mantén la proporción del logo */
+            filter: brightness(0.9); /* Oscurecer ligeramente el logo */
+            transition:
+                filter 0.3s ease,
+                transform 0.3s ease;
+
+            &:hover {
+                filter: brightness(1); /* Restaurar brillo al pasar el ratón */
+                transform: scale(1.1); /* Efecto de agrandamiento suave */
             }
         }
     }
@@ -119,30 +122,30 @@
                 position: relative; /* Posicionamiento relativo para manejar dropdowns */
                 padding: 0.5rem 0; /* Añadir algo de padding superior e inferior */
                 margin: 0; /* Eliminar margen */
-            
+
                 a {
                     text-decoration: none; /* Quitar subrayado de los links */
-                    color: var(--bs-selector); /* Color del enlace en estado normal */
-                    font-family: "Cormorant Garamond", serif; /* Tipografía elegante */
+                    color: var(--bs-secondary); /* Color del enlace en estado normal */
                     font-size: 1.1rem; /* Tamaño de texto */
                     font-weight: 800; /* Peso del texto */
                     padding: 0.5rem 1rem; /* Espaciado interno del enlace */
-                    transition: color 0.3s ease, border-bottom 0.3s ease; /* Transición suave para hover */
-                
+                    transition:
+                        color 0.3s ease,
+                        border-bottom 0.3s ease; /* Transición suave para hover */
+
                     &:hover,
                     &:focus {
                         color: var(--bs-primary); /* Cambia el color al primary cuando se hace hover o focus */
                         border-bottom: 2px solid var(--bs-primary); /* Subrayado con color primary al hacer hover o focus */
                     }
                 }
-                
+
                 /* Estilo para el ítem activo */
                 &.current-menu-item > a {
                     color: var(--bs-primary); /* Color diferente para el ítem activo */
                     border-bottom: 2px solid var(--bs-primary); /* Subrayado para el ítem activo */
                 }
             }
-            
         }
 
         /* Ocultar el menú en pantallas pequeñas y mostrar con el toggle */
@@ -182,11 +185,9 @@
             }
         }
 
-
         @include media-breakpoint-up(lg) {
             display: none; /* Ocultar el botón en pantallas más grandes */
         }
-    
 
         /* Estilo para el formulario de búsqueda */
         .search-form {
@@ -255,12 +256,11 @@
                 z-index: 9999;
                 padding: 1rem;
             }
-    
+
             /* Mostrar el menú cuando se activa el toggle */
             &.menu-open ul {
                 display: flex !important; /* Mostrar el menú en dispositivos móviles cuando está abierto */
             }
         }
-
     }
 }
