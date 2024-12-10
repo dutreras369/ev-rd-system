@@ -1,14 +1,16 @@
 <?php
 $title = "Panel de Administración";
-include '../templates/header.php'; 
+require_once __DIR__ . '/../../views/templates/header.php';
 ?>
+
+<?php include '../templates/sidebar.php'; ?>
+
 <main>
     <section>
-        <?php include '../templates/sidebar.php'; ?>
         <div>
             <h2>Bienvenido, Admin</h2>
             <p>Aquí puedes gestionar usuarios y registros.</p>
         </div>
     </section>
 </main>
-<?php include '../templates/footer.php'; ?>
+<?php require_once __DIR__ . '/../../views/templates/header.php'; // Footer esencial ?>

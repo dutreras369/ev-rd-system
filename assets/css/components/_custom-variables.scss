@@ -4,7 +4,7 @@ $primary-light: rgba(0, 31, 63, 0.8); // Versión translúcida del azul principa
 
 // Colores Secundarios
 $secondary: #0077b6; // Azul oscuro para botones y acentos
-$accent: #00a8e8; // Azul claro para resaltados e información
+$selector: #00a8e8; // Azul claro para resaltados e información
 
 // Colores Funcionales
 $success: #8ac926; // Verde brillante para estados de éxito
@@ -42,7 +42,7 @@ $theme-colors: (
     "primary": $primary,                 // Azul profundo para elementos principales
     "primary-light": $primary-light,     // Versión translúcida del azul principal
     "secondary": $secondary,             // Azul oscuro para botones y acentos
-    "accent": $accent,                   // Azul claro para resaltados e información
+    "selector": $selector,                   // Azul claro para resaltados e información
     "success": $success,                 // Verde brillante para estados de éxito
     "warning": $warning,                 // Amarillo para advertencias
     "danger": $danger,                   // Rojo vibrante para errores o estados críticos
