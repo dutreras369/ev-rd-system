@@ -14,8 +14,8 @@
                     <!-- Menú de Navegación -->
                     <nav id="primary-menu" class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                         <ul class="nav-item">
-                            <li><a href="<?php echo BASE_URL; ?>" class="nav-link px-2">Inicio</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/about.php" class="nav-link px-2">Acerca de</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>" class="nav-link px-2"><i class="bi bi-house"></i></a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/about.php" class="nav-link px-2">Información</a></li>
                         </ul>
                     </nav>
 

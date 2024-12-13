@@ -1,9 +1,8 @@
 <?php
-$title = "Panel de Administración Admin";
+$title = "Panel de Registros Admin";
 
 require_once __DIR__ . '/../views/templates/header.php';
 
-require_once __DIR__ . '/../views/admin/dashboard.php';
+require_once __DIR__ . '/../views/user/records.php';
 
 require_once __DIR__ . '/../views/templates/footer.php';
-
