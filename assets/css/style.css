@@ -10703,22 +10703,6 @@ a {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.bi {
-  background-color: #001f3f; /* Fondo translúcido */
-  color: var(--bs-white);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.bi:hover {
-  background-color: var(--bs-selector); /* Cambio de color al pasar el ratón */
-  transform: scale(1.1); /* Efecto de crecimiento suave */
-}
-
 /* Barra de anuncios */
 .announcement-bar {
   font-size: 0.85rem;
@@ -10948,6 +10932,21 @@ a {
   background-color: rgb(255, 255, 255);
   box-shadow: 0 0 6px var(--bs-primary); /* Sombra menos intensa al enfocar */
   outline: none;
+}
+.site-header .main-navigation .bi {
+  background-color: #001f3f; /* Fondo translúcido */
+  color: var(--bs-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.site-header .main-navigation .bi:hover {
+  background-color: var(--bs-selector); /* Cambio de color al pasar el ratón */
+  transform: scale(1.1); /* Efecto de crecimiento suave */
 }
 @media (max-width: 767.98px) {
   .site-header .main-navigation {

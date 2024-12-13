@@ -266,6 +266,25 @@
             }
         }
 
+        .bi {
+            background-color: #001f3f; /* Fondo translúcido */
+            color: var(--bs-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition:
+                background-color 0.3s ease,
+                transform 0.3s ease;
+
+            &:hover {
+                background-color: var(--bs-selector); /* Cambio de color al pasar el ratón */
+                transform: scale(1.1); /* Efecto de crecimiento suave */
+            }
+        }
+
         @include media-breakpoint-down(md) {
             ul {
                 display: none; /* Ocultar el menú en móvil */
