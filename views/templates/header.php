@@ -1,6 +1,4 @@
-<?php   
-    require_once __DIR__ . '/../../config/init.php';
-?>
+<?php require_once __DIR__ . '/../../config/init.php'; ?>
 
 <!doctype html>
 <html lang="en">
@@ -16,4 +14,8 @@
 
 <body>
 
-<?php include 'navbar.php'; ?>
+<?php require_once __DIR__ . '/navbar.php'; ?>
+<?php require_once __DIR__ . '/sidebar.php'; ?>
+<?php require_once __DIR__ . '/../auth/modals/user_modal.php'; ?>
+
+

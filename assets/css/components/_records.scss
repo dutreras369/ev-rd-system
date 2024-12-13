@@ -1,0 +1,46 @@
+#records-section {
+    background-color: #fdfdfd; /* Fondo claro */
+    border: 1px solid #ced4da; /* Borde gris */
+    border-radius: 0.5rem;
+    padding: 1rem;
+
+    h5 {
+        font-weight: 600;
+        color: var(--bs-primary); /* Azul principal */
+        margin-bottom: 1rem;
+    }
+
+    table {
+        border: 1px solid #dee2e6;
+
+        thead {
+            th {
+                background-color: var(--bs-secondary);
+                color: #fff;
+                text-align: center;
+                font-size: 0.9rem;
+            }
+        }
+
+        tbody {
+            td {
+                text-align: center;
+                vertical-align: middle;
+
+                .btn {
+                    font-size: 0.8rem;
+                    padding: 0.3rem 0.6rem;
+                }
+
+                .btn-info {
+                    background-color: var(--bs-info);
+                    border: none;
+
+                    &:hover {
+                        background-color: darken(#6c757d, 10%); // Ajuste correcto para Sass
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,135 @@
+// Estilos base para todos los modales
+.modal {
+    &-content {
+        background-color: #ffffff; // Fondo blanco
+        border-radius: 0.5rem;     // Bordes redondeados
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); // Sombra ligera
+        padding: 1rem;
+
+        // Ajustes de las cabeceras
+        .modal-header {
+            background-color: var(--bs-primary); // Color principal
+            color: #fff;                         // Texto blanco
+            border-bottom: none;
+            border-radius: 0.5rem 0.5rem 0 0;    // Bordes superiores redondeados
+            padding: 1rem;
+
+            .modal-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+            }
+
+            .btn-close {
+                color: #fff;
+                opacity: 0.8;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        // Cuerpo del modal
+        .modal-body {
+            padding: 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #212529;
+
+            form {
+                .form-label {
+                    font-weight: 500;
+                    color: #495057; // Color gris oscuro para las etiquetas
+                }
+
+                .form-control {
+                    border-radius: 0.4rem;
+                    border: 1px solid #ced4da; // Borde gris claro
+                    font-size: 0.95rem;
+
+                    &:focus {
+                        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); // Sombra azul clara
+                        border-color: var(--bs-primary); // Color primario en el borde
+                    }
+                }
+
+                .form-select {
+                    border-radius: 0.4rem;
+                    font-size: 0.95rem;
+
+                    &:focus {
+                        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                        border-color: var(--bs-primary);
+                    }
+                }
+                
+
+                .btn {
+                    font-size: 0.95rem;
+                    padding: 0.5rem 1rem;
+
+                    &.btn-primary {
+                        background-color: var(--bs-primary);
+                        border-color: var(--bs-primary);
+
+                        &:hover {
+                            background-color: darken(#001f3f, 10%);
+                            border-color: darken(#001f3f, 10%);
+                        }
+                    }
+
+                    &.btn-success {
+                        background-color: var(--bs-success);
+                        border-color: var(--bs-success);
+
+                        &:hover {
+                            background-color: darken(#8ac926, 10%);
+                            border-color: darken(#8ac926, 10%);
+                        }
+                    }
+
+                    &.btn-danger {
+                        background-color: var(--bs-danger);
+                        border-color: var(--bs-danger);
+
+                        &:hover {
+                            background-color: darken(#e63946, 10%);
+                            border-color: darken(#e63946, 10%);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Pie del modal
+        .modal-footer {
+            border-top: none;
+            padding: 0.75rem;
+
+            .btn {
+                font-size: 0.95rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+    }
+}
+
+// Ajustes específicos para modales grandes
+.modal-lg {
+    max-width: 900px;
+}
+
+// Ajustes específicos para modales pequeños
+.modal-sm {
+    max-width: 400px;
+}
+
+// Ajuste de transiciones
+.fade {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &.show {
+        opacity: 1;
+    }
+}

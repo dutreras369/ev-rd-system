@@ -1,0 +1,31 @@
+#analysis-section {
+    background-color: #f8f9fa; /* Fondo claro */
+    border: 1px solid #dee2e6; /* Borde sutil */
+    border-radius: 0.5rem;
+    padding: 1rem;
+
+    h5 {
+        font-weight: 600;
+        color: var(--bs-primary); /* Azul principal */
+        margin-bottom: 1rem;
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+            transform: translateY(-5px); /* Elevación al pasar el ratón */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Sombra adicional */
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .card-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+    }
+}

@@ -1,4 +1,3 @@
-
 // Aplicar las fuentes globalmente
 body {
     font-family: $font-family-base !important;
@@ -8,16 +7,85 @@ body {
 }
 
 // Aplicar la fuente de títulos a todos los encabezados
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: $headings-font-family !important;
     font-weight: $headings-font-weight !important; // Asegúrate de que la fuente esté bien visible
 }
 
 // Forzar la fuente en párrafos y enlaces si aún no toma la correcta
-p, a {
+p,
+a {
     font-family: $font-family-base !important;
     font-weight: 400;
 }
 
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px; // Tamaño del círculo
+    height: 25px; // Tamaño del círculo
+    border-radius: 50%; // Círculo perfecto
+    font-size: 1.2rem; // Tamaño del ícono
+    color: #fff; // Color del ícono
+    text-decoration: none; // Elimina el subrayado en enlaces
+    transition: all 0.3s ease; // Transición suave
 
-                                                                                                                                        
+    // Estilos para el botón info
+    &.btn-secondary {
+        background-color: var(--bs-secondary);
+
+        &:hover {
+            background-color: #05308d; // Oscurecer color en hover
+        }
+    }
+
+    // Estilos para el botón warning
+    &.btn-warning {
+        background-color: var(--bs-warning);
+
+        &:hover {
+            background-color: #ffa200; // Oscurecer color en hover
+        }
+    }
+
+    // Estilos para el botón danger
+    &.btn-danger {
+        background-color: var(--bs-danger);
+
+        &:hover {
+            background-color: #c92a2a; // Oscurecer color en hover
+        }
+    }
+
+    // Efecto de hover común
+    &:hover {
+        transform: scale(1.1); // Efecto de zoom al pasar el ratón
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+}
+
+
+.bi {
+    background-color: #001f3f; /* Fondo translúcido */
+    color: var(--bs-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition:
+        background-color 0.3s ease,
+        transform 0.3s ease;
+
+    &:hover {
+        background-color: var(--bs-selector); /* Cambio de color al pasar el ratón */
+        transform: scale(1.1); /* Efecto de crecimiento suave */
+    }
+}

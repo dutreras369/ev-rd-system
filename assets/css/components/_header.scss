@@ -145,6 +145,47 @@
                     color: var(--bs-primary); /* Color diferente para el ítem activo */
                     border-bottom: 2px solid var(--bs-primary); /* Subrayado para el ítem activo */
                 }
+
+                .bi {
+                    background-color: #001f3f; /* Fondo translúcido */
+                    color: var(--bs-white);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    transition:
+                        background-color 0.3s ease,
+                        transform 0.3s ease;
+
+                    &:hover {
+                        background-color: var(--bs-selector); /* Cambio de color al pasar el ratón */
+                        transform: scale(1.1); /* Efecto de crecimiento suave */
+                    }
+                }
+            }
+        }
+
+        // Ajustes específicos para dispositivos móviles
+        @include media-breakpoint-down(md) {
+            .nav li {
+                a {
+                    color: #fff; /* Color blanco para enlaces en móviles */
+                }
+
+                .bi {
+                    width: 100%; /* Ancho completo */
+                    height: auto; /* Ajustar la altura automáticamente */
+                    border-radius: 0;
+                    background-color: transparent; /* Eliminar fondo circular */
+                    text-align: center;
+                    font-size: 1.5rem; /* Tamaño del ícono */
+
+                    &:hover {
+                        color: var(--bs-primary); /* Cambia el color al primary al pasar el ratón */
+                    }
+                }
             }
         }
 
@@ -222,25 +263,6 @@
                 background-color: rgba(255, 255, 255, 1);
                 box-shadow: 0 0 6px var(--bs-primary); /* Sombra menos intensa al enfocar */
                 outline: none;
-            }
-        }
-
-        .bi {
-            background-color: #001f3f; /* Fondo translúcido */
-            color: var(--bs-white);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            transition:
-                background-color 0.3s ease,
-                transform 0.3s ease;
-
-            &:hover {
-                background-color: var(--bs-selector); /* Cambio de color al pasar el ratón */
-                transform: scale(1.1); /* Efecto de crecimiento suave */
             }
         }
 
