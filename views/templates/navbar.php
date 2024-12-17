@@ -15,7 +15,9 @@
                     <nav id="primary-menu" class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                         <ul class="nav-item">
                             <li><a href="<?php echo BASE_URL; ?>" class="nav-link px-2"><i class="bi bi-house"></i></a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/about.php" class="nav-link px-2">Información</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/public/login.php" class="nav-link px-2">Login</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/public/dashboard/user.php" class="nav-link px-2">Usuario</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/public/dashboard/admin.php" class="nav-link px-2">Administrador</a></li>
                         </ul>
                     </nav>
 

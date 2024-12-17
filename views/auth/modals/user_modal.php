@@ -17,7 +17,6 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <a href="/historial" class="btn btn-outline-secondary">Ver Historial</a>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>

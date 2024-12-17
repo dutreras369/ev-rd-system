@@ -114,8 +114,17 @@ $(document).ready(function () {
     });
   }
 
+  // Form User Register - Amount Buttons
+  function handleNumberButtonSeletion(){
+     // Botones de acceso rápido para monto
+     $(".quick-amount").on("click", function () {
+      const amount = $(this).data("amount"); // Obtiene el valor del botón
+      $("#amount").val(amount); // Actualiza el input con el monto seleccionado
+    });
+  }
   // Ejecutar todas las funciones
   handleMenuNavigation();
   handleSidebarNavigation();
   handleLogin();
+  handleNumberButtonSeletion();
 });

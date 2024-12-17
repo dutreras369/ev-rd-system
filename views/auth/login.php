@@ -23,15 +23,8 @@
                                 <input type="password" class="form-control" id="password" name="password" required placeholder="Ingresa tu contraseña">
                                 <div class="invalid-feedback">Por favor ingrese su contraseña</div>
                             </div>
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
-                                <label class="form-check-label" for="rememberMe">Recordar contraseña</label>
-                            </div>
                             <button type="submit" class="btn btn-primary w-100 mb-3">Ingresar</button>
                         </form>
-                        <div class="d-flex justify-content-between mt-3">
-                            <a href="#" class="text-primary" id="forgot-password-link">¿Olvidaste tu contraseña?</a>
-                        </div>
                     </div>
                 </div>
             </div>
