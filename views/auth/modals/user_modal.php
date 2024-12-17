@@ -16,9 +16,10 @@
                     <p class="mb-1"><strong>Última Conexión:</strong> <span id="userLastLogin">19/11/2024</span></p>
                 </div>
             </div>
-            <div class="modal-footer d-flex justify-content-between">
+            <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
             </div>
+
         </div>
     </div>
 </div>

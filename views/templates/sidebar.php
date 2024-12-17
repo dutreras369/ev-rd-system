@@ -9,7 +9,7 @@
 					</a>
 				</li>
 				<li class="sidebar__item">
-					<a href="#" class="nav-link">
+					<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#viewDetailsModal" title="Descarga Masiva">
 						<i class="bi bi-book"></i> Descarga Masiva
 					</a>
 				</li>
