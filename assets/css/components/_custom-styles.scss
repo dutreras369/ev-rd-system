@@ -70,3 +70,29 @@ a {
     }
 }
 
+/* Botón de Telegram */
+.telegram-button {
+    position: fixed;
+    bottom: 20px; /* Distancia desde la parte inferior */
+    right: 20px;  /* Distancia desde la derecha */
+    z-index: 1000; /* Siempre visible */
+    width: 60px;   /* Ancho del botón */
+    height: 60px;  /* Alto del botón */
+    background-color: #0088cc; /* Color azul de Telegram */
+    border-radius: 50%; /* Forma circular */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Sombra */
+    display: flex;
+    justify-content: center; /* Centra el ícono horizontalmente */
+    align-items: center; /* Centra el ícono verticalmente */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Efecto suave */
+
+    &:hover {
+        transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+    }
+
+    i {
+        font-size: 30px; /* Tamaño del ícono */
+        color: white; /* Color del ícono */
+    }
+}

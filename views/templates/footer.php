@@ -1,3 +1,9 @@
+
+<a href="https://t.me/dutreras369" class="telegram-button" target="_blank">
+    <i class="bi bi-telegram"></i>
+</a>
+
+
 <footer>
     <p class="p-5">&copy; <?php echo date('Y'); ?> RD-System - Create by <a href="https://espaciosvirtuales.cl" class="text-decoration-none fw-bold" target="_blank">Espacios Virtuales</a></p>
 </footer>
