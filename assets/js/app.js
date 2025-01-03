@@ -90,6 +90,20 @@ $(document).ready(function () {
     });
   }
 
+  // Inicializar DataTables
+  function initializeDataTable() {
+    $('#dynamic-table').DataTable({
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json" // Traducción al español
+      },
+      paging: true,
+      searching: true,
+      ordering: true,
+      autoWidth: false,
+      responsive: true
+    });
+  }
+
   // Cargar registros desde JSON y mostrar en tabla
   function loadRecords() {
     $.ajax({
@@ -98,6 +112,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (data) {
         renderTable(data);
+        initializeDataTable(); // Inicializar DataTables después de renderizar los registros
       },
       error: function () {
         alert("Error al cargar los registros.");
@@ -161,4 +176,3 @@ $(document).ready(function () {
   handleNumberButtonSelection();
   loadRecords();
 });
-

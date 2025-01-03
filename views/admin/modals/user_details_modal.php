@@ -50,9 +50,8 @@
                     </div>
                 </form>
 
-                <!-- Tabla de resultados -->
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
+                    <table id="dynamic-table" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -68,6 +67,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
