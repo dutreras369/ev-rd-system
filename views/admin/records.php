@@ -21,42 +21,6 @@
                 </tr>
             </thead>
             <tbody id="records-table-body">
-                <tr>
-                    <td>1</td>
-                    <td>Juan Pérez</td>
-                    <td>$ 120</td>
-                    <td>$ 110</td>
-                    <td>$ 100</td>
-                    <td class="d-flex justify-content-center align-items-center">
-                        <a href="#" class="btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#viewDetailsModal" title="Ver Detalles">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>María López</td>
-                    <td>$ 950</td>
-                    <td>$ 900</td>
-                    <td>$ 500</td>
-                    <td class="d-flex justify-content-center align-items-center">
-                         <a href="#" class="btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#viewDetailsModal" title="Ver Detalles">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Carlos Ramírez</td>
-                    <td>$ 750</td>
-                    <td>$ 700</td>
-                    <td>$ 500</td>
-                    <td class="d-flex justify-content-center align-items-center">
-                        <a href="#" class="btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#viewDetailsModal" title="Ver Detalles">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
