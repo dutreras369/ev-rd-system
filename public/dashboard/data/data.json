@@ -1,7 +1,0 @@
-[
-    { "id": 1, "usuario": "Juan Pérez", "fecha": "2024-01-01", "tipo": "Carga", "monto": 1000, "estado": "true" },
-    { "id": 2, "usuario": "María López", "fecha": "2024-01-02", "tipo": "Retiro", "monto": 5000, "estado": "true" },
-    { "id": 3, "usuario": "Carlos Ramírez", "fecha": "2024-01-03", "tipo": "Carga", "monto": 1500, "estado": "false" },
-    { "id": 4, "usuario": "Ana Gómez", "fecha": "2024-01-04", "tipo": "Retiro", "monto": 2000, "estado": "true" },
-    { "id": 5, "usuario": "Juan Pérez", "fecha": "2024-01-05", "tipo": "Carga", "monto": 3000, "estado": "false" }
-]
