@@ -10,45 +10,39 @@
                 <!-- Formulario de filtro -->
                 <form id="filterDetailsForm" class="mb-4">
                     <div class="row">
-                        <!-- Fecha Desde -->
                         <div class="col-md-4">
                             <label for="filter-date-from" class="form-label">Desde</label>
-                            <input type="date" class="form-control" id="filter-date-from" name="filter-date-from" required>
+                            <input type="date" class="form-control" id="filter-date-from">
                         </div>
-                        <!-- Fecha Hasta -->
                         <div class="col-md-4">
                             <label for="filter-date-to" class="form-label">Hasta</label>
-                            <input type="date" class="form-control" id="filter-date-to" name="filter-date-to" required>
+                            <input type="date" class="form-control" id="filter-date-to">
                         </div>
-                        <!-- Tipo (Carga/Retiro) -->
                         <div class="col-md-4">
                             <label for="filter-type" class="form-label">Tipo</label>
-                            <select class="form-select" id="filter-type" name="filter-type" required>
-                                <option value="" disabled selected>Seleccione Tipo</option>
+                            <select class="form-select" id="filter-type">
+                                <option value="">Todos</option>
                                 <option value="carga">Carga</option>
                                 <option value="retiro">Retiro</option>
                             </select>
                         </div>
                     </div>
-
-                    <!-- Filtro de Usuario -->
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label for="filter-user" class="form-label">Usuario</label>
-                            <select class="form-select" id="filter-user" name="filter-user">
-                                <!-- Opciones dinámicas -->
+                            <select class="form-select" id="filter-user">
+                                <option value="">Todos</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="filter-user" class="form-label">Estado</label>
-                            <select class="form-select" id="filter-status" name="filter-status">
+                            <label for="filter-status" class="form-label">Estado</label>
+                            <select class="form-select" id="filter-status">
+                                <option value="">Todos</option>
                                 <option value="true">Correcto</option>
                                 <option value="false">Incorrecto</option>
-                            </select>                            
+                            </select>
                         </div>
                     </div>
-
-                    <!-- Botón Filtrar -->
                     <div class="text-end mt-3">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> Filtrar

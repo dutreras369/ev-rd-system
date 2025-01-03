@@ -19,12 +19,10 @@ $(document).ready(function () {
 
   // Manejar la navegación del sidebar
   function handleSidebarNavigation() {
-    // Toggle del Sidebar usando la clase común
     $(".sidebar-toggle").on("click", function () {
       toggleSidebar(this);
     });
 
-    // Cerrar el Sidebar al hacer clic fuera de él (Opcional)
     $(document).on("click", function (event) {
       const sidebar = $("#sidebar-wrapper");
       const toggleButtons = $(".sidebar-toggle");
@@ -40,7 +38,6 @@ $(document).ready(function () {
     });
   }
 
-  // Función para alternar la visibilidad del sidebar
   function toggleSidebar(button) {
     const $sidebar = $("#sidebar-wrapper");
     const isExpanded = $(button).attr("aria-expanded") === "true";
@@ -57,27 +54,21 @@ $(document).ready(function () {
   // Manejar el formulario de inicio de sesión
   function handleLogin() {
     $("#loginForm").on("submit", function (event) {
-      event.preventDefault(); // Evita que el formulario se envíe
-
-      // Obtiene los valores del formulario
+      event.preventDefault();
       const email = $("#email").val().trim();
       const password = $("#password").val().trim();
-
-      // Limpia el contenedor de alertas antes de mostrar una nueva
       $("#loginAlert").html("");
 
-      // Validación básica de los campos
       if (email === "" || password === "") {
         $("#loginAlert").html(`
           <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              <strong>Error:</strong> Por favor completa todos los campos.
+              <strong>Error:</strong> Completa todos los campos.
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         `);
         return;
       }
 
-      // Simulación del login y redirección al Dashboard
       $("#loginAlert").html(`
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Éxito:</strong> Inicio de sesión exitoso. Redirigiendo al Dashboard...
@@ -86,45 +77,88 @@ $(document).ready(function () {
       `);
 
       setTimeout(function () {
-        window.location.href =
-          BASE_URL + "/dashboard/admin"; // URL de redirección simulada
+        window.location.href = BASE_URL + "/dashboard/admin";
       }, 2000);
     });
+  }
 
-    // Enlace para "Recordar contraseña"
-    $("#forgot-password-link").on("click", function (event) {
-      event.preventDefault();
-      $("#loginAlert").html(`
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <strong>Info:</strong> Se abrirá el formulario para recordar contraseña (simulación).
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      `);
-    });
-
-    // Enlace para "Crear cuenta"
-    $("#create-account-link").on("click", function (event) {
-      event.preventDefault();
-      $("#loginAlert").html(`
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <strong>Info:</strong> Se abrirá el formulario para crear una cuenta (simulación).
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      `);
+  // Botones de acceso rápido para monto
+  function handleNumberButtonSelection() {
+    $(".quick-amount").on("click", function () {
+      const amount = $(this).data("amount");
+      $("#amount").val(amount);
     });
   }
 
-  // Form User Register - Amount Buttons
-  function handleNumberButtonSeletion(){
-     // Botones de acceso rápido para monto
-     $(".quick-amount").on("click", function () {
-      const amount = $(this).data("amount"); // Obtiene el valor del botón
-      $("#amount").val(amount); // Actualiza el input con el monto seleccionado
+  // Cargar registros desde JSON y mostrar en tabla
+  function loadRecords() {
+    $.ajax({
+      url: "assets/data/data.json",
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        renderTable(data);
+      },
+      error: function () {
+        alert("Error al cargar los registros.");
+      },
     });
   }
-  // Ejecutar todas las funciones
+
+  function renderTable(records) {
+    const tableBody = $("#records-table-body");
+    tableBody.empty();
+    if (records.length > 0) {
+      records.forEach((record) => {
+        tableBody.append(`
+          <tr>
+            <td>${record.id}</td>
+            <td>${record.usuario}</td>
+            <td>${record.fecha}</td>
+            <td>${record.tipo}</td>
+            <td>$${record.monto}</td>
+            <td>${record.estado === "true" ? "Correcto" : "Incorrecto"}</td>
+          </tr>
+        `);
+      });
+    } else {
+      tableBody.append('<tr><td colspan="6" class="text-center">No hay registros.</td></tr>');
+    }
+  }
+
+  // Filtrar registros
+  $("#filterDetailsForm").on("submit", function (event) {
+    event.preventDefault();
+    const filterFrom = $("#filter-date-from").val();
+    const filterTo = $("#filter-date-to").val();
+    const filterType = $("#filter-type").val();
+    const filterUser = $("#filter-user").val();
+    const filterStatus = $("#filter-status").val();
+
+    $.ajax({
+      url: "assets/data/data.json",
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        const filtered = data.filter((record) => {
+          return (
+            (!filterFrom || record.fecha >= filterFrom) &&
+            (!filterTo || record.fecha <= filterTo) &&
+            (!filterType || record.tipo === filterType) &&
+            (!filterUser || record.usuario === filterUser) &&
+            (!filterStatus || record.estado === filterStatus)
+          );
+        });
+        renderTable(filtered);
+      },
+    });
+  });
+
+  // Inicializar funciones
   handleMenuNavigation();
   handleSidebarNavigation();
   handleLogin();
-  handleNumberButtonSeletion();
+  handleNumberButtonSelection();
+  loadRecords();
 });
+
