@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-  const BASE_URL = "<?php echo BASE_URL; ?>";
-
   // Manejar la navegación del menú
   function handleMenuNavigation() {
     $(".menu-toggle").on("click", function () {
