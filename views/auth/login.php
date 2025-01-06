@@ -14,8 +14,8 @@
                     <div class="p-4 bg-light rounded shadow-lg">
                         <form id="loginForm" class="needs-validation mt-4" novalidate action="controllers/AuthController.php" method="POST">
                             <div class="mb-3">
-                                <label for="user" class="form-label">Usuario:</label>
-                                <input type="text" class="form-control" id="user" name="user" required placeholder="Ingresa tu usuario">
+                                <label for="email" class="form-label">Usuario:</label>
+                                <input type="text" class="form-control" id="email" name="email" required placeholder="Ingresa tu usuario">
                                 <div class="invalid-feedback">Por favor ingrese un usuario válido</div>
                             </div>
                             <div class="mb-3">
