@@ -136,7 +136,7 @@ $(document).ready(function () {
     });
   }
 
-  // Cargar registros desde JSON y mostrar en tabla
+  /* Cargar registros desde JSON y mostrar en tabla
   function loadRecords() {
     $.ajax({
       url: BASE_URL + "/assets/data/data.json",
@@ -199,12 +199,12 @@ $(document).ready(function () {
         renderTable(filtered);
       },
     });
-  });
+  });*/
 
   // Inicializar funciones
   handleMenuNavigation();
   handleSidebarNavigation();
   handleLogin();
   handleNumberButtonSelection();
-  loadRecords();
+  //loadRecords();
 });
