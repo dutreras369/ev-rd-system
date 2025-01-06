@@ -51,37 +51,68 @@ $(document).ready(function () {
     }
   }
 
-  // Manejar el formulario de inicio de sesión
   function handleLogin() {
     $("#loginForm").on("submit", function (event) {
       event.preventDefault();
+  
       const email = $("#email").val().trim();
       const password = $("#password").val().trim();
       $("#loginAlert").html("");
-
+  
+      // Validar campos vacíos
       if (email === "" || password === "") {
         $("#loginAlert").html(`
           <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              <strong>Error:</strong> Completa todos los campos.
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <strong>Error:</strong> Completa todos los campos.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         `);
         return;
       }
-
-      $("#loginAlert").html(`
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Éxito:</strong> Inicio de sesión exitoso. Redirigiendo al Dashboard...
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      `);
-
-      setTimeout(function () {
-        window.location.href = BASE_URL + "/dashboard/admin";
-      }, 2000);
+  
+      // Enviar datos al backend
+      $.ajax({
+        url: BASE_URL + "/controllers/AuthController.php",
+        type: "POST",
+        data: { email: email, password: password },
+        dataType: "json",
+        success: function (response) {
+          if (response.success) {
+            $("#loginAlert").html(`
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Éxito:</strong> Inicio de sesión exitoso. Redirigiendo al Dashboard...
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            `);
+  
+            // Redirigir según el rol
+            const role = response.role;
+            const redirectUrl = role === "admin" 
+              ? BASE_URL + "/public/dashboard/admin.php" 
+              : BASE_URL + "/public/dashboard/user.php";
+  
+            setTimeout(() => window.location.href = redirectUrl, 2000);
+          } else {
+            $("#loginAlert").html(`
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> ${response.error}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            `);
+          }
+        },
+        error: function () {
+          $("#loginAlert").html(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error:</strong> Ha ocurrido un problema al procesar la solicitud.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          `);
+        }
+      });
     });
   }
-
+  
   // Botones de acceso rápido para monto
   function handleNumberButtonSelection() {
     $(".quick-amount").on("click", function () {

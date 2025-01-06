@@ -1,5 +1,5 @@
 <main>
-    <section id="login" class="login py-5">
+    <section id="loginForm" class="login py-5">
         <div class="container">
             <div class="text-center mb-4">
                 <div class="icon-container rounded-circle mx-auto mb-4">
