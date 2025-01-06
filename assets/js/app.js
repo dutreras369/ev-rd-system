@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
   const BASE_URL = "<?php echo BASE_URL; ?>";
-  
+
   // Manejar la navegación del menú
   function handleMenuNavigation() {
     $(".menu-toggle").on("click", function () {
@@ -141,7 +141,7 @@ $(document).ready(function () {
   // Cargar registros desde JSON y mostrar en tabla
   function loadRecords() {
     $.ajax({
-      url: "assets/data/data.json",
+      url: BASE_URL + "/assets/data/data.json",
       type: "GET",
       dataType: "json",
       success: function (data) {
@@ -185,7 +185,7 @@ $(document).ready(function () {
     const filterStatus = $("#filter-status").val();
 
     $.ajax({
-      url: "assets/data/data.json",
+      url: BASE_URL + "/assets/data/data.json",
       type: "GET",
       dataType: "json",
       success: function (data) {
