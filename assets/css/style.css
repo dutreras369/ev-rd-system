@@ -11273,10 +11273,11 @@ a {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 #login .icon-container .icon-img {
-  width: 80%;
-  height: 80%;
+  width: 30%;
+  height: 30%;
   -o-object-fit: contain;
      object-fit: contain;
+  border-radius: 50%;
 }
 #login h2, #login .h2 {
   font-size: 2rem;

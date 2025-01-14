@@ -37,12 +37,12 @@
                         </a>
 
                         <!-- Botón de Salida -->
-                        <a class="btn d-flex align-items-center justify-content-center text-white" href="<?php echo BASE_URL; ?>/logout.php" title="Cerrar Sesión">
+                        <a class="btn d-flex align-items-center justify-content-center text-white" href="<?php echo BASE_URL; ?>/public/logout.php" title="Cerrar Sesión">
                             <i class="bi bi-box-arrow-right"></i>
                         </a>
                     <?php else: ?>
                         <!-- Enlace de Inicio de Sesión -->
-                        <a href="<?php echo BASE_URL; ?>/login.php" class="btn btn-primary">Iniciar Sesión</a>
+                        <a href="<?php echo BASE_URL; ?>/public/login.php" class="btn btn-primary">Iniciar Sesión</a>
                     <?php endif; ?>
                 </div>
 
