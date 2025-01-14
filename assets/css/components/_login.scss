@@ -2,8 +2,6 @@
     padding: 2rem 0;
 
     .icon-container {
-        width: 150px; // Tamaño del ícono circular
-        height: 150px;
         background-color: var(--bs-primary);
         overflow: hidden;
         display: flex;
@@ -13,7 +11,9 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 
         .icon-img {
-            object-fit: contain;
+            max-width: 100px; /* Ancho máximo */
+            max-height: 100px; /* Mantener la proporción */
+            border-radius: 50%; /* Ejemplo: Redondear bordes si lo necesitas */
         }
     }
 
