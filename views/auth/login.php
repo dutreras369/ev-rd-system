@@ -1,5 +1,5 @@
 <main>
-    <section id="loginForm" class="login py-5">
+    <section id="loginSection" class="login py-5">
         <div class="container">
             <div class="text-center mb-4">
                 <div class="icon-container rounded-circle mx-auto mb-4">
@@ -12,11 +12,11 @@
                     <!-- Sección para mostrar alertas -->
                     <div id="loginAlert"></div>
                     <div class="p-4 bg-light rounded shadow-lg">
-                        <form id="loginForm" class="needs-validation mt-4" novalidate action="controllers/AuthController.php" method="POST">
+                        <form id="loginForm" class="needs-validation mt-4" novalidate action="" method="POST">
                             <div class="mb-3">
-                                <label for="email" class="form-label">Usuario:</label>
-                                <input type="text" class="form-control" id="email" name="email" required placeholder="Ingresa tu usuario">
-                                <div class="invalid-feedback">Por favor ingrese un usuario válido</div>
+                                <label for="email" class="form-label">Correo Electrónico:</label>
+                                <input type="email" class="form-control" id="email" name="email" required placeholder="Ingresa tu correo electrónico">
+                                <div class="invalid-feedback">Por favor ingrese un correo electrónico válido</div>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Contraseña:</label>

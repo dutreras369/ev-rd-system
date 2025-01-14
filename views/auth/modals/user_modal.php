@@ -19,7 +19,6 @@
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
             </div>
-
         </div>
     </div>
 </div>

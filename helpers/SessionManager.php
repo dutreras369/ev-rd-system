@@ -31,6 +31,34 @@ class SessionManager {
             session_unset();
             session_destroy();
         }
+        setcookie(session_name(), '', time() - 3600, '/'); // Eliminar cookie de sesión
+    }
+
+    // Registrar inicio de sesión
+    public static function loginUser($userId, $roleId) {
+        self::startSession();
+
+        // Validar el rol basado en la relación en la base de datos
+        $roleName = self::getRoleName($roleId);
+        if (!$roleName) {
+            throw new Exception("Rol inválido para el usuario.");
+        }
+
+        self::set('user_id', $userId);
+        self::set('user_role', $roleName); // Almacenar el nombre del rol
+        self::set('login_time', date('Y-m-d H:i:s'));
+    }
+
+    // Obtener el nombre del rol basado en el ID del rol
+    private static function getRoleName($roleId) {
+        require_once __DIR__ . '/../config/config.php'; // Conexión a la base de datos
+
+        global $pdo;
+        $stmt = $pdo->prepare("SELECT nombre FROM roles WHERE id = :role_id");
+        $stmt->execute(['role_id' => $roleId]);
+        $role = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $role['nombre'] ?? null;
     }
 
     // Validar si el usuario está autenticado
@@ -46,14 +74,6 @@ class SessionManager {
     // Obtener el rol del usuario autenticado
     public static function getUserRole() {
         return self::get('user_role');
-    }
-
-    // Registrar inicio de sesión
-    public static function loginUser($userId, $role) {
-        self::startSession();
-        self::set('user_id', $userId);
-        self::set('user_role', $role);
-        self::set('login_time', date('Y-m-d H:i:s')); // Hora de inicio de sesión
     }
 
     // Registrar cierre de sesión
