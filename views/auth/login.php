@@ -2,8 +2,8 @@
     <section id="loginSection" class="login py-5">
         <div class="container">
             <div class="text-center mb-4">
-                <div class="icon-container rounded-circle mx-auto mb-4">
-                    <img src="<?php echo IMG_URL; ?>/user.png" alt="User Icono" class="icon-img">
+                <div class="icon-container mx-auto mb-4">
+                    <img src="<?php echo IMG_URL; ?>/logo.jpg" alt="User Icono" class="icon-img">
                 </div>
                 <h2 class="text-primary">Bienvenido/a</h2>
             </div>
