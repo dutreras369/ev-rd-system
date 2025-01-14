@@ -4,11 +4,12 @@ CREATE TABLE usuarios (
     username VARCHAR(50) NOT NULL UNIQUE, -- Nombre de usuario único
     email VARCHAR(100) UNIQUE, -- Correo electrónico único
     contrasena VARCHAR(255) NOT NULL, -- Contraseña encriptada
-    rol ENUM('user', 'admin') DEFAULT 'user', -- Rol del usuario
+    rol_id INT NOT NULL,
     hora_inicio TIME NULL, -- Hora de inicio permitida para usuarios
     hora_fin TIME NULL, -- Hora de fin permitida para usuarios
     estado ENUM('activo', 'inactivo') DEFAULT 'activo', -- Estado del usuario
-    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP -- Fecha de creación
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
+    FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE registros (
@@ -42,9 +43,23 @@ CREATE TABLE configuraciones (
 CREATE TABLE sesiones (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
-    token VARCHAR(255) NOT NULL UNIQUE, -- Token de sesión
+    rol_id INT NOT NULL, -- Relación con la tabla de roles
     ip_address VARCHAR(45) DEFAULT NULL,
-    inicio DATETIME DEFAULT CURRENT_TIMESTAMP,
-    expiracion DATETIME DEFAULT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    inicio DATETIME DEFAULT CURRENT_TIMESTAMP, -- Hora de inicio de la sesión
+    fin DATETIME DEFAULT NULL, -- Hora de fin de la sesión
+    token VARCHAR(255) NOT NULL UNIQUE, -- Token único para identificar la sesión
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE RESTRICT
 );
+
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE, -- Nombre único del rol (e.g., admin, user)
+    descripcion VARCHAR(255) DEFAULT NULL -- Descripción opcional
+);
+
+
+
+INSERT INTO roles (nombre, descripcion) VALUES
+('admin', 'Administrador del sistema con acceso completo'),
+('user', 'Usuario regular con acceso limitado a sus datos personales');

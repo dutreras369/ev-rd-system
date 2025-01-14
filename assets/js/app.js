@@ -58,6 +58,7 @@ $(document).ready(function () {
   
       const email = $("#email").val().trim();
       const password = $("#password").val().trim();
+
       $("#loginAlert").html("");
   
       // Validar campos vacíos
