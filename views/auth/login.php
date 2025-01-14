@@ -3,7 +3,7 @@
         <div class="container">
             <div class="text-center mb-4">
                 <div class="icon-container mx-auto mb-4">
-                    <img src="<?php echo IMG_URL; ?>/logo.jpg" alt="User Icono" class="icon-img">
+                    <img src="<?php echo IMG_URL; ?>/logo.jpg" alt="User Icono" class="icon-img w-30">
                 </div>
                 <h2 class="text-primary">Bienvenido/a</h2>
             </div>
