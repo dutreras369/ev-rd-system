@@ -2,6 +2,8 @@
     padding: 2rem 0;
 
     .icon-container {
+        width: 110px; // Tamaño del ícono circular
+        height: 110px;
         background-color: var(--bs-primary);
         overflow: hidden;
         display: flex;
