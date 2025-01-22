@@ -94,4 +94,19 @@ class UserService {
         $stmt->execute(['id' => $id]);
         return $stmt->rowCount();
     }
+
+    public function logEvent($accion, $usuarioId = null) {
+        $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'Desconocida';
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'Desconocido';
+    
+        $query = "INSERT INTO logs (accion, usuario_id, ip_address, user_agent) VALUES (:accion, :usuario_id, :ip_address, :user_agent)";
+        $stmt = $this->pdo->prepare($query);
+    
+        $stmt->execute([
+            ':accion' => $accion,
+            ':usuario_id' => $usuarioId,
+            ':ip_address' => $ipAddress,
+            ':user_agent' => $userAgent,
+        ]);
+    }    
 }
