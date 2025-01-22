@@ -1,4 +1,4 @@
-<div id="page" class="site">
+<div id="page" class="app">
     <div class="announcement-bar">
         <div class="container d-flex justify-content-between align-items-center">
             <?php if (SessionManager::isAuthenticated() && SessionManager::getUserRole() === 'admin'): ?>
