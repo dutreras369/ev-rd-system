@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
     $action = $_GET['action'];
-    require_once __DIR__ . '/controllers/AuthController.php';
+    require_once __DIR__ . '/../controllers/AuthController.php';
 
     $authController = new AuthController($pdo);
 
