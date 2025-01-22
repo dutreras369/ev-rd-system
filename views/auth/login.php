@@ -5,7 +5,7 @@
                 <div class="icon-container mx-auto mb-4">
                     <img src="<?php echo IMG_URL; ?>/logo.jpg" alt="User Icono" class="icon-img w-30">
                 </div>
-                <h2 class="text-primary">Bienvenido/a</h2>
+                <h2 class="text-primary">Bienvenido/a RD</h2>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6">
