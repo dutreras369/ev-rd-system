@@ -1,20 +1,26 @@
 <?php
 
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../services/LogService.php';
 
 class UserService
 {
     private $pdo;
+    private $logService;
 
     public function __construct()
     {
         $this->pdo = Database::getConnection();
+        $this->logService = new LogService(); // Inicializamos el servicio de logs
     }
 
     public function getAllUsers()
     {
         $stmt = $this->pdo->query("SELECT * FROM usuarios");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->logService->addLog("Consulta de todos los usuarios", null); // Log sin usuario específico
+
         return array_map(fn($data) => new User($data), $users);
     }
 
@@ -23,10 +29,18 @@ class UserService
         $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data) {
+            $this->logService->addLog("Consulta de usuario por ID: $id", $id);
+        } else {
+            $this->logService->addLog("Consulta de usuario fallida por ID: $id", $id);
+        }
+
         return $data ? new User($data) : null;
     }
 
-    public function getUserByEmail($email) {
+    public function getUserByEmail($email)
+    {
         $stmt = $this->pdo->prepare("
             SELECT * 
             FROM usuarios 
@@ -34,13 +48,16 @@ class UserService
         ");
         $stmt->execute(['email' => $email]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-        // Registrar log
-        Logger::info("Consulta de usuario por email: $email}");
-    
+
+        if ($data) {
+            $this->logService->addLog("Consulta de usuario por email: $email", $data['id']);
+        } else {
+            $this->logService->addLog("Consulta fallida para email: $email", null);
+        }
+
         return $data ? new User($data) : null;
     }
-    
+
     public function addUser(User $user)
     {
         $stmt = $this->pdo->prepare("
@@ -59,9 +76,7 @@ class UserService
         ]);
 
         $userId = $this->pdo->lastInsertId();
-
-        // Registrar log usando Logger
-        Logger::info("Usuario agregado: {$user->email} (ID: $userId)");
+        $this->logService->addLog("Usuario agregado: {$user->email} (ID: $userId)", $userId);
 
         return $userId;
     }
@@ -84,12 +99,13 @@ class UserService
             'estado' => $user->estado,
         ]);
 
-        Logger::info("Usuario Actualizado: {$user->email} (ID: $user->id)");
+        $this->logService->addLog("Usuario actualizado: {$user->email} (ID: {$user->id})", $user->id);
 
         return $stmt->rowCount();
     }
 
-    public function canLoginToday($userId) {
+    public function canLoginToday($userId)
+    {
         $stmt = $this->pdo->prepare("
             SELECT COUNT(*) 
             FROM registros 
@@ -98,38 +114,28 @@ class UserService
         ");
         $stmt->execute(['userId' => $userId]);
         $count = $stmt->fetchColumn();
-    
-        // Registrar log de verificación
-        Logger::info("Verificación de inicio de sesión para usuario ID: $userId");
-    
-        // Retorna true si no hay registros para hoy
+
+        $this->logService->addLog(
+            "Verificación de inicio de sesión para usuario ID: $userId (Puede iniciar sesión: " . ($count == 0 ? "Sí" : "No") . ")",
+            $userId
+        );
+
         return $count == 0;
     }
-    
-    public function deleteUser($id) {
-        $user = $this->getUserById($id); // Obtener información del usuario antes de eliminar
+
+    public function deleteUser($id)
+    {
+        $user = $this->getUserById($id);
+        if (!$user) {
+            $this->logService->addLog("Intento de eliminar usuario no encontrado (ID: $id)", $id);
+            return 0;
+        }
+
         $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :id");
         $stmt->execute(['id' => $id]);
-        
-        // Registrar log
-        Logger::info("Usuario eliminado: {$user->email}", $id);
-        
+
+        $this->logService->addLog("Usuario eliminado: {$user->email} (ID: $id)", $id);
+
         return $stmt->rowCount();
-    }
-
-    public function logEvent($accion, $usuarioId = null)
-    {
-        $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'Desconocida';
-        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'Desconocido';
-
-        $query = "INSERT INTO logs (accion, usuario_id, ip_address, user_agent) VALUES (:accion, :usuario_id, :ip_address, :user_agent)";
-        $stmt = $this->pdo->prepare($query);
-
-        $stmt->execute([
-            ':accion' => $accion,
-            ':usuario_id' => $usuarioId,
-            ':ip_address' => $ipAddress,
-            ':user_agent' => $userAgent,
-        ]);
     }
 }

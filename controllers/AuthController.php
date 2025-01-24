@@ -1,22 +1,28 @@
 <?php 
 
 require_once __DIR__ . '/../services/UserService.php';
+require_once __DIR__ . '/../services/LogService.php';
 require_once __DIR__ . '/../helpers/SessionManager.php';
 
 class AuthController {
     private $userService;
+    private $logService;
 
     public function __construct() {
-        $this->userService = new UserService(); // Inicializar correctamente UserService
+        $this->userService = new UserService(); // Inicializar UserService
+        $this->logService = new LogService();   // Inicializar LogService
     }
-    
+
     public function login($email, $password) {
         try {
             $user = $this->userService->getUserByEmail($email);
-    
+
             if ($user && password_verify($password, $user->contrasena)) {
                 SessionManager::loginUser($user->id, $user->rol);
-                Logger::info("Inicio de sesión exitoso para el usuario: $email");
+
+                // Registrar log del inicio de sesión exitoso
+                $this->logService->addLog("Inicio de sesión exitoso para el usuario: $email", $user->id);
+
                 return [
                     'success' => true,
                     'message' => 'Inicio de sesión exitoso',
@@ -25,15 +31,19 @@ class AuthController {
                         : '/dashboard/user.php',
                 ];
             }
-    
-            Logger::warning("Credenciales inválidas para el usuario: $email");
+
+            // Registrar log de intento fallido
+            $this->logService->addLog("Intento fallido de inicio de sesión para el usuario: $email", null);
+
             return [
                 'success' => false,
                 'error' => 'Credenciales inválidas.',
                 'error_details' => 'Usuario o contraseña incorrectos', // Detalles adicionales
             ];
         } catch (Exception $e) {
-            Logger::error("Error en el login: " . $e->getMessage());
+            // Registrar log de error del sistema
+            $this->logService->addLog("Error en el login: " . $e->getMessage(), null);
+
             return [
                 'success' => false,
                 'error' => 'Error en el sistema. Por favor, contacte al administrador.',
@@ -41,6 +51,4 @@ class AuthController {
             ];
         }
     }
-    
-    
 }
