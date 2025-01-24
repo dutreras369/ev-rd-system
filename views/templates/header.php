@@ -21,6 +21,4 @@
 
 <script>
     const BASE_URL = "<?php echo BASE_URL; ?>";
-
-    console.log(BASE_URL)
 </script>
