@@ -1,4 +1,6 @@
 <?php
+// Configuración de la base de datos
+require_once __DIR__ . '/config.php';
 
 class Database {
     // Instancia única de PDO
