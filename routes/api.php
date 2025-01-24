@@ -1,12 +1,11 @@
 <?php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../config/init.php'; // Carga las configuraciones necesarias
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
     $action = $_GET['action'];
-    
-    $authController = new AuthController();
+    require_once __DIR__ . '/../controllers/AuthController.php';
+
+    $authController = new AuthController($pdo);
 
     switch ($action) {
         case 'login':
