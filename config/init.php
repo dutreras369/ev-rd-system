@@ -24,7 +24,7 @@ try {
     $logService = new LogService();
 
     // Insertar un log de prueba en la base de datos
-    $logService->logEvent('Sistema inicializado correctamente.', null);
+    $logService->addLog('Sistema inicializado correctamente.', null);
 
     // Mensaje en la consola del servidor
     echo "Sistema inicializado y log insertado en la base de datos correctamente.";
@@ -33,14 +33,14 @@ try {
     $logService = isset($logService) ? $logService : null;
 
     if ($logService) {
-        $logService->logEvent('Error al conectar con la base de datos: ' . $e->getMessage(), null);
+        $logService->addLog('Error al conectar con la base de datos: ' . $e->getMessage(), null);
     }
 
     die("No se pudo establecer conexión con la base de datos. Verifica la configuración.");
 } catch (Exception $e) {
     // Manejar cualquier otro error durante la inicialización
     if (isset($logService)) {
-        $logService->logEvent('Error general en la inicialización: ' . $e->getMessage(), null);
+        $logService->addLog('Error general en la inicialización: ' . $e->getMessage(), null);
     }
 
     die("Ocurrió un error durante la inicialización del sistema.");
