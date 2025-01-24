@@ -27,10 +27,12 @@ class AuthController {
             }
     
             Logger::warning("Credenciales inválidas para el usuario: $email");
-            return ['success' => false, 'error' => 'Credenciales inválidas.'];
+            return ['success' => false, 'error' => 'Credenciales inválidas.', 'error_details' => 'Usuario o contraseña incorrectos'];
         } catch (Exception $e) {
             Logger::error("Error en el login: " . $e->getMessage());
-            return ['success' => false, 'error' => 'Error en el sistema.'];
+            return ['success' => false, 
+                    'error' => 'Error en el sistema.', 
+                    'error_details' => $e->getMessage()];
         }
     }
     
