@@ -3,8 +3,8 @@ session_start();
 
 // Verificar si el usuario ya inició sesión
 if (isset($_SESSION['user_id'])) {
-    // Redirigir al dashboard según el rol
-    if ($_SESSION['role'] === 'admin') {
+    // Redirigir al dashboard según el rol almacenado en la sesión
+    if ($_SESSION['user_role'] === 'admin') {
         header('Location: dashboard/admin.php');
     } else {
         header('Location: dashboard/user.php');

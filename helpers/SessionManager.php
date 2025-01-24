@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../config/Database.php';
+
 class SessionManager {
     // Iniciar sesión
     public static function startSession() {
@@ -51,14 +53,16 @@ class SessionManager {
 
     // Obtener el nombre del rol basado en el ID del rol
     private static function getRoleName($roleId) {
-        require_once __DIR__ . '/../config/config.php'; // Conexión a la base de datos
-
-        global $pdo;
-        $stmt = $pdo->prepare("SELECT nombre FROM roles WHERE id = :role_id");
-        $stmt->execute(['role_id' => $roleId]);
-        $role = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $role['nombre'] ?? null;
+        try {
+            $pdo = Database::getConnection(); // Usar la clase Database para la conexión
+            $stmt = $pdo->prepare("SELECT nombre FROM roles WHERE id = :role_id");
+            $stmt->execute(['role_id' => $roleId]);
+            $role = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $role['nombre'] ?? null;
+        } catch (PDOException $e) {
+            error_log("Error al obtener el nombre del rol: " . $e->getMessage());
+            return null;
+        }
     }
 
     // Validar si el usuario está autenticado

@@ -11,7 +11,7 @@ define('CSS_URL', ASSETS_URL . '/css');
 define('JS_URL', ASSETS_URL . '/js');
 
 // Ruta del directorio de logs
-define('LOG_DIR', '/var/log/rd-system');
+define('LOG_DIR', '/apps/logs/rd-system');
 
 // Información del sistema
 define('SYSTEM_NAME', 'EV-RD-System');
