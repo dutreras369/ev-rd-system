@@ -14,18 +14,17 @@ class Logger {
                 return;
             }
         }
-    
+
         $filePath = self::$logDir . '/' . self::$logFile;
         $timestamp = date('Y-m-d H:i:s');
         $formattedMessage = "[$timestamp][$level] $message" . PHP_EOL;
-    
+
         // Intentar escribir en el archivo
         if (file_put_contents($filePath, $formattedMessage, FILE_APPEND) === false) {
             error_log("No se pudo escribir en el archivo de logs: $filePath");
         }
     }
 
-    // Métodos de conveniencia para diferentes tipos de logs
     public static function info($message) {
         self::log($message, 'INFO');
     }
