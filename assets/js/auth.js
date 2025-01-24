@@ -52,30 +52,30 @@ $(document).ready(function () {
         },
         error: function (xhr, status, error) {
           console.error("Error en la solicitud:", {
-            status: status,
-            error: error,
-            response: xhr.responseText,
+              status: status,
+              error: error,
+              response: xhr.responseText,
           });
-
+      
           // Analizar la respuesta si es JSON
           let errorDetails = "Ha ocurrido un problema al procesar la solicitud.";
           try {
-            const response = JSON.parse(xhr.responseText);
-            if (response.error_details) {
-              errorDetails += `<br>Detalle: ${response.error_details}`;
-            }
+              const response = JSON.parse(xhr.responseText);
+              if (response.error_details) {
+                  errorDetails += `<br>Detalle: ${response.error_details}`;
+              }
           } catch (e) {
-            console.error("No se pudo parsear la respuesta:", xhr.responseText);
+              console.error("No se pudo parsear la respuesta:", xhr.responseText);
           }
-
+      
           $("#loginAlert").html(`
               <div class="alert alert-danger alert-dismissible fade show" role="alert">
                   <strong>Error:</strong> ${errorDetails}
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
           `);
-        },
-
+      },
+      
       });
     });
   }
