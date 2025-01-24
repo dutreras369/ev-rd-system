@@ -11,11 +11,6 @@ require_once __DIR__ . '/Database.php';
 // Servicio de Logs
 require_once __DIR__ . '/../services/LogService.php';
 
-// Inicializar sesión si no está activa
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 try {
     // Probar conexión a la base de datos
     $pdo = Database::getConnection();
