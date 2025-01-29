@@ -17,3 +17,9 @@ require_once __DIR__ . '/../helpers/SessionManager.php';
 $user_id = SessionManager::getAuthenticatedUserId();
 $user_role = SessionManager::getUserRole();
 $is_authenticated = SessionManager::isAuthenticated();
+
+?>
+
+<pre><?php echo $user_id; ?></pre>
+<pre><?php echo $user_role; ?></pre>
+<pre><?php echo $user_role; ?></pre>
