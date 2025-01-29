@@ -23,7 +23,7 @@
                         <i class="bi bi-person rounded-circle"></i>
                     </a>
                     <a id="logoutButton" class="text-white text-decoration-none" style="display: none;">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                        <i class="bi bi-box-arrow-right"></i>
                     </a>
                     <a href="<?php echo BASE_URL; ?>/public/login.php" class="btn btn-primary" id="loginButton">
                         Iniciar Sesión
