@@ -28,73 +28,80 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.success) {
-              const user = response.user;  // Definir correctamente la variable user
-      
-              localStorage.setItem("user_id", user.id);
-              localStorage.setItem("user_role", user.rol);  // Guardar nombre del rol
-              localStorage.setItem("login_time", new Date().toISOString());  // Guardar la fecha
-      
-              $("#loginAlert").html(`
+            const user = response.user;  // Definir correctamente la variable user
+
+            localStorage.setItem("user_id", user.id);
+            localStorage.setItem("user_role", user.rol);  // Guardar nombre del rol
+            localStorage.setItem("login_time", new Date().toISOString());  // Guardar la fecha
+
+            $("#loginAlert").html(`
                   <div class="alert alert-success alert-dismissible fade show" role="alert">
                       <strong>Éxito:</strong> Inicio de sesión exitoso. Redirigiendo al Dashboard...
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
               `);
-      
-              const redirectUrl = response.redirect_url;
-              setTimeout(() => window.location.href = redirectUrl, 2000);
+
+            const redirectUrl = response.redirect_url;
+            setTimeout(() => window.location.href = redirectUrl, 2000);
           } else {
-              $("#loginAlert").html(`
+            $("#loginAlert").html(`
                   <div class="alert alert-danger alert-dismissible fade show" role="alert">
                       <strong>Error:</strong> ${response.error}
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
               `);
           }
-      },      
+        },
         error: function (xhr, status, error) {
           console.error("Error en la solicitud:", {
-              status: status,
-              error: error,
-              response: xhr.responseText,
+            status: status,
+            error: error,
+            response: xhr.responseText,
           });
-      
+
           // Analizar la respuesta si es JSON
           let errorDetails = "Ha ocurrido un problema al procesar la solicitud.";
           try {
-              const response = JSON.parse(xhr.responseText);
-              if (response.error_details) {
-                  errorDetails += `<br>Detalle: ${response.error_details}`;
-              }
+            const response = JSON.parse(xhr.responseText);
+            if (response.error_details) {
+              errorDetails += `<br>Detalle: ${response.error_details}`;
+            }
           } catch (e) {
-              console.error("No se pudo parsear la respuesta:", xhr.responseText);
+            console.error("No se pudo parsear la respuesta:", xhr.responseText);
           }
-      
+
           $("#loginAlert").html(`
               <div class="alert alert-danger alert-dismissible fade show" role="alert">
                   <strong>Error:</strong> ${errorDetails}
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
           `);
-      },
-      
+        },
+
       });
     });
   }
 
 
-  // Verificar si el usuario ya está autenticado
+  // Verificar si el usuario ya está autenticado y evitar redirección infinita
   function checkExistingSession() {
     const userId = localStorage.getItem("user_id");
     const userRole = localStorage.getItem("user_role");
 
     if (userId && userRole) {
-      const redirectUrl =
-        userRole === "admin"
-          ? BASE_URL + "/public/dashboard/admin.php"
-          : BASE_URL + "/public/dashboard/user.php";
+      const currentPath = window.location.pathname;
 
-      window.location.href = redirectUrl;
+      const isAdminPage = currentPath.includes("/dashboard/admin.php");
+      const isUserPage = currentPath.includes("/dashboard/user.php");
+
+      const redirectUrl = userRole === "admin"
+        ? BASE_URL + "/public/dashboard/admin.php"
+        : BASE_URL + "/public/dashboard/user.php";
+
+      // Evitar redireccionar si ya está en la página correcta
+      if ((!isAdminPage && userRole === "admin") || (!isUserPage && userRole === "user")) {
+        window.location.href = redirectUrl;
+      }
     }
   }
 
@@ -104,12 +111,35 @@ $(document).ready(function () {
       localStorage.removeItem("user_id");
       localStorage.removeItem("user_role");
       localStorage.removeItem("login_time");
+
       window.location.href = BASE_URL + "/public/login.php";
+    });
+  }
+
+
+  // Sincronizar localStorage con $_SESSION
+  function syncSession() {
+    $.ajax({
+      url: BASE_URL + "/public/sync_session.php",
+      type: "GET",
+      dataType: "json",
+      success: function (response) {
+        if (response.is_authenticated) {
+          localStorage.setItem("user_id", response.user_id);
+          localStorage.setItem("user_role", response.user_role);
+        }
+      },
+      error: function () {
+        console.error("Error al sincronizar sesión");
+      }
     });
   }
 
   // Inicializar funciones
   checkExistingSession();
+  // Ejecutar sincronización al cargar
+  syncSession();
   handleLogin();
   handleLogout();
+
 });

@@ -1,5 +1,11 @@
 <?php require_once __DIR__ . '/../../config/init.php'; ?>
 
+<?php
+$user_id = SessionManager::getAuthenticatedUserId();
+$user_role = SessionManager::getUserRole();
+$is_authenticated = SessionManager::isAuthenticated();
+?>
+
 <!doctype html>
 <html lang="en">
 
