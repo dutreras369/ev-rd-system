@@ -61,15 +61,15 @@ class UserService
     public function addUser(User $user)
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO usuarios (nombre, username, email, contrasena, rol, hora_inicio, hora_fin, estado)
-            VALUES (:nombre, :username, :email, :contrasena, :rol, :hora_inicio, :hora_fin, :estado)
+            INSERT INTO usuarios (nombre, username, email, contrasena, rol_id, hora_inicio, hora_fin, estado)
+            VALUES (:nombre, :username, :email, :contrasena, :rol_id, :hora_inicio, :hora_fin, :estado)
         ");
         $stmt->execute([
             'nombre' => $user->nombre,
             'username' => $user->username,
             'email' => $user->email,
             'contrasena' => password_hash($user->contrasena, PASSWORD_BCRYPT),
-            'rol' => $user->rol,
+            'rol_id' => $user->rol_id,
             'hora_inicio' => $user->hora_inicio,
             'hora_fin' => $user->hora_fin,
             'estado' => $user->estado,
@@ -85,7 +85,7 @@ class UserService
     {
         $stmt = $this->pdo->prepare("
             UPDATE usuarios
-            SET nombre = :nombre, username = :username, email = :email, rol = :rol, hora_inicio = :hora_inicio, hora_fin = :hora_fin, estado = :estado
+            SET nombre = :nombre, username = :username, email = :email, rol_id = :rol_id, hora_inicio = :hora_inicio, hora_fin = :hora_fin, estado = :estado
             WHERE id = :id
         ");
         $stmt->execute([
@@ -93,7 +93,7 @@ class UserService
             'nombre' => $user->nombre,
             'username' => $user->username,
             'email' => $user->email,
-            'rol' => $user->rol,
+            'rol_id' => $user->rol_id,
             'hora_inicio' => $user->hora_inicio,
             'hora_fin' => $user->hora_fin,
             'estado' => $user->estado,

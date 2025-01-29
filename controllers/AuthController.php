@@ -18,7 +18,7 @@ class AuthController {
             $user = $this->userService->getUserByEmail($email);
 
             if ($user && password_verify($password, $user->contrasena)) {
-                SessionManager::loginUser($user->id, $user->rol);
+                SessionManager::loginUser($user->id, $user->rol_id);
 
                 // Registrar log del inicio de sesión exitoso
                 $this->logService->addLog("Inicio de sesión exitoso para el usuario: $email", $user->id);
@@ -26,7 +26,7 @@ class AuthController {
                 return [
                     'success' => true,
                     'message' => 'Inicio de sesión exitoso',
-                    'redirect_url' => $user->rol === 'admin' 
+                    'redirect_url' => $user->rol_id === 'admin' 
                         ? '/dashboard/admin.php' 
                         : '/dashboard/user.php',
                 ];

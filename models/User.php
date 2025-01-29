@@ -6,7 +6,7 @@ class User {
     public $username;
     public $email;
     public $contrasena; // Nueva propiedad para la contraseña
-    public $rol;
+    public $rol_id;
     public $hora_inicio;
     public $hora_fin;
     public $estado;
@@ -17,7 +17,7 @@ class User {
         $this->username = $data['username'] ?? '';
         $this->email = $data['email'] ?? '';
         $this->contrasena = $data['contrasena'] ?? null; // Inicializar contraseña (puede ser null para seguridad)
-        $this->rol = $data['rol'] ?? 'user';
+        $this->rol_id = $data['rol_id'] ?? 'user';
         $this->hora_inicio = $data['hora_inicio'] ?? null;
         $this->hora_fin = $data['hora_fin'] ?? null;
         $this->estado = $data['estado'] ?? 'activo';
