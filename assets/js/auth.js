@@ -105,7 +105,7 @@ $(document).ready(function () {
     }
   }
 
-  /*function updateUI() {
+  function updateUI() {
     const userId = localStorage.getItem("user_id");
     const userRole = localStorage.getItem("user_role");
 
@@ -122,7 +122,7 @@ $(document).ready(function () {
       $("#loginButton").show();
       $("#logoutButton, #userIcon, #menuUser, #menuAdmin, #sidebarToggle, #sidebarToggleMobile").hide();
     }
-  }*/
+  }
 
   function handleLogout() {
     $("#logoutButton").on("click", function () {
@@ -144,6 +144,8 @@ $(document).ready(function () {
         if (response.is_authenticated) {
           localStorage.setItem("user_id", response.user_id);
           localStorage.setItem("user_role", response.user_role);
+
+          console.log(response);
         }
       },
       error: function () {
@@ -156,7 +158,7 @@ $(document).ready(function () {
   // Inicializar funciones
   checkExistingSession();
   handleLogin();
-  // updateUI();
+  updateUI();
   handleLogout();
   syncSession();
 
