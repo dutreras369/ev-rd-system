@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../config/Database.php';
+
 class SessionManager {
     // Iniciar sesión
     public static function startSession() {
