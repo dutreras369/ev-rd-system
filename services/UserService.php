@@ -138,4 +138,11 @@ class UserService
 
         return $stmt->rowCount();
     }
+
+    public function getRoleName($roleId) {
+        $stmt = $this->pdo->prepare("SELECT nombre FROM roles WHERE id = :role_id");
+        $stmt->execute(['role_id' => $roleId]);
+        $role = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $role ? $role['nombre'] : 'Desconocido';
+    }    
 }

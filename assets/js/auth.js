@@ -28,28 +28,30 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.success) {
-            localStorage.setItem("user_id", response.user.id);
-            localStorage.setItem("user_role", response.user.rol);
-            localStorage.setItem("login_time", response.user.login_time);
-
-            $("#loginAlert").html(`
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-              <strong>Éxito:</strong> Inicio de sesión exitoso. Redirigiendo al Dashboard...
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          `);
-
-            const redirectUrl = response.redirect_url;
-            setTimeout(() => window.location.href = redirectUrl, 2000);
+              const user = response.user;  // Definir correctamente la variable user
+      
+              localStorage.setItem("user_id", user.id);
+              localStorage.setItem("user_role", user.rol);  // Guardar nombre del rol
+              localStorage.setItem("login_time", new Date().toISOString());  // Guardar la fecha
+      
+              $("#loginAlert").html(`
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <strong>Éxito:</strong> Inicio de sesión exitoso. Redirigiendo al Dashboard...
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              `);
+      
+              const redirectUrl = response.redirect_url;
+              setTimeout(() => window.location.href = redirectUrl, 2000);
           } else {
-            $("#loginAlert").html(`
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>Error:</strong> ${response.error}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          `);
+              $("#loginAlert").html(`
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <strong>Error:</strong> ${response.error}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              `);
           }
-        },
+      },      
         error: function (xhr, status, error) {
           console.error("Error en la solicitud:", {
               status: status,

@@ -16,39 +16,46 @@ class AuthController {
     public function login($email, $password) {
         try {
             $user = $this->userService->getUserByEmail($email);
-
+    
             if ($user && password_verify($password, $user->contrasena)) {
                 SessionManager::loginUser($user->id, $user->rol_id);
-
+    
                 // Registrar log del inicio de sesión exitoso
                 $this->logService->addLog("Inicio de sesión exitoso para el usuario: $email", $user->id);
-
+    
                 return [
                     'success' => true,
                     'message' => 'Inicio de sesión exitoso',
-                    'redirect_url' => $user->rol_id === 'admin' 
+                    'user' => [
+                        'id' => $user->id,
+                        'nombre' => $user->nombre,
+                        'email' => $user->email,
+                        'rol_id' => $user->rol_id,  // Agregar el ID del rol
+                        'rol' => $this->userService->getRoleName($user->rol_id), // Obtener el nombre del rol
+                    ],
+                    'redirect_url' => ($user->rol_id == 1) 
                         ? '/dashboard/admin.php' 
                         : '/dashboard/user.php',
                 ];
             }
-
+    
             // Registrar log de intento fallido
             $this->logService->addLog("Intento fallido de inicio de sesión para el usuario: $email", null);
-
+    
             return [
                 'success' => false,
                 'error' => 'Credenciales inválidas.',
-                'error_details' => 'Usuario o contraseña incorrectos', // Detalles adicionales
+                'error_details' => 'Usuario o contraseña incorrectos', 
             ];
         } catch (Exception $e) {
             // Registrar log de error del sistema
             $this->logService->addLog("Error en el login: " . $e->getMessage(), null);
-
+    
             return [
                 'success' => false,
                 'error' => 'Error en el sistema. Por favor, contacte al administrador.',
-                'error_details' => $e->getMessage(), // Solo para desarrollo
+                'error_details' => $e->getMessage(), 
             ];
         }
     }
-}
+}    
