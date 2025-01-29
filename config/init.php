@@ -14,11 +14,7 @@ require_once __DIR__ . '/../services/LogService.php';
 // Sesion Test
 require_once __DIR__ . '/../helpers/SessionManager.php';
 
-
 $user_id = SessionManager::getAuthenticatedUserId();
 $user_role = SessionManager::getUserRole();
 $is_authenticated = SessionManager::isAuthenticated();
 
-echo "<pre>User ID: " . ($user_id ?? 'No data') . "</pre>";
-echo "<pre>User Role: " . ($user_role ?? 'No data') . "</pre>";
-echo "<pre>Authenticated: " . ($is_authenticated ? 'Yes' : 'No') . "</pre>";

@@ -105,7 +105,7 @@ $(document).ready(function () {
     }
   }
 
-  function updateUI() {
+  /*function updateUI() {
     const userId = localStorage.getItem("user_id");
     const userRole = localStorage.getItem("user_role");
 
@@ -122,7 +122,7 @@ $(document).ready(function () {
       $("#loginButton").show();
       $("#logoutButton, #userIcon, #menuUser, #menuAdmin, #sidebarToggle, #sidebarToggleMobile").hide();
     }
-  }
+  }*/
 
   function handleLogout() {
     $("#logoutButton").on("click", function () {
@@ -134,7 +134,7 @@ $(document).ready(function () {
     });
   }
 
-  /* Sincronizar localStorage con $_SESSION
+  // Sincronizar localStorage con $_SESSION
   function syncSession() {
     $.ajax({
       url: BASE_URL + "/public/sync_session.php",
@@ -150,13 +150,14 @@ $(document).ready(function () {
         console.error("Error al sincronizar sesión");
       }
     });
-  } */
+  } 
 
 
   // Inicializar funciones
   checkExistingSession();
   handleLogin();
-  updateUI();
+  // updateUI();
   handleLogout();
+  syncSession();
 
 });
