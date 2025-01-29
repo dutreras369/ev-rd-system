@@ -1,5 +1,5 @@
 <?php 
-
+require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../services/UserService.php';
 require_once __DIR__ . '/../services/LogService.php';
 require_once __DIR__ . '/../helpers/SessionManager.php';
