@@ -22,7 +22,7 @@
                     <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#userInfoModal" title="Perfil de Usuario" id="userIcon" style="display: none;">
                         <i class="bi bi-person rounded-circle"></i>
                     </a>
-                    <a id="logoutButton" class="btn btn-danger text-white" style="display: none;">
+                    <a id="logoutButton" class="text-white text-decoration-none" style="display: none;">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </a>
                     <a href="<?php echo BASE_URL; ?>/public/login.php" class="btn btn-primary" id="loginButton">
