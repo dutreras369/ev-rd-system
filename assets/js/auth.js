@@ -135,11 +135,37 @@ $(document).ready(function () {
     });
   }
 
+  function updateNavbarButtons() {
+    const userId = localStorage.getItem("user_id");
+    const userRole = localStorage.getItem("user_role");
+
+    if (userId && userRole) {
+      // Si el usuario está autenticado
+      $("#loginButton").hide(); // Ocultar botón de inicio de sesión
+      $("#logoutButton").show(); // Mostrar botón de cerrar sesión
+
+      if (userRole === "admin") {
+        $(".sidebar-toggle").show(); // Mostrar botón del sidebar si es admin
+      } else {
+        $(".sidebar-toggle").hide(); // Ocultar si no es admin
+      }
+    } else {
+      // Si no hay sesión activa
+      $("#loginButton").show();  // Mostrar botón de inicio de sesión
+      $("#logoutButton").hide(); // Ocultar botón de cerrar sesión
+      $(".sidebar-toggle").hide(); // Ocultar el sidebar-toggle si no hay sesión
+    }
+  }
+
+
+
   // Inicializar funciones
   checkExistingSession();
   // Ejecutar sincronización al cargar
   syncSession();
   handleLogin();
   handleLogout();
+  // Ejecutar la función al cargar
+  updateNavbarButtons();
 
 });

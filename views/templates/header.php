@@ -19,7 +19,7 @@ $is_authenticated = SessionManager::isAuthenticated();
     <title><?php echo $title ?? 'RD-System'; ?></title>
 </head>
 
-<body>
+<body  data-user-role="<?php echo $user_role ?? 'guest'; ?>">
 
 <?php require_once __DIR__ . '/navbar.php'; ?>
 <?php require_once __DIR__ . '/sidebar.php'; ?>
