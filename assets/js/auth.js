@@ -137,24 +137,26 @@ $(document).ready(function () {
   // Sincronizar localStorage con $_SESSION
   function syncSession() {
     $.ajax({
-      url: BASE_URL + "/public/sync_session.php",
+      url: BASE_URL + "/routes/api.php?action=sessionStatus",
       type: "GET",
       dataType: "json",
       success: function (response) {
-        if (response.is_authenticated) {
+        if (response.success && response.is_authenticated) {
           localStorage.setItem("user_id", response.user_id);
           localStorage.setItem("user_role", response.user_role);
-
-          console.log(response);
+          console.log("Sesión sincronizada:", response);
+        } else {
+          console.warn("No hay sesión activa.");
+          localStorage.removeItem("user_id");
+          localStorage.removeItem("user_role");
         }
       },
-      error: function () {
-        console.error("Error al sincronizar sesión");
+      error: function (xhr, status, error) {
+        console.error("Error al sincronizar sesión:", xhr.responseText);
       }
     });
-  } 
-
-
+  }
+  
   // Inicializar funciones
   checkExistingSession();
   handleLogin();
