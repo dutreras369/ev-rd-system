@@ -139,6 +139,9 @@ $(document).ready(function () {
     const userId = localStorage.getItem("user_id");
     const userRole = localStorage.getItem("user_role");
 
+    console.log(userId)
+    console.log(userRole)
+
     if (userId && userRole) {
       // Si el usuario está autenticado
       $("#loginButton").hide(); // Ocultar botón de inicio de sesión
