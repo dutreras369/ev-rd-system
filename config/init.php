@@ -11,10 +11,9 @@ require_once __DIR__ . '/Database.php';
 // Servicio de Logs
 require_once __DIR__ . '/../services/LogService.php';
 
-session_start();
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
+// Sesion Test
+require_once __DIR__ . '/../helpers/SessionManager.php';
+
 
 $user_id = SessionManager::getAuthenticatedUserId();
 $user_role = SessionManager::getUserRole();
