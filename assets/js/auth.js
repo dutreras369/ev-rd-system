@@ -105,7 +105,25 @@ $(document).ready(function () {
     }
   }
 
-  // Manejar el cierre de sesión
+  function updateUI() {
+    const userId = localStorage.getItem("user_id");
+    const userRole = localStorage.getItem("user_role");
+
+    if (userId && userRole) {
+      $("#loginButton").hide();
+      $("#logoutButton, #userIcon").show();
+
+      if (userRole === "admin") {
+        $("#menuAdmin, #sidebarToggle, #sidebarToggleMobile").show();
+      } else if (userRole === "user") {
+        $("#menuUser").show();
+      }
+    } else {
+      $("#loginButton").show();
+      $("#logoutButton, #userIcon, #menuUser, #menuAdmin, #sidebarToggle, #sidebarToggleMobile").hide();
+    }
+  }
+
   function handleLogout() {
     $("#logoutButton").on("click", function () {
       localStorage.removeItem("user_id");
@@ -116,8 +134,7 @@ $(document).ready(function () {
     });
   }
 
-
-  // Sincronizar localStorage con $_SESSION
+  /* Sincronizar localStorage con $_SESSION
   function syncSession() {
     $.ajax({
       url: BASE_URL + "/public/sync_session.php",
@@ -133,42 +150,13 @@ $(document).ready(function () {
         console.error("Error al sincronizar sesión");
       }
     });
-  }
-
-  function updateNavbarButtons() {
-    const userId = localStorage.getItem("user_id");
-    const userRole = localStorage.getItem("user_role");
-
-    console.log(userId)
-    console.log(userRole)
-
-    if (userId && userRole) {
-      // Si el usuario está autenticado
-      $("#loginButton").hide(); // Ocultar botón de inicio de sesión
-      $("#logoutButton").show(); // Mostrar botón de cerrar sesión
-
-      if (userRole === "admin") {
-        $(".sidebar-toggle").show(); // Mostrar botón del sidebar si es admin
-      } else {
-        $(".sidebar-toggle").hide(); // Ocultar si no es admin
-      }
-    } else {
-      // Si no hay sesión activa
-      $("#loginButton").show();  // Mostrar botón de inicio de sesión
-      $("#logoutButton").hide(); // Ocultar botón de cerrar sesión
-      $(".sidebar-toggle").hide(); // Ocultar el sidebar-toggle si no hay sesión
-    }
-  }
-
+  } */
 
 
   // Inicializar funciones
   checkExistingSession();
-  // Ejecutar sincronización al cargar
-  syncSession();
   handleLogin();
+  updateUI();
   handleLogout();
-  // Ejecutar la función al cargar
-  updateNavbarButtons();
 
 });
