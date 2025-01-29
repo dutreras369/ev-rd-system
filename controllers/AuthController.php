@@ -21,7 +21,7 @@ class AuthController {
                 SessionManager::loginUser($user->id, $user->rol_id);
     
                 // Registrar log del inicio de sesión exitoso
-                $this->logService->addLog("Inicio de sesión exitoso para el usuario: $email", $user->id);
+                $this->logService->addLog("Inicio de sesion exitoso para el usuario: $email", $user->id);
     
                 return [
                     'success' => true,

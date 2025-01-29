@@ -1,6 +1,6 @@
 
 <?php
-$title = "Erroe";
+$title = "Error";
 
 require_once __DIR__ . '/../views/templates/header.php'; ?>
 

@@ -11,3 +11,9 @@ require_once __DIR__ . '/Database.php';
 // Servicio de Logs
 require_once __DIR__ . '/../services/LogService.php';
 
+// Sesion Manager
+require_once __DIR__ . '/../helpers/SessionManager.php';
+
+$user_id = SessionManager::getAuthenticatedUserId();
+$user_role = SessionManager::getUserRole();
+$is_authenticated = SessionManager::isAuthenticated();

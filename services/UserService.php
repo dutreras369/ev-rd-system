@@ -116,7 +116,7 @@ class UserService
         $count = $stmt->fetchColumn();
 
         $this->logService->addLog(
-            "Verificación de inicio de sesión para usuario ID: $userId (Puede iniciar sesión: " . ($count == 0 ? "Sí" : "No") . ")",
+            "Verificación de inicio de sesion para usuario ID: $userId (Puede iniciar sesion: " . ($count == 0 ? "Sí" : "No") . ")",
             $userId
         );
 
