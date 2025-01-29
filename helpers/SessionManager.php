@@ -68,22 +68,21 @@ class SessionManager {
             return null;
         }
     }
-
-    // Validar si el usuario está autenticado
+    
+    public static function getAuthenticatedUserId() {
+        self::startSession();
+        return $_SESSION['user_id'] ?? null;
+    }
+    
+    public static function getUserRole() {
+        self::startSession();
+        return $_SESSION['user_role'] ?? null;
+    }
+    
     public static function isAuthenticated() {
+        self::startSession();
         return isset($_SESSION['user_id']);
     }
-
-    // Obtener el ID del usuario autenticado
-    public static function getAuthenticatedUserId() {
-        return self::get('user_id');
-    }
-
-    // Obtener el rol del usuario autenticado
-    public static function getUserRole() {
-        return self::get('user_role');
-    }
-
     // Registrar cierre de sesión
     public static function logout() {
         self::destroy();
