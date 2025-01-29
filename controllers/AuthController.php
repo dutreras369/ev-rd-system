@@ -13,16 +13,19 @@ class AuthController {
         $this->logService = new LogService();   // Inicializar LogService
     }
 
+    /**
+     * Manejar el inicio de sesión de usuarios.
+     */
     public function login($email, $password) {
         try {
             $user = $this->userService->getUserByEmail($email);
     
             if ($user && password_verify($password, $user->contrasena)) {
                 SessionManager::loginUser($user->id, $user->rol_id);
-    
+
                 // Registrar log del inicio de sesión exitoso
-                $this->logService->addLog("Inicio de sesion exitoso para el usuario: $email", $user->id);
-    
+                $this->logService->addLog("Inicio de sesión exitoso para el usuario: $email", $user->id);
+
                 return [
                     'success' => true,
                     'message' => 'Inicio de sesión exitoso',
@@ -38,19 +41,19 @@ class AuthController {
                         : BASE_URL . '/public/dashboard/user.php',
                 ];
             }
-    
+
             // Registrar log de intento fallido
             $this->logService->addLog("Intento fallido de inicio de sesión para el usuario: $email", null);
-    
+
             return [
                 'success' => false,
                 'error' => 'Credenciales inválidas.',
-                'error_details' => 'Usuario o contrasena incorrectos', 
+                'error_details' => 'Usuario o contraseña incorrectos', 
             ];
         } catch (Exception $e) {
             // Registrar log de error del sistema
             $this->logService->addLog("Error en el login: " . $e->getMessage(), null);
-    
+
             return [
                 'success' => false,
                 'error' => 'Error en el sistema. Por favor, contacte al administrador.',
@@ -58,4 +61,16 @@ class AuthController {
             ];
         }
     }
-}    
+
+    /**
+     * Obtener el estado actual de la sesión del usuario.
+     */
+    public function sessionStatus() {
+        return [
+            'success' => true,
+            'is_authenticated' => SessionManager::isAuthenticated(),
+            'user_id' => SessionManager::getAuthenticatedUserId(),
+            'user_role' => SessionManager::getUserRole()
+        ];
+    }
+}
