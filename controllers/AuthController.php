@@ -34,8 +34,8 @@ class AuthController {
                         'rol' => $this->userService->getRoleName($user->rol_id), // Obtener el nombre del rol
                     ],
                     'redirect_url' => ($user->rol_id == 1) 
-                        ? BASE_URL . '/dashboard/admin.php' 
-                        : BASE_URL . '/dashboard/user.php',
+                        ? BASE_URL . '/public/dashboard/admin.php' 
+                        : BASE_URL . '/public/dashboard/user.php',
                 ];
             }
     
