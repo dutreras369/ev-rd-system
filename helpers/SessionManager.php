@@ -5,8 +5,12 @@ require_once __DIR__ . '/../config/Database.php';
 class SessionManager {
     // Iniciar sesión
     public static function startSession() {
-        if (session_status() === PHP_SESSION_NONE) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
+            if (session_status() !== PHP_SESSION_ACTIVE) {
+                error_log("Error al iniciar sesión en SessionManager");
+                die("Error crítico: No se pudo iniciar la sesión.");
+            }
         }
     }
 

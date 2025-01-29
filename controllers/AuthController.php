@@ -45,7 +45,7 @@ class AuthController {
             return [
                 'success' => false,
                 'error' => 'Credenciales inválidas.',
-                'error_details' => 'Usuario o contraseña incorrectos', 
+                'error_details' => 'Usuario o contrasena incorrectos', 
             ];
         } catch (Exception $e) {
             // Registrar log de error del sistema

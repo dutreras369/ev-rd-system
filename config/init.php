@@ -18,6 +18,11 @@ $user_id = SessionManager::getAuthenticatedUserId();
 $user_role = SessionManager::getUserRole();
 $is_authenticated = SessionManager::isAuthenticated();
 
+session_start();
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+
 ?>
 
 <pre><?php echo $user_id; ?></pre>
