@@ -134,7 +134,7 @@ $(document).ready(function () {
     });
   }
 
-  // Sincronizar localStorage con $_SESSION
+  /* Sincronizar localStorage con $_SESSION
   function syncSession() {
     $.ajax({
       url: BASE_URL + "/routes/api.php?action=sessionStatus",
@@ -155,13 +155,13 @@ $(document).ready(function () {
         console.error("Error al sincronizar sesión:", xhr.responseText);
       }
     });
-  }
+  }*/
   
   // Inicializar funciones
   checkExistingSession();
   handleLogin();
   updateUI();
   handleLogout();
-  syncSession();
+  // syncSession();
 
 });

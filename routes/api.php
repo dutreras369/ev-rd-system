@@ -1,6 +1,5 @@
 <?php
 header('Content-Type: application/json');
-session_start(); // Asegurar que la sesión está iniciada
 
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../controllers/AuthController.php';
