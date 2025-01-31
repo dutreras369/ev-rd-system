@@ -22,7 +22,7 @@ $(document).ready(function () {
 
       // Enviar datos al backend
       $.ajax({
-        url: BASE_URL + "/routes/api.php?action=login",
+        url: BASE_URL + "/routes/auth.php?action=login",
         type: "POST",
         data: { email: email, password: password },
         dataType: "json",
@@ -83,7 +83,6 @@ $(document).ready(function () {
     });
   }
 
-
   // Verificar si el usuario ya está autenticado y evitar redirección infinita
   function checkExistingSession() {
     const userId = localStorage.getItem("user_id");
@@ -131,7 +130,7 @@ $(document).ready(function () {
       const token = localStorage.getItem("token");
 
       $.ajax({
-        url: BASE_URL + "/routes/api.php?action=logout",
+        url: BASE_URL + "/routes/auth.php?action=logout",
         type: "POST",
         data: { user_id: userId, token: token },
         dataType: "json",
@@ -156,7 +155,7 @@ $(document).ready(function () {
   /* Sincronizar localStorage con $_SESSION
   function syncSession() {
     $.ajax({
-      url: BASE_URL + "/routes/api.php?action=sessionStatus",
+      url: BASE_URL + "/routes/auth.php?action=sessionStatus",
       type: "GET",
       dataType: "json",
       success: function (response) {
