@@ -16,51 +16,47 @@ class SessionManager
         }
     }
 
-    // Generar un token seguro para la sesión
-    private static function generateToken()
-    {
-        return bin2hex(random_bytes(32));
-    }
-
     // Establecer una variable de sesión
     public static function set($key, $value)
     {
-        self::startSession();
         $_SESSION[$key] = $value;
     }
 
     // Obtener una variable de sesión
     public static function get($key)
     {
-        self::startSession();
         return $_SESSION[$key] ?? null;
     }
 
     // Eliminar una variable de sesión
     public static function delete($key)
     {
-        self::startSession();
         if (isset($_SESSION[$key])) {
             unset($_SESSION[$key]);
         }
     }
 
-    // Destruir la sesión completa y eliminar el token
+    // Generar un token seguro para la sesión
+    private static function generateToken() {
+        return bin2hex(random_bytes(32));
+    }   
+
+    // Destruir la sesión completa
     public static function destroy()
     {
-        self::startSession();
-        self::invalidateToken(self::getAuthenticatedUserId());
-        session_unset();
-        session_destroy();
-        setcookie(session_name(), '', time() - 3600, '/');
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_unset();
+            session_destroy();
+        }
+        setcookie(session_name(), '', time() - 3600, '/'); // Eliminar cookie de sesión
     }
 
-    // Registrar inicio de sesión con token
+    // Registrar inicio de sesión
     public static function loginUser($userId, $roleId)
     {
         self::startSession();
 
-        // Obtener el nombre del rol
+        // Validar el rol basado en la relación en la base de datos
         $roleName = self::getRoleName($roleId);
         if (!$roleName) {
             throw new Exception("Rol inválido para el usuario.");
@@ -72,15 +68,14 @@ class SessionManager
         $login_time = date('Y-m-d H:i:s');
 
         self::set('user_id', $userId);
-        self::set('user_role', $roleName);
-        self::set('role_id', $roleId);
+        self::set('user_role', $roleName); // Almacenar el nombre del rol
         self::set('login_time', $login_time);
         self::set('token', $token);
 
         // Guardar en la base de datos
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("INSERT INTO sesiones (usuario_id, rol_id, ip_address, inicio, token) 
-                           VALUES (:user_id, :role_id, :ip, NOW(), :token)");
+                             VALUES (:user_id, :role_id, :ip, NOW(), :token)");
         $stmt->execute([
             ':user_id' => $userId,
             ':role_id' => $roleId,
@@ -90,12 +85,11 @@ class SessionManager
         ]);
     }
 
-
-    // Obtener nombre del rol basado en ID
+    // Obtener el nombre del rol basado en el ID del rol
     private static function getRoleName($roleId)
     {
         try {
-            $pdo = Database::getConnection();
+            $pdo = Database::getConnection(); // Usar la clase Database para la conexión
             $stmt = $pdo->prepare("SELECT nombre FROM roles WHERE id = :role_id");
             $stmt->execute(['role_id' => $roleId]);
             $role = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -103,6 +97,60 @@ class SessionManager
         } catch (PDOException $e) {
             error_log("Error al obtener el nombre del rol: " . $e->getMessage());
             return null;
+        }
+    }
+
+    public static function getAuthenticatedUserId()
+    {
+        self::startSession();
+        return $_SESSION['user_id'] ?? null;
+    }
+
+    public static function getUserRole()
+    {
+        self::startSession();
+        return $_SESSION['user_role'] ?? null;
+    }
+
+    public static function isAuthenticated()
+    {
+        self::startSession();
+        return isset($_SESSION['user_id']);
+    }
+
+    // Obtener el token de sesión
+    public static function getToken()
+    {
+        return isset($_SESSION['token']);
+    }
+
+    // Verificar si el usuario es administrador
+    public static function isAdmin()
+    {
+        return self::getUserRole() === 'admin';
+    }
+
+    // Verificar si el usuario es regular (rol 'user')
+    public static function isUser()
+    {
+        return self::getUserRole() === 'user';
+    }
+
+    // Validar la sesión y redirigir si no está autenticado
+    public static function requireAuthentication($redirectUrl = '/login.php')
+    {
+        if (!self::isAuthenticated()) {
+            header("Location: $redirectUrl");
+            exit;
+        }
+    }
+
+    // Validar el rol del usuario y redirigir según corresponda
+    public static function requireRole($requiredRole, $redirectUrl = '/unauthorized.php')
+    {
+        if (self::getUserRole() !== $requiredRole) {
+            header("Location: $redirectUrl");
+            exit;
         }
     }
 
@@ -121,59 +169,6 @@ class SessionManager
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("DELETE FROM sesiones WHERE usuario_id = :user_id");
         $stmt->execute([':user_id' => $userId]);
-    }
-
-    // Obtener ID del usuario autenticado
-    public static function getAuthenticatedUserId() {
-        self::startSession();
-        return isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
-    }
-
-    // Obtener el rol del usuario autenticado
-    public static function getUserRole() {
-        self::startSession();
-        return isset($_SESSION['user_role']) ? $_SESSION['user_role'] : null;
-    }
-
-    // Verificar si el usuario está autenticado
-    public static function isAuthenticated() {
-        self::startSession();
-        return !empty($_SESSION['user_id']);
-    }
-    // Obtener el token de sesión
-    public static function getToken()
-    {
-        return isset($_SESSION['token']) ? $_SESSION['token'] : null;
-
-    }
-    // Verificar si el usuario es administrador
-    public static function isAdmin()
-    {
-        return self::getUserRole() === 'admin';
-    }
-
-    // Verificar si el usuario es regular
-    public static function isUser()
-    {
-        return self::getUserRole() === 'user';
-    }
-
-    // Validar sesión y redirigir si no está autenticado
-    public static function requireAuthentication($redirectUrl = '/login.php')
-    {
-        if (!self::isAuthenticated()) {
-            header("Location: $redirectUrl");
-            exit;
-        }
-    }
-
-    // Validar el rol del usuario y redirigir si no tiene permisos
-    public static function requireRole($requiredRole, $redirectUrl = '/unauthorized.php')
-    {
-        if (self::getUserRole() !== $requiredRole) {
-            header("Location: $redirectUrl");
-            exit;
-        }
     }
 
     // Cerrar sesión en la BD
