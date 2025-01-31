@@ -34,8 +34,7 @@ class AuthController {
                         'nombre' => $user->nombre,
                         'email' => $user->email,
                         'rol_id' => $user->rol_id,  // Agregar el ID del rol
-                        'rol' => $this->userService->getRoleName($user->rol_id), // Obtener el nombre del rol
-                        'token' => SessionManager::getToken(),
+                        'rol' => $this->userService->getRoleName($user->rol_id), // Obtener el nombre del rolz
                     ],
                     'redirect_url' => ($user->rol_id == 1) 
                         ? BASE_URL . '/public/dashboard/admin.php' 
@@ -74,7 +73,6 @@ class AuthController {
             'user_role' => SessionManager::getUserRole()
         ];
     }
-
     /*
     public function logout($userId, $loginTime) {
         try {
@@ -99,14 +97,15 @@ class AuthController {
         } catch (Exception $e) {
             return ['success' => false, 'error' => 'Error en el sistema.', 'error_details' => $e->getMessage()];
         }
-    }*/
+    } */
+
 
     public function logout($userId) {
-        $pdo = Database::getConnection();
+        /*$pdo = Database::getConnection();
         
         // Eliminar la sesión en la BD
         $stmt = $pdo->prepare("DELETE FROM sesiones WHERE usuario_id = :user_id");
-        $stmt->execute(['user_id' => $userId]);
+        $stmt->execute(['user_id' => $userId]);*/
     
         // Destruir la sesión en PHP
         SessionManager::logout();
