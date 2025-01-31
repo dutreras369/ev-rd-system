@@ -32,7 +32,8 @@ $(document).ready(function () {
 
             localStorage.setItem("user_id", user.id);
             localStorage.setItem("user_role", user.rol);  // Guardar nombre del rol
-            localStorage.setItem("login_time", new Date().toISOString());  // Guardar la fecha
+            localStorage.setItem("login_time", user.login_time);
+            localStorage.setItem("token", user.token);
 
             $("#loginAlert").html(`
                   <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -126,11 +127,26 @@ $(document).ready(function () {
 
   function handleLogout() {
     $("#logoutButton").on("click", function () {
-      localStorage.removeItem("user_id");
-      localStorage.removeItem("user_role");
-      localStorage.removeItem("login_time");
+      const userId = localStorage.getItem("user_id");
+      const token = localStorage.getItem("token");
 
-      window.location.href = BASE_URL + "/public/login.php";
+      $.ajax({
+        url: BASE_URL + "/routes/api.php?action=logout",
+        type: "POST",
+        data: { user_id: userId, token: token },
+        dataType: "json",
+        success: function (response) {
+          if (response.success) {
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_role");
+            localStorage.removeItem("token");
+            window.location.href = BASE_URL + "/public/login.php";
+          }
+        },
+        error: function () {
+          console.error("Error al cerrar sesión.");
+        }
+      });
     });
   }
 
@@ -156,7 +172,7 @@ $(document).ready(function () {
       }
     });
   }*/
-  
+
   // Inicializar funciones
   checkExistingSession();
   handleLogin();

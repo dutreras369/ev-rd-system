@@ -45,6 +45,23 @@ switch ($action) {
         }
         break;
 
+    case 'logout':
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'error' => 'Método HTTP no permitido.']);
+            exit;
+        }
+    
+        $userId = $_POST['user_id'] ?? null;
+        $loginTime = $_POST['login_time'] ?? null;
+    
+        if ($userId && $loginTime) {
+            $response = $authController->logout($userId, $loginTime);
+        } else {
+            $response = ['success' => false, 'error' => 'Faltan datos.'];
+        }
+        break;
+
     default:
         http_response_code(400);
         $response = ['success' => false, 'error' => 'Acción no válida.'];

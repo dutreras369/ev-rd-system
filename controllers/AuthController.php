@@ -35,6 +35,7 @@ class AuthController {
                         'email' => $user->email,
                         'rol_id' => $user->rol_id,  // Agregar el ID del rol
                         'rol' => $this->userService->getRoleName($user->rol_id), // Obtener el nombre del rol
+                        'token' => SessionManager::getToken(),
                     ],
                     'redirect_url' => ($user->rol_id == 1) 
                         ? BASE_URL . '/public/dashboard/admin.php' 
@@ -73,4 +74,30 @@ class AuthController {
             'user_role' => SessionManager::getUserRole()
         ];
     }
+
+    public function logout($userId, $loginTime) {
+        try {
+            $schedule = $this->userService->getUserSchedule($userId);
+    
+            if (!$schedule) {
+                return ['success' => false, 'error' => 'Usuario no encontrado.'];
+            }
+    
+            $currentTime = date('H:i:s');
+            $hora_fin = $schedule['hora_fin'];
+    
+            // Si el usuario está dentro del horario de salida, permitir logout normal
+            if ($currentTime < $hora_fin) {
+                SessionManager::logout();
+                return ['success' => true, 'message' => 'Sesión cerrada correctamente.'];
+            }
+    
+            // Si el usuario está fuera del horario, invalidar la sesión
+            SessionManager::invalidateToken($userId);
+            return ['success' => true, 'message' => 'Sesión cerrada fuera del horario permitido.'];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => 'Error en el sistema.', 'error_details' => $e->getMessage()];
+        }
+    }
+    
 }

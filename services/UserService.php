@@ -145,4 +145,14 @@ class UserService
         $role = $stmt->fetch(PDO::FETCH_ASSOC);
         return $role ? $role['nombre'] : 'Desconocido';
     }    
+
+    public function getUserSchedule($userId) {
+        $stmt = $this->pdo->prepare("
+            SELECT hora_inicio, hora_fin 
+            FROM usuarios 
+            WHERE id = :user_id
+        ");
+        $stmt->execute(['user_id' => $userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
