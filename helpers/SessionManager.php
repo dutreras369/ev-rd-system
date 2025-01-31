@@ -124,29 +124,28 @@ class SessionManager
     }
 
     // Obtener ID del usuario autenticado
-    public static function getAuthenticatedUserId()
-    {
-        return self::get('user_id');
+    public static function getAuthenticatedUserId() {
+        self::startSession();
+        return isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
     }
 
     // Obtener el rol del usuario autenticado
-    public static function getUserRole()
-    {
-        return self::get('user_role');
-    }
-
-    // Obtener el token de sesión
-    public static function getToken()
-    {
-        return self::get('token');
+    public static function getUserRole() {
+        self::startSession();
+        return isset($_SESSION['user_role']) ? $_SESSION['user_role'] : null;
     }
 
     // Verificar si el usuario está autenticado
-    public static function isAuthenticated()
-    {
-        return isset($_SESSION['user_id']);
+    public static function isAuthenticated() {
+        self::startSession();
+        return !empty($_SESSION['user_id']);
     }
+    // Obtener el token de sesión
+    public static function getToken()
+    {
+        return isset($_SESSION['token']) ? $_SESSION['token'] : null;
 
+    }
     // Verificar si el usuario es administrador
     public static function isAdmin()
     {
