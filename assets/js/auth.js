@@ -32,7 +32,7 @@ $(document).ready(function () {
 
             localStorage.setItem("user_id", user.id);
             localStorage.setItem("user_role", user.rol);  // Guardar nombre del rol
-            localStorage.setItem("login_time", user.login_time);
+            localStorage.setItem("login_time", new Date().toISOString());  // Guardar la fecha
             localStorage.setItem("token", user.token);
 
             $("#loginAlert").html(`
@@ -140,6 +140,8 @@ $(document).ready(function () {
             localStorage.removeItem("user_id");
             localStorage.removeItem("user_role");
             localStorage.removeItem("token");
+            localStorage.removeItem("login_time");
+
             window.location.href = BASE_URL + "/public/login.php";
           }
         },

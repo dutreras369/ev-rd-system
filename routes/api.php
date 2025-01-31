@@ -53,10 +53,9 @@ switch ($action) {
         }
     
         $userId = $_POST['user_id'] ?? null;
-        $loginTime = $_POST['login_time'] ?? null;
     
         if ($userId && $loginTime) {
-            $response = $authController->logout($userId, $loginTime);
+            $response = $authController->logout($userId);
         } else {
             $response = ['success' => false, 'error' => 'Faltan datos.'];
         }
