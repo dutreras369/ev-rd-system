@@ -35,6 +35,8 @@ class AuthController {
                         'email' => $user->email,
                         'rol_id' => $user->rol_id,  // Agregar el ID del rol
                         'rol' => $this->userService->getRoleName($user->rol_id), // Obtener el nombre del rolz
+                        'token' => SessionManager::getToken()
+
                     ],
                     'redirect_url' => ($user->rol_id == 1) 
                         ? BASE_URL . '/public/dashboard/admin.php' 

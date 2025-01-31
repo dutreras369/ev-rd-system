@@ -147,6 +147,11 @@ class SessionManager
         }
     }
 
+    public static function getToken() { 
+        self::startSession();
+        return isset($_SESSION['token']);
+    }
+
     // Registrar cierre de sesión
     public static function logout()
     {
