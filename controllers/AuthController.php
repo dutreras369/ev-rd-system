@@ -19,12 +19,12 @@ class AuthController {
     public function login($email, $password) {
         try {
             $user = $this->userService->getUserByEmail($email);
-    
+
             if ($user && password_verify($password, $user->contrasena)) {
                 SessionManager::loginUser($user->id, $user->rol_id);
 
-                // Registrar log del inicio de sesión exitoso
-                $this->logService->addLog("Inicio de sesión exitoso para el usuario: $email", $user->id);
+                // Log de inicio de sesión
+                $this->logService->addLog("Inicio de sesión exitoso para: $email", $user->id);
 
                 return [
                     'success' => true,
@@ -33,8 +33,8 @@ class AuthController {
                         'id' => $user->id,
                         'nombre' => $user->nombre,
                         'email' => $user->email,
-                        'rol_id' => $user->rol_id,  // Agregar el ID del rol
-                        'rol' => $this->userService->getRoleName($user->rol_id), // Obtener el nombre del rol
+                        'rol_id' => $user->rol_id,
+                        'rol' => $this->userService->getRoleName($user->rol_id),
                         'token' => SessionManager::getToken(),
                     ],
                     'redirect_url' => ($user->rol_id == 1) 
@@ -43,23 +43,13 @@ class AuthController {
                 ];
             }
 
-            // Registrar log de intento fallido
-            $this->logService->addLog("Intento fallido de inicio de sesión para el usuario: $email", null);
+            // Log de intento fallido
+            $this->logService->addLog("Intento fallido de login para: $email", null);
 
-            return [
-                'success' => false,
-                'error' => 'Credenciales inválidas.',
-                'error_details' => 'Usuario o contraseña incorrectos', 
-            ];
+            return ['success' => false, 'error' => 'Credenciales inválidas.'];
         } catch (Exception $e) {
-            // Registrar log de error del sistema
-            $this->logService->addLog("Error en el login: " . $e->getMessage(), null);
-
-            return [
-                'success' => false,
-                'error' => 'Error en el sistema. Por favor, contacte al administrador.',
-                'error_details' => $e->getMessage(), 
-            ];
+            $this->logService->addLog("Error en login: " . $e->getMessage(), null);
+            return ['success' => false, 'error' => 'Error en el sistema.'];
         }
     }
 
@@ -75,6 +65,7 @@ class AuthController {
         ];
     }
 
+    /*
     public function logout($userId, $loginTime) {
         try {
             $schedule = $this->userService->getUserSchedule($userId);
@@ -99,5 +90,10 @@ class AuthController {
             return ['success' => false, 'error' => 'Error en el sistema.', 'error_details' => $e->getMessage()];
         }
     }
-    
+    */
+
+    public function logout($userId) {
+        SessionManager::logout();
+        return ['success' => true, 'message' => 'Sesión cerrada correctamente.'];
+    }
 }

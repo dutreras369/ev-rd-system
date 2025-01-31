@@ -69,11 +69,12 @@ class SessionManager
         // Generar token único
         $token = self::generateToken();
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'Desconocida';
+        $login_time = date('Y-m-d H:i:s');
 
         self::set('user_id', $userId);
         self::set('user_role', $roleName);
         self::set('role_id', $roleId);
-        self::set('login_time', date('Y-m-d H:i:s'));
+        self::set('login_time', $login_time);
         self::set('token', $token);
 
         // Guardar en la base de datos
@@ -84,7 +85,8 @@ class SessionManager
             ':user_id' => $userId,
             ':role_id' => $roleId,
             ':ip' => $ip,
-            ':token' => $token
+            ':token' => $token,
+            ':login_time' => $login_time
         ]);
     }
 

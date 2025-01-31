@@ -150,6 +150,7 @@ $(document).ready(function () {
     });
   }
 
+
   /* Sincronizar localStorage con $_SESSION
   function syncSession() {
     $.ajax({
