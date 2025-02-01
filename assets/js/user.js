@@ -2,24 +2,24 @@ $(document).ready(function () {
     function loadUserInfo() {
         const userId = localStorage.getItem("user_id");
         const token = localStorage.getItem("token");
-
+    
+        console.log("Petición a getUser - userId:", userId, "token:", token);
+    
         if (!userId || !token) {
-            console.error("⚠️ No hay usuario autenticado o falta el token en localStorage.");
+            console.error("No hay usuario autenticado o falta el token en localStorage.");
             return;
         }
-
-        console.log(`ℹ️ Enviando solicitud con user_id=${userId} y token=${token}`);
-
+    
         $.ajax({
             url: `${BASE_URL}/routes/user.php?action=getUser`,
-            type: "POST",
+            type: "POST", // Cambiamos a POST
             dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({
+            data: {
                 user_id: userId,
                 token: token
-            }),
+            },
             success: function(response) {
+                console.log("Respuesta de getUser:", response);
                 if (response.success) {
                     $("#userName").text(response.user.nombre);
                     $("#userEmail").text(response.user.email);
@@ -30,11 +30,11 @@ $(document).ready(function () {
                 }
             },
             error: function(xhr) {
-                console.error("Error en la solicitud:", xhr.responseText);
+                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
             }
         });
-        
     }
+    
 
     // Ejecutar la función al abrir el modal
     $("#userInfoModal").on("show.bs.modal", function() {
