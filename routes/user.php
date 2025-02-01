@@ -15,12 +15,6 @@ switch ($method) {
             echo json_encode($userController->listUsers());
         } elseif ($action === 'show' && isset($_GET['id'])) {
             echo json_encode($userController->showUser($_GET['id']));
-        } elseif ($action === 'getUser' && isset($_GET['user_id']) && isset($_GET['token'])) {
-            $userId = $_GET['user_id'];
-            $token = $_GET['token'];
-
-            $response = $userController->getUser($userId, $token);
-            echo json_encode($response);
         } else {
             http_response_code(400);
             echo json_encode(['success' => false, 'error' => 'Acción no válida']);
@@ -31,7 +25,16 @@ switch ($method) {
         if ($action === 'create') {
             $data = json_decode(file_get_contents("php://input"), true);
             echo json_encode($userController->createUser($data));
-        } else {
+        } 
+        elseif ($action === 'getUser') {
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (isset($data['user_id']) && isset($data['token'])) {
+                echo json_encode($userController->getUser($data['user_id'], $data['token']));
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Datos insuficientes']);
+            }
+        }
+        else {
             http_response_code(400);
             echo json_encode(['success' => false, 'error' => 'Acción no válida']);
         }

@@ -11,24 +11,29 @@ $(document).ready(function () {
         console.log(`ℹ️ Enviando solicitud con user_id=${userId} y token=${token}`);
 
         $.ajax({
-            url: `${BASE_URL}/routes/user.php?action=getUser&user_id=${encodeURIComponent(userId)}&token=${encodeURIComponent(token)}`,
-            type: "GET",
+            url: `${BASE_URL}/routes/user.php?action=getUser`,
+            type: "POST",
             dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({
+                user_id: userId,
+                token: token
+            }),
             success: function(response) {
                 if (response.success) {
-                    console.log("✅ Usuario encontrado:", response.user);
                     $("#userName").text(response.user.nombre);
                     $("#userEmail").text(response.user.email);
                     $("#userRole").text(response.user.rol);
                     $("#userHoursIn").text(response.user.hora_inicio);
                 } else {
-                    console.error("❌ Error al obtener usuario:", response.error);
+                    console.error("Error al obtener usuario:", response.error);
                 }
             },
             error: function(xhr) {
-                console.error("❌ Error en la solicitud:", xhr.responseText);
+                console.error("Error en la solicitud:", xhr.responseText);
             }
         });
+        
     }
 
     // Ejecutar la función al abrir el modal
