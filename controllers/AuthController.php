@@ -79,51 +79,12 @@ class AuthController
             'user_role' => SessionManager::getUserRole()
         ];
     }
-    /*
-    public function logout($userId, $loginTime) {
-        try {
-            $schedule = $this->userService->getUserSchedule($userId);
-    
-            if (!$schedule) {
-                return ['success' => false, 'error' => 'Usuario no encontrado.'];
-            }
-    
-            $currentTime = date('H:i:s');
-            $hora_fin = $schedule['hora_fin'];
-    
-            // Si el usuario está dentro del horario de salida, permitir logout normal
-            if ($currentTime < $hora_fin) {
-                SessionManager::logout();
-                return ['success' => true, 'message' => 'Sesión cerrada correctamente.'];
-            }
-    
-            // Si el usuario está fuera del horario, invalidar la sesión
-            SessionManager::invalidateToken($userId);
-            return ['success' => true, 'message' => 'Sesión cerrada fuera del horario permitido.'];
-        } catch (Exception $e) {
-            return ['success' => false, 'error' => 'Error en el sistema.', 'error_details' => $e->getMessage()];
-        }
-    } */
-
-
+    /**
+     * Cerrar Sesion
+     */
     public function logout($userId, $token)
     {
-        $pdo = Database::getConnection();
-
-        // Marcar la hora de finalización en la sesión
-        $stmt = $pdo->prepare("UPDATE sesiones SET fin = NOW() WHERE usuario_id = :user_id AND token = :token AND fin IS NULL");
-        $stmt->execute([
-            ':user_id' => $userId,
-            ':token' => $token
-        ]);
-
-        // Verificar si la actualización fue exitosa
-        if ($stmt->rowCount() > 0) {
-            // Destruir la sesión en PHP
-            SessionManager::logout();
-            return ['success' => true, 'message' => 'Sesión cerrada correctamente.'];
-        } else {
-            return ['success' => false, 'error' => 'No se encontró una sesión activa para cerrar.'];
-        }
+        $response = SessionManager::logout($userId, $token);
+        return $response;
     }
 }

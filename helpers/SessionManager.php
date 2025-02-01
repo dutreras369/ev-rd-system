@@ -147,29 +147,55 @@ class SessionManager
         }
     }
 
-    public static function getToken() { 
+    public static function getToken()
+    {
         self::startSession();
         return $_SESSION['token'] ?? null;
     }
 
-    // Registrar cierre de sesión
-    public static function logout()
+    // Registrar cierre de sesión con respuesta
+    public static function logout($userId, $token)
     {
         self::startSession();
-        $userId = self::getAuthenticatedUserId();
-        if ($userId) {
-            self::closeSessionInDB($userId);
+
+        if ($userId && $token) {
+            $success = self::closeSessionInDB($userId, $token);
+
+            if ($success) {
+                session_unset();
+                session_destroy();
+                setcookie(session_name(), '', time() - 3600, '/');
+
+                return [
+                    'success' => true,
+                    'message' => 'Sesión cerrada correctamente.'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'error' => 'No se encontró una sesión activa para cerrar.'
+                ];
+            }
         }
-        session_unset();
-        session_destroy();
-        setcookie(session_name(), '', time() - 3600, '/');
+
+        return [
+            'success' => false,
+            'error' => 'Datos inválidos para cerrar sesión.'
+        ];
     }
 
-    // Cerrar sesión en la BD
-    private static function closeSessionInDB($userId)
+    // Cerrar sesión en la BD y devolver el resultado
+    private static function closeSessionInDB($userId, $token)
     {
         $pdo = Database::getConnection();
-        $stmt = $pdo->prepare("UPDATE sesiones SET fin = NOW() WHERE usuario_id = :user_id AND fin IS NULL");
-        $stmt->execute([':user_id' => $userId]);
+
+        // Marcar la hora de finalización en la sesión
+        $stmt = $pdo->prepare("UPDATE sesiones SET fin = NOW() WHERE usuario_id = :user_id AND token = :token AND fin IS NULL");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':token' => $token
+        ]);
+
+        return $stmt->rowCount() > 0; // Retorna `true` si se actualizó la sesión
     }
 }
