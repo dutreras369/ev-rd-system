@@ -13,7 +13,7 @@
                     <h6 class="text-primary">Nombre: <span id="userName">Juan Pérez</span></h6>
                     <p class="mb-1"><strong>Correo:</strong> <span id="userEmail">juan.perez@example.com</span></p>
                     <p class="mb-1"><strong>Rol:</strong> <span id="userRole">Administrador</span></p>
-                    <p class="mb-1"><strong>Última Conexión:</strong> <span id="userLastLogin">19/11/2024</span></p>
+                    <p class="mb-1"><strong>Primera Conexión:</strong> <span id="userLastLogin">19/11/2024</span></p>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
