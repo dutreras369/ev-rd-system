@@ -30,7 +30,7 @@ try {
             $response = $userController->listUsers();
             break;
 
-        case 'getUser':
+        case 'get_user':
             if ($method !== 'POST') { // Preferimos POST para mayor seguridad con el token
                 http_response_code(405);
                 echo json_encode(['success' => false, 'error' => 'Método HTTP no permitido.']);

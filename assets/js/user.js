@@ -11,15 +11,13 @@ $(document).ready(function () {
         }
     
         $.ajax({
-            url: `${BASE_URL}/routes/user.php?action=getUser`,
-            type: "POST", // Cambiamos a POST
+            url: BASE_URL + "/routes/user.php?action=get_user",
+            type: "POST",
+            data: { user_id: userId, token: token},
             dataType: "json",
-            data: {
-                user_id: userId,
-                token: token
-            },
+
             success: function(response) {
-                console.log("Respuesta de getUser:", response);
+                console.log("Respuesta de get_user:", response);
                 if (response.success) {
                     $("#userName").text(response.user.nombre);
                     $("#userEmail").text(response.user.email);
