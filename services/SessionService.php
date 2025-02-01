@@ -44,4 +44,43 @@ class SessionService
         $role = $stmt->fetch(PDO::FETCH_ASSOC);
         return $role['nombre'] ?? null;
     }
+
+    /**
+     *  Validar si el token de sesión es válido y está activo.
+     */
+    public function validateToken($userId, $token)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT id FROM sesiones 
+            WHERE usuario_id = :user_id 
+              AND token = :token 
+              AND fin IS NULL
+        ");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':token' => $token
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+    }
+
+    /**
+     *  Obtener la hora de inicio de la sesión activa.
+     */
+    public function getSessionStartTime($userId, $token)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT inicio FROM sesiones 
+            WHERE usuario_id = :user_id 
+              AND token = :token 
+              AND fin IS NULL
+        ");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':token' => $token
+        ]);
+
+        $session = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $session ? $session['inicio'] : null;
+    }
 }

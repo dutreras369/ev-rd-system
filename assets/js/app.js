@@ -61,8 +61,6 @@ $(document).ready(function () {
     });
   }
 
- 
-
   // Inicializar funciones
   handleMenuNavigation();
   handleSidebarNavigation();

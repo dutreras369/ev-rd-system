@@ -20,12 +20,7 @@
             }
 
             .btn-close {
-                color: #fff;
-                opacity: 0.8;
-
-                &:hover {
-                    opacity: 1;
-                }
+                filter: invert(1); /* Invierte el color del botón */
             }
         }
 
@@ -112,6 +107,7 @@
             }
         }
     }
+    
 }
 
 // Ajustes específicos para modales grandes

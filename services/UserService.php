@@ -155,4 +155,6 @@ class UserService
         $stmt->execute(['user_id' => $userId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    
 }

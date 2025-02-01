@@ -11433,11 +11433,7 @@ a {
   font-weight: 600;
 }
 .modal-content .modal-header .btn-close {
-  color: #fff;
-  opacity: 0.8;
-}
-.modal-content .modal-header .btn-close:hover {
-  opacity: 1;
+  filter: invert(1); /* Invierte el color del botón */
 }
 .modal-content .modal-body {
   padding: 1rem;

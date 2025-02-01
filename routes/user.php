@@ -15,6 +15,8 @@ switch ($method) {
             echo json_encode($userController->listUsers());
         } elseif ($action === 'show' && isset($_GET['id'])) {
             echo json_encode($userController->showUser($_GET['id']));
+        }  elseif ($action === 'getUser' && isset($_GET['user_id']) && isset($_GET['token'])) {
+            echo json_encode($userController->getUser($_GET['user_id'], $_GET['token']));
         } else {
             http_response_code(400);
             echo json_encode(['success' => false, 'error' => 'Acción no válida']);

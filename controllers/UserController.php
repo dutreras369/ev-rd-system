@@ -2,14 +2,19 @@
 require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../services/UserService.php';
 require_once __DIR__ . '/../services/LogService.php';
+require_once __DIR__ . '/../services/SessionService.php';
 
 class UserController {
     private $userService;
     private $logService;
+    private $sessionService;
+
 
     public function __construct() {
         $this->userService = new UserService();
         $this->logService = new LogService();
+        $this->sessionService = new SessionService();
+
     }
 
     /**
@@ -131,5 +136,31 @@ class UserController {
                 'error_details' => $e->getMessage()
             ];
         }
+    }
+
+    public function getUser($userId, $token)
+    {
+        // Validar si el token es válido
+        if (!$this->sessionService->validateToken($userId, $token)) {
+            return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
+        }
+
+        $userData = $this->userService->getUserById($userId);
+
+        if ($userData) {
+            return [
+                'success' => true,
+                'user' => [
+                    'id' => $userData['id'],
+                    'nombre' => $userData['nombre'],
+                    'email' => $userData['email'],
+                    'rol_id' => $userData['rol_id'],
+                    'rol' => $this->sessionService->getRoleName($userData['rol_id']),
+                    'hora_inicio' => $this->sessionService->getSessionStartTime($userId, $token)
+                ]
+            ];
+        }
+
+        return ['success' => false, 'error' => 'Usuario no encontrado'];
     }
 }
