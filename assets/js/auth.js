@@ -128,11 +128,11 @@ $(document).ready(function () {
     $("#logoutButton").on("click", function () {
       const userId = localStorage.getItem("user_id");
       const token = localStorage.getItem("token");
-
+      
       $.ajax({
         url: BASE_URL + "/routes/auth.php?action=logout",
         type: "POST",
-        data: { user_id: userId, token: token },
+        data: { user_id: userId, token: token, loginTime },
         dataType: "json",
         success: function (response) {
           if (response.success) {

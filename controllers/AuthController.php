@@ -102,12 +102,12 @@ class AuthController {
     } */
 
 
-    public function logout($userId) {
-        /*$pdo = Database::getConnection();
+    public function logout($userId, $token) {
+        $pdo = Database::getConnection();
         
         // Eliminar la sesión en la BD
-        $stmt = $pdo->prepare("DELETE FROM sesiones WHERE usuario_id = :user_id");
-        $stmt->execute(['user_id' => $userId]);*/
+        $stmt = $pdo->prepare("DELETE FROM sesiones WHERE token = :token");
+        $stmt->execute(['token' => $token]);
     
         // Destruir la sesión en PHP
         SessionManager::logout();
