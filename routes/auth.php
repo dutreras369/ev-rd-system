@@ -55,7 +55,7 @@ switch ($action) {
         $userId = $_POST['user_id'] ?? null;
         $token = $_POST['token'] ?? null;
 
-        if ($userId && $loginTime) {
+        if ($userId && $token) {
             $response = $authController->logout($userId, $token);
         } else {
             $response = ['success' => false, 'error' => 'Faltan datos.'];

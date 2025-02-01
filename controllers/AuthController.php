@@ -1,14 +1,16 @@
-<?php 
+<?php
 require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../services/UserService.php';
 require_once __DIR__ . '/../services/LogService.php';
 require_once __DIR__ . '/../helpers/SessionManager.php';
 
-class AuthController {
+class AuthController
+{
     private $userService;
     private $logService;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->userService = new UserService(); // Inicializar UserService
         $this->logService = new LogService();   // Inicializar LogService
     }
@@ -16,10 +18,11 @@ class AuthController {
     /**
      * Manejar el inicio de sesión de usuarios.
      */
-    public function login($email, $password) {
+    public function login($email, $password)
+    {
         try {
             $user = $this->userService->getUserByEmail($email);
-    
+
             if ($user && password_verify($password, $user->contrasena)) {
                 SessionManager::loginUser($user->id, $user->rol_id);
 
@@ -38,8 +41,8 @@ class AuthController {
                         'token' => SessionManager::getToken()
 
                     ],
-                    'redirect_url' => ($user->rol_id == 1) 
-                        ? BASE_URL . '/public/dashboard/admin.php' 
+                    'redirect_url' => ($user->rol_id == 1)
+                        ? BASE_URL . '/public/dashboard/admin.php'
                         : BASE_URL . '/public/dashboard/user.php',
                 ];
             }
@@ -50,7 +53,7 @@ class AuthController {
             return [
                 'success' => false,
                 'error' => 'Credenciales inválidas.',
-                'error_details' => 'Usuario o contraseña incorrectos', 
+                'error_details' => 'Usuario o contraseña incorrectos',
             ];
         } catch (Exception $e) {
             // Registrar log de error del sistema
@@ -59,7 +62,7 @@ class AuthController {
             return [
                 'success' => false,
                 'error' => 'Error en el sistema. Por favor, contacte al administrador.',
-                'error_details' => $e->getMessage(), 
+                'error_details' => $e->getMessage(),
             ];
         }
     }
@@ -67,7 +70,8 @@ class AuthController {
     /**
      * Obtener el estado actual de la sesión del usuario.
      */
-    public function sessionStatus() {
+    public function sessionStatus()
+    {
         return [
             'success' => true,
             'is_authenticated' => SessionManager::isAuthenticated(),
@@ -102,17 +106,24 @@ class AuthController {
     } */
 
 
-    public function logout($userId, $token) {
+    public function logout($userId, $token)
+    {
         $pdo = Database::getConnection();
-        
-        // Eliminar la sesión en la BD
-        $stmt = $pdo->prepare("DELETE FROM sesiones WHERE token = :token");
-        $stmt->execute(['token' => $token]);
-    
-        // Destruir la sesión en PHP
-        SessionManager::logout();
-    
-        return ['success' => true, 'message' => 'Sesión cerrada correctamente.'];
+
+        // Marcar la hora de finalización en la sesión
+        $stmt = $pdo->prepare("UPDATE sesiones SET fin = NOW() WHERE usuario_id = :user_id AND token = :token AND fin IS NULL");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':token' => $token
+        ]);
+
+        // Verificar si la actualización fue exitosa
+        if ($stmt->rowCount() > 0) {
+            // Destruir la sesión en PHP
+            SessionManager::logout();
+            return ['success' => true, 'message' => 'Sesión cerrada correctamente.'];
+        } else {
+            return ['success' => false, 'error' => 'No se encontró una sesión activa para cerrar.'];
+        }
     }
-    
 }
