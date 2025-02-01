@@ -110,17 +110,17 @@ $(document).ready(function () {
     const userRole = localStorage.getItem("user_role");
 
     if (userId && userRole) {
-      $("#loginButton").hide();
-      $("#logoutButton, #userIcon").show();
+      $("#loginButton").addClass("d-none");
+      $("#logoutButton, #userIcon").removeClass("d-none");
 
       if (userRole === "admin") {
-        $("#sidebarToggle, #menuAdmin, #menuUser, #sidebarToggleMobile").show();
+        $("#sidebarToggle, #menuAdmin, #menuUser, #sidebarToggleMobile").removeClass("d-none");
       } else if (userRole === "user") {
-        $("#menuUser").show();
+        $("#menuUser").removeClass("d-none");
       }
     } else {
-      $("#loginButton").show();
-      $("#logoutButton, #userIcon, #menuUser, #menuAdmin, #sidebarToggle, #sidebarToggleMobile").hide();
+      $("#loginButton").removeClass("d-none");
+      $("#logoutButton, #userIcon, #menuUser, #menuAdmin, #sidebarToggle, #sidebarToggleMobile").addClass("d-none");
     }
   }
 
@@ -132,7 +132,7 @@ $(document).ready(function () {
       $.ajax({
         url: BASE_URL + "/routes/auth.php?action=logout",
         type: "POST",
-        data: { user_id: userId, token: token},
+        data: { user_id: userId, token: token },
         dataType: "json",
         success: function (response) {
           if (response.success) {
