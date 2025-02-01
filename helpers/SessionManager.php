@@ -1,9 +1,20 @@
 <?php
 
-require_once __DIR__ . '/../config/Database.php';
+require_once __DIR__ . '/../services/SessionService.php';
 
 class SessionManager
 {
+
+    private static $sessionService;
+
+    public static function init()
+    {
+        if (!self::$sessionService) {
+            self::$sessionService = new SessionService();
+        }
+    }
+
+
     // Iniciar sesión
     public static function startSession()
     {
@@ -57,7 +68,7 @@ class SessionManager
         self::startSession();
 
         // Validar el rol basado en la relación en la base de datos
-        $roleName = self::getRoleName($roleId);
+        $roleName = self::$sessionService->getRoleName($roleId);
         if (!$roleName) {
             throw new Exception("Rol inválido para el usuario.");
         }
@@ -73,30 +84,7 @@ class SessionManager
         self::set('token', $token);
 
         // Guardar en la base de datos
-        $pdo = Database::getConnection();
-        $stmt = $pdo->prepare("INSERT INTO sesiones (usuario_id, rol_id, ip_address, inicio, token) 
-                               VALUES (:user_id, :role_id, :ip, NOW(), :token)");
-        $stmt->execute([
-            ':user_id' => $userId,
-            ':role_id' => $roleId,
-            ':ip' => $ip,
-            ':token' => $token
-        ]);
-    }
-
-    // Obtener el nombre del rol basado en el ID del rol
-    private static function getRoleName($roleId)
-    {
-        try {
-            $pdo = Database::getConnection(); // Usar la clase Database para la conexión
-            $stmt = $pdo->prepare("SELECT nombre FROM roles WHERE id = :role_id");
-            $stmt->execute(['role_id' => $roleId]);
-            $role = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $role['nombre'] ?? null;
-        } catch (PDOException $e) {
-            error_log("Error al obtener el nombre del rol: " . $e->getMessage());
-            return null;
-        }
+        self::$sessionService->createSession($userId, $roleId, $token, $ip);
     }
 
     public static function getAuthenticatedUserId()
@@ -153,13 +141,13 @@ class SessionManager
         return $_SESSION['token'] ?? null;
     }
 
-    // Registrar cierre de sesión con respuesta
     public static function logout($userId, $token)
     {
+        self::init();
         self::startSession();
 
         if ($userId && $token) {
-            $success = self::closeSessionInDB($userId, $token);
+            $success = self::$sessionService->closeSession($userId, $token);
 
             if ($success) {
                 session_unset();
@@ -182,20 +170,5 @@ class SessionManager
             'success' => false,
             'error' => 'Datos inválidos para cerrar sesión.'
         ];
-    }
-
-    // Cerrar sesión en la BD y devolver el resultado
-    private static function closeSessionInDB($userId, $token)
-    {
-        $pdo = Database::getConnection();
-
-        // Marcar la hora de finalización en la sesión
-        $stmt = $pdo->prepare("UPDATE sesiones SET fin = NOW() WHERE usuario_id = :user_id AND token = :token AND fin IS NULL");
-        $stmt->execute([
-            ':user_id' => $userId,
-            ':token' => $token
-        ]);
-
-        return $stmt->rowCount() > 0; // Retorna `true` si se actualizó la sesión
     }
 }
