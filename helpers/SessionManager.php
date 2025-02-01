@@ -14,7 +14,6 @@ class SessionManager
         }
     }
 
-
     // Iniciar sesión
     public static function startSession()
     {
@@ -65,6 +64,7 @@ class SessionManager
     // Registrar inicio de sesión
     public static function loginUser($userId, $roleId)
     {
+        self::init();
         self::startSession();
 
         // Validar el rol basado en la relación en la base de datos
