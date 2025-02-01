@@ -114,7 +114,7 @@ $(document).ready(function () {
       $("#logoutButton, #userIcon").show();
 
       if (userRole === "admin") {
-        $("#menuAdmin, #sidebarToggle, #sidebarToggleMobile").show();
+        $("#sidebarToggle, #menuAdmin, #menuUser, #sidebarToggleMobile").show();
       } else if (userRole === "user") {
         $("#menuUser").show();
       }
