@@ -1,65 +1,62 @@
 <?php
-header('Content-Type: application/json');
 
-require_once __DIR__ . '/../controllers/UserController.php';
+try {
+    header('Content-Type: application/json');
 
-// Obtener conexión con la base de datos
-$userController = new UserController();
+    require_once __DIR__ . '/../controllers/UserController.php';
 
-$method = $_SERVER['REQUEST_METHOD'];
-$action = $_GET['action'] ?? null;
+    $userController = new UserController();
 
-switch ($method) {
-    case 'GET':
-        if ($action === 'list') {
-            echo json_encode($userController->listUsers());
-        } elseif ($action === 'show' && isset($_GET['id'])) {
-            echo json_encode($userController->showUser($_GET['id']));
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Acción no válida']);
-        }
-        break;
+    $method = $_SERVER['REQUEST_METHOD'];
+    $action = $_GET['action'] ?? null;
 
-    case 'POST':
-        if ($action === 'create') {
-            $data = json_decode(file_get_contents("php://input"), true);
-            echo json_encode($userController->createUser($data));
-        } 
-        elseif ($action === 'getUser') {
-            $data = json_decode(file_get_contents("php://input"), true);
-            if (isset($data['user_id']) && isset($data['token'])) {
-                echo json_encode($userController->getUser($data['user_id'], $data['token']));
+    if (!$action) {
+        throw new Exception("Falta el parámetro 'action'.");
+    }
+
+    switch ($method) {
+        case 'GET':
+            if ($action === 'list') {
+                echo json_encode($userController->listUsers());
+            } elseif ($action === 'show' && isset($_GET['id'])) {
+                echo json_encode($userController->showUser($_GET['id']));
+            } elseif ($action === 'getUser' && isset($_GET['user_id']) && isset($_GET['token'])) {
+                echo json_encode($userController->getUser($_GET['user_id'], $_GET['token']));
             } else {
-                echo json_encode(['success' => false, 'error' => 'Datos insuficientes']);
+                throw new Exception("Acción no válida en GET.");
             }
-        }
-        else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Acción no válida']);
-        }
-        break;
+            break;
 
-    case 'PUT':
-        if ($action === 'edit' && isset($_GET['id'])) {
-            $data = json_decode(file_get_contents("php://input"), true);
-            echo json_encode($userController->editUser($_GET['id'], $data));
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Acción no válida']);
-        }
-        break;
+        case 'POST':
+            if ($action === 'create') {
+                $data = json_decode(file_get_contents("php://input"), true);
+                echo json_encode($userController->createUser($data));
+            } else {
+                throw new Exception("Acción no válida en POST.");
+            }
+            break;
 
-    case 'DELETE':
-        if ($action === 'delete' && isset($_GET['id'])) {
-            echo json_encode($userController->removeUser($_GET['id']));
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Acción no válida']);
-        }
-        break;
+        case 'PUT':
+            if ($action === 'edit' && isset($_GET['id'])) {
+                $data = json_decode(file_get_contents("php://input"), true);
+                echo json_encode($userController->editUser($_GET['id'], $data));
+            } else {
+                throw new Exception("Acción no válida en PUT.");
+            }
+            break;
 
-    default:
-        http_response_code(405);
-        echo json_encode(['success' => false, 'error' => 'Método HTTP no permitido']);
+        case 'DELETE':
+            if ($action === 'delete' && isset($_GET['id'])) {
+                echo json_encode($userController->removeUser($_GET['id']));
+            } else {
+                throw new Exception("Acción no válida en DELETE.");
+            }
+            break;
+
+        default:
+            throw new Exception("Método HTTP no permitido.");
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Error interno en el servidor', 'details' => $e->getMessage()]);
 }
