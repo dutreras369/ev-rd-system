@@ -1,7 +1,7 @@
 <div id="page" class="app">
     <div class="announcement-bar">
         <div class="container d-flex justify-content-between align-items-center">
-            <button id="sidebarToggle" class="sidebar-toggle d-sm-none d-none" aria-expanded="false">
+            <button id="sidebarToggle" class="sidebar-toggle d-none" aria-expanded="false">
                 <i class="bi bi-list"></i>
             </button>
         </div>

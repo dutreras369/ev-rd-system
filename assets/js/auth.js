@@ -114,13 +114,15 @@ $(document).ready(function () {
       $("#logoutButton, #userIcon").show();
 
       if (userRole === "admin") {
-        $("#sidebarToggle, #menuAdmin, #menuUser, #sidebarToggleMobile").show();
+        $("#menuAdmin, #menuUser, #sidebarToggleMobile").show();
+        $("#sidebarToggle").removeClass("d-none").addClass("d-lg-block");
       } else if (userRole === "user") {
         $("#menuUser").show();
       }
     } else {
       $("#loginButton").show();
-      $("#logoutButton, #userIcon, #menuUser, #menuAdmin, #sidebarToggle, #sidebarToggleMobile").hide();
+      $("#logoutButton, #userIcon, #menuUser, #menuAdmin, #sidebarToggleMobile").hide();
+      $("#sidebarToggle").addClass("d-none");
     }
   }
 
