@@ -111,7 +111,7 @@ $(document).ready(function () {
 
     if (userId && userRole) {
       $("#loginButton").hide();
-      $("#logoutButton, #userIcon").show();
+      $("#userIcon").show();
 
       if (userRole === "admin") {
         $("#menuAdmin, #menuUser, #sidebarToggleMobile").show();
@@ -121,7 +121,7 @@ $(document).ready(function () {
       }
     } else {
       $("#loginButton").show();
-      $("#logoutButton, #userIcon, #menuUser, #menuAdmin, #sidebarToggleMobile").hide();
+      $("#userIcon, #menuUser, #menuAdmin, #sidebarToggleMobile").hide();
       $("#sidebarToggle").addClass("d-none");
     }
   }
