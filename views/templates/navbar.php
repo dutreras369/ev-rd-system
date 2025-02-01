@@ -13,8 +13,8 @@
                 <nav id="primary-menu" class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <ul class="nav-item">
                         <li><a href="<?php echo BASE_URL; ?>" class="nav-link px-2"><i class="bi bi-house"></i></a></li>
-                        <li id="menuUser" style="display: none;"><a href="<?php echo BASE_URL; ?>/public/dashboard/user.php" class="nav-link px-2">Registrar</a></li>
                         <li id="menuAdmin" style="display: none;"><a href="<?php echo BASE_URL; ?>/public/dashboard/admin.php" class="nav-link px-2">Administración</a></li>
+                        <li id="menuUser" style="display: none;"><a href="<?php echo BASE_URL; ?>/public/dashboard/user.php" class="nav-link px-2">Registrar</a></li>
                     </ul>
                 </nav>
 
