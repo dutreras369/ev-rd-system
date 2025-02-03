@@ -9,6 +9,12 @@
             <div class="modal-body">
                 <form id="registerForm">
                     <!-- Selector de Tipo de Movimiento con Botones -->
+
+                    <div class="mb-3">
+                        <label for="codigo_usuario" class="form-label">Código del Usuario</label>
+                        <input type="text" class="form-control" id="codigo_usuario" name="codigo_usuario" required placeholder="Ej: ABC123">
+                    </div>
+                    
                     <div class="mb-3">
                         <label class="form-label">Tipo de Movimiento</label>
                         <div class="d-flex gap-2">

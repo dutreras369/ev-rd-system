@@ -1,22 +1,5 @@
 $(document).ready(function () {
-    let selectedType = "carga"; // Tipo de movimiento predeterminado
-
-    // Validar si el usuario ya ingresó un código de usuario
-    if (!localStorage.getItem("codigo_usuario")) {
-        $("#userCodeModal").modal("show");
-    }
-
-    // Guardar código de usuario en localStorage
-    $("#userCodeForm").submit(function (event) {
-        event.preventDefault();
-        const codigoUsuario = $("#codigo_usuario").val();
-        if (codigoUsuario.trim() === "") {
-            alert("El código de usuario es obligatorio.");
-            return;
-        }
-        localStorage.setItem("codigo_usuario", codigoUsuario);
-        $("#userCodeModal").modal("hide");
-    });
+    let selectedType = "carga"; // Tipo predeterminado
 
     // Manejar selección de tipo de movimiento
     $(".movement-type").click(function () {
@@ -31,20 +14,20 @@ $(document).ready(function () {
         $("#amount").val($(this).data("amount"));
     });
 
-    // Manejo del envío del formulario de registro
+    // Envío del formulario de registro
     $("#registerForm").submit(function (event) {
-        event.preventDefault(); // Evitar recarga de página
+        event.preventDefault();
 
         const userId = localStorage.getItem("user_id");
         const token = localStorage.getItem("token");
-        const codigoUsuario = localStorage.getItem("codigo_usuario");
+        const codigoUsuario = $("#codigo_usuario").val();
 
         if (!userId || !token || !codigoUsuario) {
             alert("Error: Datos incompletos.");
             return;
         }
 
-        // Obtener fecha y hora actual en formato YYYY-MM-DD HH:MM:SS
+        // Obtener la fecha y hora actual en formato YYYY-MM-DD HH:MM:SS
         const now = new Date();
         const timestamp = now.toISOString().slice(0, 19).replace("T", " ");
 
@@ -58,7 +41,7 @@ $(document).ready(function () {
             timestamp: timestamp
         };
 
-        // Enviar solicitud AJAX
+        // Enviar datos al endpoint
         $.ajax({
             url: BASE_URL + "/routes/record.php?action=register",
             type: "POST",
@@ -69,7 +52,7 @@ $(document).ready(function () {
                 if (response.success) {
                     alert("Registro exitoso.");
                     $("#registerModal").modal("hide");
-                    loadRecords();
+                    loadRecords(); // Recargar la lista de registros
                 } else {
                     alert("Error al registrar: " + response.error);
                 }
