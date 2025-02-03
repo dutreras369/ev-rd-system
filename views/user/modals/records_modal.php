@@ -8,21 +8,13 @@
             </div>
             <div class="modal-body">
                 <form id="registerForm">
-                    <!-- Usuario -->
-                    <div class="mb-3">
-                        <label for="usuario" class="form-label">Usuario</label>
-                        <input type="text" class="form-control" id="usuario" name="usuario" required placeholder="Ingrese usuario">
-                    </div>
+                    <!-- Campo oculto para el usuario (se llenará con localStorage) -->
+                    <input type="hidden" id="user_id" name="user_id">
 
-                    <!-- Selector de Tipo de Movimiento con Botones -->
+                    <!-- Tipo de Movimiento -->
                     <div class="mb-3">
-                        <label class="form-label">Tipo de Movimiento</label>
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-outline-success movement-type" data-type="carga">Carga</button>
-                            <button type="button" class="btn btn-outline-danger movement-type" data-type="retiro">Retiro</button>
-                        </div>
-                        <!-- Select oculto para sincronización -->
-                        <select class="form-select d-none" id="movement-type" name="movement-type" required>
+                        <label for="movement-type" class="form-label">Tipo</label>
+                        <select class="form-select" id="movement-type" name="movement-type" required>
                             <option value="carga">Carga</option>
                             <option value="retiro">Retiro</option>
                         </select>
