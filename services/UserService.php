@@ -29,15 +29,13 @@ class UserService
         $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
         if ($data) {
-            $this->logService->addLog("Consulta de usuario por ID: $id", $id);
-        } else {
-            $this->logService->addLog("Consulta de usuario fallida por ID: $id", $id);
+            return new User($data); // Devuelve una instancia de User
         }
-
-        return $data ? new User($data) : null;
+        return null;
     }
+    
 
     public function getUserByEmail($email)
     {

@@ -4,23 +4,25 @@ require_once __DIR__ . '/../services/UserService.php';
 require_once __DIR__ . '/../services/LogService.php';
 require_once __DIR__ . '/../services/SessionService.php';
 
-class UserController {
+class UserController
+{
     private $userService;
     private $logService;
     private $sessionService;
 
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->userService = new UserService();
         $this->logService = new LogService();
         $this->sessionService = new SessionService();
-
     }
 
     /**
      * Obtener todos los usuarios.
      */
-    public function listUsers() {
+    public function listUsers()
+    {
         try {
             $users = $this->userService->getAllUsers();
             return [
@@ -40,7 +42,8 @@ class UserController {
     /**
      * Obtener un usuario por ID.
      */
-    public function showUser($id) {
+    public function showUser($id)
+    {
         try {
             $user = $this->userService->getUserById($id);
             if (!$user) {
@@ -60,7 +63,8 @@ class UserController {
     /**
      * Crear un nuevo usuario.
      */
-    public function createUser($data) {
+    public function createUser($data)
+    {
         try {
             $user = new User($data);
             $userId = $this->userService->addUser($user);
@@ -83,7 +87,8 @@ class UserController {
     /**
      * Editar un usuario existente.
      */
-    public function editUser($id, $data) {
+    public function editUser($id, $data)
+    {
         try {
             $user = $this->userService->getUserById($id);
             if (!$user) {
@@ -118,7 +123,8 @@ class UserController {
     /**
      * Eliminar un usuario por ID.
      */
-    public function removeUser($id) {
+    public function removeUser($id)
+    {
         try {
             $deleted = $this->userService->deleteUser($id);
             if ($deleted) {
@@ -144,24 +150,26 @@ class UserController {
         if (!$this->sessionService->validateToken($userId, $token)) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
         }
-    
+
+        // Obtener el objeto usuario
         $userData = $this->userService->getUserById($userId);
-    
-        if ($userData) {
-            return [
-                'success' => true,
-                'user' => [
-                    'id' => $userData['id'],
-                    'nombre' => $userData['nombre'],
-                    'email' => $userData['email'],
-                    'rol_id' => $userData['rol_id'],
-                    'rol' => $this->sessionService->getRoleName($userData['rol_id']),
-                    'hora_inicio' => $this->sessionService->getSessionStartTime($userId, $token)
-                ]
-            ];
+
+        // Validar que el usuario existe
+        if (!$userData) {
+            return ['success' => false, 'error' => 'Usuario no encontrado'];
         }
-    
-        return ['success' => false, 'error' => 'Usuario no encontrado'];
+
+        // Retornar los datos del usuario correctamente
+        return [
+            'success' => true,
+            'user' => [
+                'id' => $userData->id, // Ahora se accede a la propiedad del objeto
+                'nombre' => $userData->nombre,
+                'email' => $userData->email,
+                'rol_id' => $userData->rol_id,
+                'rol' => $this->sessionService->getRoleName($userData->rol_id),
+                'hora_inicio' => $this->sessionService->getSessionStartTime($userId, $token)
+            ]
+        ];
     }
-    
 }
