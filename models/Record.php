@@ -1,54 +1,75 @@
 <?php
 
-class Record
-{
-    private $db;
+class Record {
+    private $id;
+    private $usuario_id;
+    private $tipo;
+    private $monto;
+    private $descripcion;
+    private $fecha;
+    private $estado;
 
-    public function __construct($dbConnection)
-    {
-        $this->db = $dbConnection;
+    public function __construct($data) {
+        $this->id = $data['id'] ?? null;
+        $this->usuario_id = $data['usuario_id'];
+        $this->tipo = $data['tipo'];
+        $this->monto = $data['monto'];
+        $this->descripcion = $data['descripcion'] ?? null;
+        $this->fecha = $data['fecha'];
+        $this->estado = $data['estado'] ?? 'pendiente';
     }
 
-    /**
-     * Obtener registros con filtros.
-     *
-     * @param array $filters
-     * @return array
-     */
-    public function getFilteredRecords($filters)
-    {
-        $query = "SELECT r.id, u.nombre AS usuario, r.fecha, r.tipo, r.monto, r.estado
-                  FROM registros r
-                  INNER JOIN usuarios u ON r.usuario_id = u.id
-                  WHERE 1=1";
+    // Getters
+    public function getId() {
+        return $this->id;
+    }
 
-        $params = [];
+    public function getUsuarioId() {
+        return $this->usuario_id;
+    }
 
-        // Aplicar filtros dinámicos
-        if (!empty($filters['user'])) {
-            $query .= " AND u.nombre LIKE :user";
-            $params[':user'] = '%' . $filters['user'] . '%';
-        }
-        if (!empty($filters['start_date'])) {
-            $query .= " AND r.fecha >= :start_date";
-            $params[':start_date'] = $filters['start_date'];
-        }
-        if (!empty($filters['end_date'])) {
-            $query .= " AND r.fecha <= :end_date";
-            $params[':end_date'] = $filters['end_date'];
-        }
-        if (!empty($filters['type'])) {
-            $query .= " AND r.tipo = :type";
-            $params[':type'] = $filters['type'];
-        }
-        if (isset($filters['status']) && $filters['status'] !== '') {
-            $query .= " AND r.estado = :status";
-            $params[':status'] = $filters['status'] === 'true' ? 1 : 0;
-        }
+    public function getTipo() {
+        return $this->tipo;
+    }
 
-        $stmt = $this->db->prepare($query);
-        $stmt->execute($params);
+    public function getMonto() {
+        return $this->monto;
+    }
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function getDescripcion() {
+        return $this->descripcion;
+    }
+
+    public function getFecha() {
+        return $this->fecha;
+    }
+
+    public function getEstado() {
+        return $this->estado;
+    }
+
+    // Setters
+    public function setUsuarioId($usuario_id) {
+        $this->usuario_id = $usuario_id;
+    }
+
+    public function setTipo($tipo) {
+        $this->tipo = $tipo;
+    }
+
+    public function setMonto($monto) {
+        $this->monto = $monto;
+    }
+
+    public function setDescripcion($descripcion) {
+        $this->descripcion = $descripcion;
+    }
+
+    public function setFecha($fecha) {
+        $this->fecha = $fecha;
+    }
+
+    public function setEstado($estado) {
+        $this->estado = $estado;
     }
 }

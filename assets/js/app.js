@@ -61,6 +61,40 @@ $(document).ready(function () {
     });
   }
 
+  function initializeMovementTypeSelection(formSelector) {
+    if ($(formSelector).length === 0) return; // Solo se ejecuta si el formulario existe
+
+    console.log("Inicializando selector de movimiento en:", formSelector);
+
+    // Manejar selección de tipo de movimiento
+    $(formSelector).find(".movement-type").on("click", function () {
+        // Remover la clase "active" de todos los botones dentro del formulario
+        $(formSelector).find(".movement-type").removeClass("btn-success btn-danger")
+            .addClass("btn-outline-success btn-outline-danger");
+
+        // Agregar la clase activa al botón seleccionado
+        if ($(this).data("type") === "carga") {
+            $(this).removeClass("btn-outline-success").addClass("btn-success");
+        } else {
+            $(this).removeClass("btn-outline-danger").addClass("btn-danger");
+        }
+
+        // Actualizar el valor del select oculto dentro del formulario
+        $(formSelector).find("#movement-type").val($(this).data("type"));
+    });
+
+    // Manejar los botones de monto rápido dentro del formulario
+    $(formSelector).find(".quick-amount").on("click", function () {
+        $(formSelector).find("#amount").val($(this).data("amount"));
+    });
+  }
+
+  // Ejecutar solo cuando el modal de registro se muestra
+  $("#registerModal").on("shown.bs.modal", function () {
+      initializeMovementTypeSelection("#registerForm");
+  });
+
+
   // Inicializar funciones
   handleMenuNavigation();
   handleSidebarNavigation();

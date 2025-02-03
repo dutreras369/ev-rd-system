@@ -13,14 +13,21 @@
                         <label for="usuario" class="form-label">Usuario</label>
                         <input type="text" class="form-control" id="usuario" name="usuario" required placeholder="Ingrese usuario">
                     </div>
-                    <!-- Tipo de Movimiento -->
+
+                    <!-- Selector de Tipo de Movimiento con Botones -->
                     <div class="mb-3">
-                        <label for="movement-type" class="form-label">Tipo</label>
-                        <select class="form-select" id="movement-type" name="movement-type" required>
+                        <label class="form-label">Tipo de Movimiento</label>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-outline-success movement-type" data-type="carga">Carga</button>
+                            <button type="button" class="btn btn-outline-danger movement-type" data-type="retiro">Retiro</button>
+                        </div>
+                        <!-- Select oculto para sincronización -->
+                        <select class="form-select d-none" id="movement-type" name="movement-type" required>
                             <option value="carga">Carga</option>
                             <option value="retiro">Retiro</option>
                         </select>
                     </div>
+
                     <!-- Botones de Acceso Rápido y Monto -->
                     <div class="mb-3">
                         <label class="form-label">Monto</label>
@@ -32,11 +39,13 @@
                             <button type="button" class="btn btn-outline-primary quick-amount" data-amount="200000">200000</button>
                         </div>
                     </div>
+
                     <!-- Fecha y Hora -->
                     <div class="mb-3">
                         <label for="timestamp" class="form-label">Fecha y Hora</label>
                         <input type="datetime-local" class="form-control" id="timestamp" name="timestamp" required>
                     </div>
+
                     <!-- Botón Registrar -->
                     <button type="submit" class="btn btn-primary w-100">Registrar</button>
                 </form>
