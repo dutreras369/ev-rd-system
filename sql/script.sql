@@ -27,6 +27,7 @@ CREATE TABLE logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     accion VARCHAR(255) NOT NULL,
     usuario_id INT NOT NULL,
+    codigo_usuario VARCHAR(50) NOT NULL,
     ip_address VARCHAR(45) DEFAULT NULL, -- Dirección IP del usuario
     user_agent TEXT DEFAULT NULL, -- Información del navegador/dispositivo
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,

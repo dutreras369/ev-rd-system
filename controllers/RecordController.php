@@ -11,8 +11,9 @@ class RecordController {
         $this->sessionService = new SessionService();
     }
 
-    public function createRecord($data) {
-        // Validar sesión
+    public function createRecord($data)
+    {
+        // Validar sesión con token
         if (!$this->sessionService->validateToken($data['user_id'], $data['token'])) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
         }
@@ -20,6 +21,7 @@ class RecordController {
         // Registrar en la BD
         return $this->recordService->addRecord(
             $data['user_id'],
+            $data['codigo_usuario'],
             $data['movement_type'],
             $data['amount'],
             $data['timestamp']

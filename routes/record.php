@@ -20,20 +20,20 @@ switch ($method) {
         }
         break;
 
-    case 'POST':
-        if ($action === 'register') {
-            $data = json_decode(file_get_contents("php://input"), true);
-            if (isset($data['user_id'], $data['token'], $data['movement_type'], $data['amount'], $data['timestamp'])) {
-                echo json_encode($recordController->createRecord($data));
+        case 'POST':
+            if ($action === 'register') {
+                $data = json_decode(file_get_contents("php://input"), true);
+                if (isset($data['user_id'], $data['codigo_usuario'], $data['token'], $data['movement_type'], $data['amount'], $data['timestamp'])) {
+                    echo json_encode($recordController->createRecord($data));
+                } else {
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'error' => 'Datos incompletos.']);
+                }
             } else {
                 http_response_code(400);
-                echo json_encode(['success' => false, 'error' => 'Datos incompletos.']);
+                echo json_encode(['success' => false, 'error' => 'Acción no válida']);
             }
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Acción no válida']);
-        }
-        break;
+            break;
 
     default:
         http_response_code(405);

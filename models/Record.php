@@ -3,6 +3,7 @@
 class Record {
     private $id;
     private $usuario_id;
+    private $codigo_usuario;
     private $tipo;
     private $monto;
     private $descripcion;
@@ -12,6 +13,7 @@ class Record {
     public function __construct($data) {
         $this->id = $data['id'] ?? null;
         $this->usuario_id = $data['usuario_id'];
+        $this->codigo_usuario = $data['codigo_usuario'];
         $this->tipo = $data['tipo'];
         $this->monto = $data['monto'];
         $this->descripcion = $data['descripcion'] ?? null;
@@ -26,6 +28,10 @@ class Record {
 
     public function getUsuarioId() {
         return $this->usuario_id;
+    }
+
+    public function getCodigoUsuario() {
+        return $this->codigo_usuario;
     }
 
     public function getTipo() {
@@ -51,6 +57,10 @@ class Record {
     // Setters
     public function setUsuarioId($usuario_id) {
         $this->usuario_id = $usuario_id;
+    }
+
+    public function setCodigoUsuario($codigo_usuario) {
+        $this->codigo_usuario = $codigo_usuario;
     }
 
     public function setTipo($tipo) {

@@ -20,9 +20,10 @@ $(document).ready(function () {
 
         const userId = localStorage.getItem("user_id");
         const token = localStorage.getItem("token");
+        const codigoUsuario = prompt("Ingrese el código del usuario que realiza el movimiento:");
 
-        if (!userId || !token) {
-            alert("Error: Usuario no autenticado.");
+        if (!userId || !token || !codigoUsuario) {
+            alert("Error: Datos incompletos.");
             return;
         }
 
@@ -30,16 +31,17 @@ $(document).ready(function () {
         const now = new Date();
         const timestamp = now.toISOString().slice(0, 19).replace("T", " ");
 
-        // Obtener los datos del formulario
+        // Datos a enviar
         const formData = {
             user_id: userId,
+            codigo_usuario: codigoUsuario,
             token: token,
             movement_type: selectedType,
             amount: $("#amount").val(),
-            timestamp: timestamp // Se genera automáticamente
+            timestamp: timestamp
         };
 
-        // Enviar la solicitud AJAX
+        // Enviar solicitud AJAX
         $.ajax({
             url: BASE_URL + "/routes/record.php?action=register",
             type: "POST",
@@ -50,7 +52,7 @@ $(document).ready(function () {
                 if (response.success) {
                     alert("Registro exitoso.");
                     $("#registerModal").modal("hide");
-                    loadRecords(); // Recargar la tabla de registros
+                    loadRecords();
                 } else {
                     alert("Error al registrar: " + response.error);
                 }
@@ -76,6 +78,7 @@ $(document).ready(function () {
                     response.records.forEach(record => {
                         tableBody.append(`
                             <tr>
+                                <td>${record.codigo_usuario}</td>
                                 <td>${record.tipo}</td>
                                 <td>$${record.monto}</td>
                                 <td>${record.fecha}</td>
