@@ -75,58 +75,35 @@ class SessionService
     // Validar si el token de sesión es válido y está activo
     public function validateToken($userId, $token)
     {
-        try {
-            $stmt = $this->pdo->prepare("
-                SELECT id FROM sesiones 
-                WHERE usuario_id = :user_id 
-                AND token = :token 
-                AND fin IS NULL
-            ");
-            $stmt->execute([
-                ':user_id' => $userId,
-                ':token' => $token
-            ]);
-
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$result) {
-                $this->logService->addLog("Token inválido para usuario ID: $userId", $userId);
-                return false;
-            }
-
-            return true;
-        } catch (PDOException $e) {
-            $this->logService->addLog("Error al validar token para usuario ID: $userId - " . $e->getMessage(), $userId);
-            return false;
-        }
+        $stmt = $this->pdo->prepare("
+            SELECT id FROM sesiones 
+            WHERE usuario_id = :user_id 
+              AND token = :token 
+              AND fin IS NULL
+        ");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':token' => $token
+        ]);
+    
+        return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
     }
-
-    // Obtener la hora de inicio de la sesión activa
+    
     public function getSessionStartTime($userId, $token)
     {
-        try {
-            $stmt = $this->pdo->prepare("
-                SELECT inicio FROM sesiones 
-                WHERE usuario_id = :user_id 
-                AND token = :token 
-                AND fin IS NULL
-            ");
-            $stmt->execute([
-                ':user_id' => $userId,
-                ':token' => $token
-            ]);
-
-            $session = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$session) {
-                $this->logService->addLog("No se encontró sesión activa para usuario ID: $userId", $userId);
-                return null;
-            }
-
-            return $session['inicio'];
-        } catch (PDOException $e) {
-            $this->logService->addLog("Error al obtener hora de inicio de sesión para usuario ID: $userId - " . $e->getMessage(), $userId);
-            return null;
-        }
+        $stmt = $this->pdo->prepare("
+            SELECT inicio FROM sesiones 
+            WHERE usuario_id = :user_id 
+              AND token = :token 
+              AND fin IS NULL
+        ");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':token' => $token
+        ]);
+    
+        $session = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $session ? $session['inicio'] : null;
     }
+    
 }

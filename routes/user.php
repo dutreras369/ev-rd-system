@@ -1,10 +1,15 @@
 <?php
 header('Content-Type: application/json');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
+require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../controllers/UserController.php';
 
-// Obtener conexión con la base de datos
-$userController = new UserController();
+// Inicializar conexión y controlador
+$pdo = Database::getConnection();
+$userController = new UserController($pdo);
+
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? null;
 
@@ -41,8 +46,9 @@ switch ($action) {
         }
 
         // Obtener datos enviados en POST
-        $userId = $_POST['user_id'] ?? null;
-        $token = $_POST['token'] ?? null;
+        $data = json_decode(file_get_contents("php://input"), true);
+        $userId = $data['user_id'] ?? null;
+        $token = $data['token'] ?? null;
 
         if (!$userId || !$token) {
             echo json_encode(['success' => false, 'error' => 'Faltan datos (user_id o token).']);

@@ -144,9 +144,9 @@ class UserController {
         if (!$this->sessionService->validateToken($userId, $token)) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
         }
-
+    
         $userData = $this->userService->getUserById($userId);
-
+    
         if ($userData) {
             return [
                 'success' => true,
@@ -160,7 +160,8 @@ class UserController {
                 ]
             ];
         }
-
+    
         return ['success' => false, 'error' => 'Usuario no encontrado'];
     }
+    
 }
