@@ -1,0 +1,90 @@
+$(document).ready(function () {
+    // Llenar automáticamente el user_id en el formulario al abrir el modal
+    $("#registerModal").on("show.bs.modal", function () {
+        const userId = localStorage.getItem("user_id");
+        const token = localStorage.getItem("token");
+
+        if (userId && token) {
+            $("#user_id").val(userId);
+        } else {
+            console.error("No hay usuario autenticado en localStorage.");
+        }
+    });
+
+    // Manejo del envío del formulario
+    $("#registerForm").submit(function (event) {
+        event.preventDefault(); // Evitar recarga de página
+
+        const userId = localStorage.getItem("user_id");
+        const token = localStorage.getItem("token");
+
+        if (!userId || !token) {
+            alert("Error: Usuario no autenticado.");
+            return;
+        }
+
+        // Obtener los datos del formulario
+        const formData = {
+            user_id: userId,
+            token: token,
+            movement_type: $("#movement-type").val(),
+            amount: $("#amount").val(),
+            timestamp: $("#timestamp").val(),
+        };
+
+        // Enviar la solicitud AJAX
+        $.ajax({
+            url: BASE_URL + "/routes/record.php?action=register",
+            type: "POST",
+            data: JSON.stringify(formData),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    alert("Registro exitoso.");
+                    $("#registerModal").modal("hide");
+                    loadRecords(); // Recargar la tabla de registros
+                } else {
+                    alert("Error al registrar: " + response.error);
+                }
+            },
+            error: function (xhr) {
+                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
+                alert("Error en la solicitud. Ver consola.");
+            },
+        });
+    });
+
+    // Función para actualizar la tabla de registros
+    function loadRecords() {
+        $.ajax({
+            url: BASE_URL + "/routes/record.php?action=list&user_id=" + localStorage.getItem("user_id"),
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    let tableBody = $("#daily-records-table");
+                    tableBody.empty();
+
+                    response.records.forEach(record => {
+                        tableBody.append(`
+                            <tr>
+                                <td>${record.tipo}</td>
+                                <td>$${record.monto}</td>
+                                <td>${record.fecha}</td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    console.error("Error al obtener registros:", response.error);
+                }
+            },
+            error: function (xhr) {
+                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
+            },
+        });
+    }
+
+    // Cargar registros al iniciar la página
+    loadRecords();
+});
