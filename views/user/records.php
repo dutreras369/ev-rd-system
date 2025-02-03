@@ -21,18 +21,6 @@
                    </tr>
                </thead>
                <tbody id="daily-records-table">
-                   <tr>
-                       <td>1</td>
-                       <td>Carga</td>
-                       <td>$150.00</td>
-                       <td>2024-12-13 09:00 AM</td>
-                   </tr>
-                   <tr>
-                       <td>2</td>
-                       <td>Retiro</td>
-                       <td>$50.00</td>
-                       <td>2024-12-13 02:00 PM</td>
-                   </tr>
                </tbody>
            </table>
        </div>

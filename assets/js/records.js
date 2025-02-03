@@ -26,13 +26,17 @@ $(document).ready(function () {
             return;
         }
 
+        // Obtener fecha y hora actual en formato YYYY-MM-DD HH:MM:SS
+        const now = new Date();
+        const timestamp = now.toISOString().slice(0, 19).replace("T", " ");
+
         // Obtener los datos del formulario
         const formData = {
             user_id: userId,
             token: token,
             movement_type: selectedType,
             amount: $("#amount").val(),
-            timestamp: $("#timestamp").val(),
+            timestamp: timestamp // Se genera automáticamente
         };
 
         // Enviar la solicitud AJAX

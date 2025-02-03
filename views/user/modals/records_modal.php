@@ -15,7 +15,6 @@
                             <button type="button" class="btn btn-outline-success movement-type" data-type="carga">Carga</button>
                             <button type="button" class="btn btn-outline-danger movement-type" data-type="retiro">Retiro</button>
                         </div>
-                        <!-- Select oculto para sincronización -->
                         <select class="form-select d-none" id="movement-type" name="movement-type" required>
                             <option value="carga">Carga</option>
                             <option value="retiro">Retiro</option>
@@ -32,12 +31,6 @@
                             <button type="button" class="btn btn-outline-primary quick-amount" data-amount="100000">100000</button>
                             <button type="button" class="btn btn-outline-primary quick-amount" data-amount="200000">200000</button>
                         </div>
-                    </div>
-
-                    <!-- Fecha y Hora -->
-                    <div class="mb-3">
-                        <label for="timestamp" class="form-label">Fecha y Hora</label>
-                        <input type="datetime-local" class="form-control" id="timestamp" name="timestamp" required>
                     </div>
 
                     <!-- Botón Registrar -->
