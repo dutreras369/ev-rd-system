@@ -1,14 +1,17 @@
 $(document).ready(function () {
-    // Llenar automáticamente el user_id en el formulario al abrir el modal
-    $("#registerModal").on("show.bs.modal", function () {
-        const userId = localStorage.getItem("user_id");
-        const token = localStorage.getItem("token");
+    let selectedType = "carga"; // Tipo de movimiento predeterminado
 
-        if (userId && token) {
-            $("#user_id").val(userId);
-        } else {
-            console.error("No hay usuario autenticado en localStorage.");
-        }
+    // Manejar selección de tipo de movimiento
+    $(".movement-type").click(function () {
+        selectedType = $(this).data("type");
+        $("#movement-type").val(selectedType);
+        $(".movement-type").removeClass("active");
+        $(this).addClass("active");
+    });
+
+    // Manejar selección rápida de monto
+    $(".quick-amount").click(function () {
+        $("#amount").val($(this).data("amount"));
     });
 
     // Manejo del envío del formulario
@@ -27,7 +30,7 @@ $(document).ready(function () {
         const formData = {
             user_id: userId,
             token: token,
-            movement_type: $("#movement-type").val(),
+            movement_type: selectedType,
             amount: $("#amount").val(),
             timestamp: $("#timestamp").val(),
         };
