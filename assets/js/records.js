@@ -67,35 +67,30 @@ $(document).ready(function () {
     // Función para actualizar la tabla de registros
     function loadRecords() {
         $.ajax({
-            url: BASE_URL + "/routes/record.php?action=list&user_id=" + localStorage.getItem("user_id"),
+            url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}`,
             type: "GET",
             dataType: "json",
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
-
-                    console.log(response);
-                    
-                    let tableBody = $("#daily-records-table");
-                    tableBody.empty();
-
+                    $("#daily-records-table").empty();
                     response.records.forEach(record => {
-                        tableBody.append(`
+                        $("#daily-records-table").append(`
                             <tr>
                                 <td>${record.codigo_usuario}</td>
                                 <td>${record.tipo}</td>
-                                <td>$${record.monto}</td>
+                                <td>$${parseFloat(record.monto).toLocaleString()}</td>
                                 <td>${record.fecha}</td>
                             </tr>
                         `);
                     });
                 } else {
-                    console.error("Error al obtener registros:", response.error);
+                    console.error("No hay registros:", response.error);
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
-            },
-        });
+            }
+        });        
     }
 
     // Cargar registros al iniciar la página

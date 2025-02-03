@@ -37,11 +37,24 @@ class RecordController
 
 
 
-    public function listRecords($userId)
-    {
-        return [
-            'success' => true,
-            'records' => $this->recordService->getRecordsByUser($userId)
-        ];
+    public function listRecords($userId) {
+        $records = $this->recordService->getRecordsByUser($userId);
+        
+        if ($records) {
+            return [
+                'success' => true,
+                'records' => array_map(function ($record) {
+                    return [
+                        'codigo_usuario' => $record['codigo_usuario'], // 🔹 Asegurar que esta clave se devuelve
+                        'tipo' => $record['tipo'],
+                        'monto' => $record['monto'],
+                        'fecha' => $record['fecha']
+                    ];
+                }, $records)
+            ];
+        }
+    
+        return ['success' => false, 'error' => 'No hay registros para este usuario.'];
     }
+    
 }

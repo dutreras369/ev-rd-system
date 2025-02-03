@@ -26,12 +26,14 @@ class RecordService {
 
     public function getRecordsByUser($userId) {
         $stmt = $this->pdo->prepare("
-            SELECT tipo, monto, fecha FROM registros 
+            SELECT codigo_usuario, tipo, monto, fecha 
+            FROM registros 
             WHERE usuario_id = :user_id 
-            ORDER BY fecha DESC 
-            LIMIT 10
+            ORDER BY fecha DESC
         ");
-        $stmt->execute([':user_id' => $userId]);
+        $stmt->execute(['user_id' => $userId]);
+    
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 }
