@@ -2,11 +2,13 @@
 require_once __DIR__ . '/../services/RecordService.php';
 require_once __DIR__ . '/../services/SessionService.php';
 
-class RecordController {
+class RecordController
+{
     private $recordService;
     private $sessionService;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->recordService = new RecordService();
         $this->sessionService = new SessionService();
     }
@@ -16,6 +18,11 @@ class RecordController {
         // Validar sesión con token
         if (!$this->sessionService->validateToken($data['user_id'], $data['token'])) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
+        }
+
+        // Validar existencia de código de usuario
+        if (!isset($data['codigo_usuario']) || empty($data['codigo_usuario'])) {
+            return ['success' => false, 'error' => 'El código de usuario es obligatorio.'];
         }
 
         // Registrar en la BD
@@ -28,7 +35,10 @@ class RecordController {
         );
     }
 
-    public function listRecords($userId) {
+
+
+    public function listRecords($userId)
+    {
         return [
             'success' => true,
             'records' => $this->recordService->getRecordsByUser($userId)

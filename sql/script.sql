@@ -15,7 +15,7 @@ CREATE TABLE usuarios (
 CREATE TABLE registros (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
-    tipo ENUM('ingreso', 'egreso') NOT NULL,
+    tipo ENUM('carga', 'retiro') NOT NULL,
     monto DECIMAL(10, 2) NOT NULL,
     descripcion VARCHAR(255) DEFAULT NULL, -- Descripción opcional del registro
     fecha DATETIME NOT NULL,

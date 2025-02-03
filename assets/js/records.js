@@ -1,6 +1,23 @@
 $(document).ready(function () {
     let selectedType = "carga"; // Tipo de movimiento predeterminado
 
+    // Validar si el usuario ya ingresó un código de usuario
+    if (!localStorage.getItem("codigo_usuario")) {
+        $("#userCodeModal").modal("show");
+    }
+
+    // Guardar código de usuario en localStorage
+    $("#userCodeForm").submit(function (event) {
+        event.preventDefault();
+        const codigoUsuario = $("#codigo_usuario").val();
+        if (codigoUsuario.trim() === "") {
+            alert("El código de usuario es obligatorio.");
+            return;
+        }
+        localStorage.setItem("codigo_usuario", codigoUsuario);
+        $("#userCodeModal").modal("hide");
+    });
+
     // Manejar selección de tipo de movimiento
     $(".movement-type").click(function () {
         selectedType = $(this).data("type");
@@ -14,13 +31,13 @@ $(document).ready(function () {
         $("#amount").val($(this).data("amount"));
     });
 
-    // Manejo del envío del formulario
+    // Manejo del envío del formulario de registro
     $("#registerForm").submit(function (event) {
         event.preventDefault(); // Evitar recarga de página
 
         const userId = localStorage.getItem("user_id");
         const token = localStorage.getItem("token");
-        const codigoUsuario = prompt("Ingrese el código del usuario que realiza el movimiento:");
+        const codigoUsuario = localStorage.getItem("codigo_usuario");
 
         if (!userId || !token || !codigoUsuario) {
             alert("Error: Datos incompletos.");
