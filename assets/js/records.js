@@ -66,6 +66,9 @@ $(document).ready(function () {
 
     // Función para actualizar la tabla de registros
     function loadRecords() {
+
+        const userId = localStorage.getItem("user_id");
+        
         $.ajax({
             url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}`,
             type: "GET",
