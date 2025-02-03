@@ -72,6 +72,9 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.success) {
+
+                    console.log(response);
+                    
                     let tableBody = $("#daily-records-table");
                     tableBody.empty();
 
