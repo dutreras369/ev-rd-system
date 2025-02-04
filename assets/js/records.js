@@ -1,6 +1,4 @@
 $(document).ready(function () {
-    let selectedType = "carga"; // Tipo predeterminado
-
     // Variable global para almacenar el tipo de movimiento seleccionado
     let selectedType = null;
 
