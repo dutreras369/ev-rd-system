@@ -37,19 +37,20 @@ class RecordService {
     }
 
     public function getRecordsBySession($userId, $sessionStartTime) {
+        $dateOnly = date('Y-m-d', strtotime($sessionStartTime)); // Extraer solo la fecha
+    
         $stmt = $this->pdo->prepare("
             SELECT * FROM registros 
             WHERE usuario_id = :user_id 
-              AND fecha >= :session_start_time
+              AND DATE(fecha) = :session_date
             ORDER BY fecha DESC
         ");
         $stmt->execute([
             ':user_id' => $userId,
-            ':session_start_time' => $sessionStartTime
+            ':session_date' => $dateOnly
         ]);
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
     
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }    
     
 }
