@@ -79,7 +79,12 @@ $(document).ready(function () {
 
         // Restablecer la selección visual de los botones de tipo de movimiento
         $(".movement-type").removeClass("active btn-success btn-danger").addClass("btn-outline-success btn-outline-danger");
+
+        // Restaurar colores originales
+        $(".movement-type[data-type='carga']").removeClass("btn-danger").addClass("btn-outline-success");
+        $(".movement-type[data-type='retiro']").removeClass("btn-success").addClass("btn-outline-danger");
     }
+
 
     // Función para actualizar la tabla de registros
     function loadRecords() {
