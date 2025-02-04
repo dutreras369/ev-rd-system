@@ -21,8 +21,9 @@ $(document).ready(function () {
         const userId = localStorage.getItem("user_id");
         const token = localStorage.getItem("token");
         const codigoUsuario = $("#codigo_usuario").val();
+        const amount = $("#amount").val();
 
-        if (!userId || !token || !codigoUsuario) {
+        if (!userId || !token || !codigoUsuario || !selectedType || !amount) {
             alert("Error: Datos incompletos.");
             return;
         }
@@ -37,7 +38,7 @@ $(document).ready(function () {
             codigo_usuario: codigoUsuario,
             token: token,
             movement_type: selectedType,
-            amount: $("#amount").val(),
+            amount: amount,
             timestamp: timestamp
         };
 
@@ -51,7 +52,11 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     alert("Registro exitoso.");
-                    $("#registerModal").modal("hide");
+
+                    // 🔹 Restablecer valores del formulario después del registro
+                    resetRegisterForm();
+
+                    $("#registerModal").modal("hide"); // Cerrar modal
                     loadRecords(); // Recargar la lista de registros
                 } else {
                     alert("Error al registrar: " + response.error);
@@ -64,16 +69,28 @@ $(document).ready(function () {
         });
     });
 
+    /**
+     * 🔹 Restablecer valores del formulario después de registrar
+     */
+    function resetRegisterForm() {
+        $("#codigo_usuario").val(""); // Limpiar campo de código de usuario
+        $("#amount").val(""); // Limpiar campo de monto
+        selectedType = null; // Reiniciar selección del tipo de movimiento
+
+        // Restablecer la selección visual de los botones de tipo de movimiento
+        $(".movement-type").removeClass("active btn-success btn-danger").addClass("btn-outline-success btn-outline-danger");
+    }
+
     // Función para actualizar la tabla de registros
     function loadRecords() {
 
         const userId = localStorage.getItem("user_id");
-        
+
         $.ajax({
             url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}`,
             type: "GET",
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 if (response.success) {
                     $("#daily-records-table").empty();
                     response.records.forEach(record => {
@@ -90,10 +107,10 @@ $(document).ready(function () {
                     console.error("No hay registros:", response.error);
                 }
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
             }
-        });        
+        });
     }
 
     // Cargar registros al iniciar la página
