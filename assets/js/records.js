@@ -92,9 +92,15 @@ $(document).ready(function () {
     function loadRecords() {
 
         const userId = localStorage.getItem("user_id");
+        const token = localStorage.getItem("token");
 
+        if (!userId || !token) {
+            console.error("No hay usuario autenticado o falta el token en localStorage.");
+            return;
+        }
+    
         $.ajax({
-            url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}`,
+            url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}&token=${token}`,
             type: "GET",
             dataType: "json",
             success: function (response) {

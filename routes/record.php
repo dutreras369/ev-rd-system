@@ -13,8 +13,8 @@ $action = $_GET['action'] ?? null;
 try {
     switch ($method) {
         case 'GET':
-            if ($action === 'list' && isset($_GET['user_id'])) {
-                echo json_encode($recordController->listRecords($_GET['user_id']));
+            if ($action === 'list' && isset($_GET['user_id']) && isset($_GET['token'])) {
+                echo json_encode($recordController->listRecords($_GET['user_id'], $_GET['token']));
             } else {
                 throw new Exception('Acción no válida para GET', 400);
             }

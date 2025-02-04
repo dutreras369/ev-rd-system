@@ -35,5 +35,21 @@ class RecordService {
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getRecordsBySession($userId, $sessionStartTime) {
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM registros 
+            WHERE usuario_id = :user_id 
+              AND fecha >= :session_start_time
+            ORDER BY fecha DESC
+        ");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':session_start_time' => $sessionStartTime
+        ]);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     
 }

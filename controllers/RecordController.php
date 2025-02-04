@@ -35,26 +35,37 @@ class RecordController
         );
     }
 
-
-
-    public function listRecords($userId) {
-        $records = $this->recordService->getRecordsByUser($userId);
-        
+    public function listRecords($userId, $token) {
+        // Validar si el token es válido
+        if (!$this->sessionService->validateToken($userId, $token)) {
+            return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
+        }
+    
+        // Obtener la fecha de inicio de la sesión activa
+        $sessionStartTime = $this->sessionService->getSessionStartTime($userId, $token);
+        if (!$sessionStartTime) {
+            return ['success' => false, 'error' => 'No se encontró una sesión activa.'];
+        }
+    
+        // Obtener registros filtrados por ID de usuario y fecha de inicio de sesión
+        $records = $this->recordService->getRecordsBySession($userId, $sessionStartTime);
+    
         if ($records) {
             return [
                 'success' => true,
                 'records' => array_map(function ($record) {
                     return [
-                        'codigo_usuario' => $record['codigo_usuario'], // 🔹 Asegurar que esta clave se devuelve
+                        'codigo_usuario' => $record['codigo_usuario'], // Incluir código del usuario
                         'tipo' => $record['tipo'],
                         'monto' => $record['monto'],
-                        'fecha' => date('d-m-Y H:i:s', strtotime($record['fecha'])) // 🔹 Convertir la fecha
+                        'fecha' => date('d-m-Y H:i:s', strtotime($record['fecha'])) // Formatear la fecha correctamente
                     ];
                 }, $records)
             ];
         }
     
-        return ['success' => false, 'error' => 'No hay registros para este usuario.'];
-    }    
+        return ['success' => false, 'error' => 'No hay registros para este usuario en la sesión actual.'];
+    }
+    
     
 }
