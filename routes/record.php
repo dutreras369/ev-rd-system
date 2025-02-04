@@ -14,7 +14,9 @@ try {
     switch ($method) {
         case 'GET':
             if ($action === 'list' && isset($_GET['user_id']) && isset($_GET['token'])) {
-                echo json_encode($recordController->listRecords($_GET['user_id'], $_GET['token']));
+                $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+                $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 10;
+                echo json_encode($recordController->listRecords($_GET['user_id'], $_GET['token'], $page, $limit));
             } else {
                 throw new Exception('Acción no válida para GET', 400);
             }

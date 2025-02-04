@@ -1,0 +1,40 @@
+// Variables para colores y espaciado
+$primary-color: #007bff;
+$disabled-color: #ccc;
+$hover-text-color: white;
+$padding: 8px 15px;
+$border-radius: 5px;
+$font-size: 14px;
+$gap-size: 10px;
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $gap-size;
+    margin-top: 15px;
+
+    button {
+        padding: $padding;
+        border: none;
+        border-radius: $border-radius;
+        font-size: $font-size;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            background-color: $primary-color;
+            color: $hover-text-color;
+        }
+
+        &:disabled {
+            background-color: $disabled-color;
+            cursor: not-allowed;
+        }
+    }
+
+    span {
+        font-weight: bold;
+        font-size: 16px;
+    }
+}

@@ -35,37 +35,41 @@ class RecordController
         );
     }
 
-    public function listRecords($userId, $token) {
-        // Validar si el token es válido
+    public function listRecords($userId, $token, $page = 1, $limit = 10) {
         if (!$this->sessionService->validateToken($userId, $token)) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
         }
     
-        // Obtener la fecha de inicio de la sesión activa
         $sessionStartTime = $this->sessionService->getSessionStartTime($userId, $token);
         if (!$sessionStartTime) {
             return ['success' => false, 'error' => 'No se encontró una sesión activa.'];
         }
     
-        // Obtener registros filtrados por ID de usuario y fecha de inicio de sesión
-        $records = $this->recordService->getRecordsBySession($userId, $sessionStartTime);
+        // Calcular `offset` para la paginación
+        $offset = ($page - 1) * $limit;
+        $records = $this->recordService->getRecordsBySession($userId, $sessionStartTime, $limit, $offset);
     
         if ($records) {
             return [
                 'success' => true,
                 'records' => array_map(function ($record) {
                     return [
-                        'codigo_usuario' => $record['codigo_usuario'], // Incluir código del usuario
+                        'codigo_usuario' => $record['codigo_usuario'],
                         'tipo' => $record['tipo'],
                         'monto' => $record['monto'],
-                        'fecha' => date('d-m-Y H:i:s', strtotime($record['fecha'])) // Formatear la fecha correctamente
+                        'fecha' => date('d-m-Y H:i:s', strtotime($record['fecha']))
                     ];
-                }, $records)
+                }, $records),
+                'pagination' => [
+                    'current_page' => $page,
+                    'limit' => $limit,
+                    'next_page' => count($records) === $limit ? $page + 1 : null,
+                    'prev_page' => $page > 1 ? $page - 1 : null
+                ]
             ];
         }
     
-        return ['success' => false, 'error' => 'No hay registros para este usuario en la sesión actual.'];
-    }
-    
+        return ['success' => false, 'error' => 'No hay registros para este usuario en la fecha actual.'];
+    }   
     
 }

@@ -36,7 +36,7 @@ class RecordService {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getRecordsBySession($userId, $sessionStartTime) {
+    public function getRecordsBySession($userId, $sessionStartTime, $limit = 10, $offset = 0) {
         $dateOnly = date('Y-m-d', strtotime($sessionStartTime)); // Extraer solo la fecha
     
         $stmt = $this->pdo->prepare("
@@ -44,13 +44,19 @@ class RecordService {
             WHERE usuario_id = :user_id 
               AND DATE(fecha) = :session_date
             ORDER BY fecha DESC
+            LIMIT :limit OFFSET :offset
         ");
-        $stmt->execute([
-            ':user_id' => $userId,
-            ':session_date' => $dateOnly
-        ]);
+    
+        // Convertir `LIMIT` y `OFFSET` a enteros para evitar errores
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':session_date', $dateOnly, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+    
+        $stmt->execute();
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }    
+    }
+      
     
 }

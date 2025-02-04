@@ -89,33 +89,39 @@ $(document).ready(function () {
 
 
     // Función para actualizar la tabla de registros
-    function loadRecords() {
+    let currentPage = 1;
+    const limit = 10;
 
+    function loadRecords(page = 1) {
         const userId = localStorage.getItem("user_id");
         const token = localStorage.getItem("token");
 
         if (!userId || !token) {
-            console.error("No hay usuario autenticado o falta el token en localStorage.");
+            console.error("No hay usuario autenticado.");
             return;
         }
-    
+
         $.ajax({
-            url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}&token=${token}`,
+            url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}&token=${token}&page=${page}&limit=${limit}`,
             type: "GET",
             dataType: "json",
             success: function (response) {
                 if (response.success) {
                     $("#daily-records-table").empty();
+
                     response.records.forEach(record => {
                         $("#daily-records-table").append(`
-                            <tr>
-                                <td>${record.codigo_usuario}</td>
-                                <td>${record.tipo}</td>
-                                <td>$${parseFloat(record.monto).toLocaleString()}</td>
-                                <td>${record.fecha}</td>
-                            </tr>
-                        `);
+                        <tr>
+                            <td>${record.codigo_usuario}</td>
+                            <td>${record.tipo}</td>
+                            <td>$${parseFloat(record.monto).toLocaleString()}</td>
+                            <td>${record.fecha}</td>
+                        </tr>
+                    `);
                     });
+
+                    // Actualizar paginación
+                    updatePagination(response.pagination);
                 } else {
                     console.error("No hay registros:", response.error);
                 }
@@ -124,6 +130,21 @@ $(document).ready(function () {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
             }
         });
+    }
+
+    // Crear botones de paginación
+    function updatePagination(pagination) {
+        $("#pagination").empty();
+
+        if (pagination.prev_page) {
+            $("#pagination").append(`<button class="btn btn-secondary me-2" onclick="loadRecords(${pagination.prev_page})">Anterior</button>`);
+        }
+
+        $("#pagination").append(`<span class="fw-bold"> Página ${pagination.current_page} </span>`);
+
+        if (pagination.next_page) {
+            $("#pagination").append(`<button class="btn btn-secondary ms-2" onclick="loadRecords(${pagination.next_page})">Siguiente</button>`);
+        }
     }
 
     // Cargar registros al iniciar la página
