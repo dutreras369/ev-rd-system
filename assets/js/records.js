@@ -85,7 +85,6 @@ $(document).ready(function () {
         $(".movement-type[data-type='retiro']").removeClass("btn-success").addClass("btn-outline-danger");
     }
 
-
     // Función para actualizar la tabla de registros
     function loadRecords() {
 
