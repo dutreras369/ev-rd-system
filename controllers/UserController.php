@@ -146,30 +146,34 @@ class UserController
 
     public function getUser($userId, $token)
     {
-        // Validar si el token es válido
+        // 🔹 Validar si el token es válido
         if (!$this->sessionService->validateToken($userId, $token)) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
         }
-
-        // Obtener el objeto usuario
+    
+        // 🔹 Obtener el objeto usuario
         $userData = $this->userService->getUserById($userId);
-
-        // Validar que el usuario existe
+    
+        // 🔹 Validar que el usuario existe
         if (!$userData) {
             return ['success' => false, 'error' => 'Usuario no encontrado'];
         }
-
-        // Retornar los datos del usuario correctamente
+    
+        // 🔹 Obtener hora de inicio de sesión
+        $horaInicio = $this->sessionService->getSessionStartTime($userId, $token);
+        $horaInicioFormatted = $horaInicio ? date('d-m-Y H:i:s', strtotime($horaInicio)) : null;
+    
+        // 🔹 Retornar los datos del usuario correctamente
         return [
             'success' => true,
             'user' => [
-                'id' => $userData->id, // Ahora se accede a la propiedad del objeto
+                'id' => $userData->id,
                 'nombre' => $userData->nombre,
                 'email' => $userData->email,
                 'rol_id' => $userData->rol_id,
                 'rol' => $this->sessionService->getRoleName($userData->rol_id),
-                'hora_inicio' => $this->sessionService->getSessionStartTime($userId, $token)
+                'hora_inicio' => $horaInicioFormatted // ✅ Ahora la fecha está en el formato correcto
             ]
         ];
-    }
+    }    
 }

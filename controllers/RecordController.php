@@ -48,13 +48,13 @@ class RecordController
                         'codigo_usuario' => $record['codigo_usuario'], // 🔹 Asegurar que esta clave se devuelve
                         'tipo' => $record['tipo'],
                         'monto' => $record['monto'],
-                        'fecha' => $record['fecha']
+                        'fecha' => date('d-m-Y H:i:s', strtotime($record['fecha'])) // 🔹 Convertir la fecha
                     ];
                 }, $records)
             ];
         }
     
         return ['success' => false, 'error' => 'No hay registros para este usuario.'];
-    }
+    }    
     
 }

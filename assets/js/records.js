@@ -1,18 +1,6 @@
 $(document).ready(function () {
     let selectedType = "carga"; // Tipo predeterminado
 
-    function getFormattedTimestamp() {
-        const now = new Date();
-        const day = String(now.getDate()).padStart(2, "0");
-        const month = String(now.getMonth() + 1).padStart(2, "0"); // getMonth() devuelve 0-11
-        const year = now.getFullYear();
-        const hours = String(now.getHours()).padStart(2, "0");
-        const minutes = String(now.getMinutes()).padStart(2, "0");
-        const seconds = String(now.getSeconds()).padStart(2, "0");
-    
-        return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
-    }
-
     // Manejar selección de tipo de movimiento
     $(".movement-type").click(function () {
         selectedType = $(this).data("type");
@@ -39,9 +27,9 @@ $(document).ready(function () {
             return;
         }
 
-        // Obtener la fecha y hora actual en formato DD-MM-YYYY HH:MM:SS
-       const timestamp = getFormattedTimestamp();
-
+        // Obtener la fecha y hora actual en formato YYYY-MM-DD HH:MM:SS
+        const now = new Date();
+        const timestamp = now.toISOString().slice(0, 19).replace("T", " ");
 
         // Datos a enviar
         const formData = {
