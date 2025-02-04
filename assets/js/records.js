@@ -1,17 +1,24 @@
 $(document).ready(function () {
     let selectedType = "carga"; // Tipo predeterminado
 
-    // Manejar selección de tipo de movimiento
-    $(".movement-type").click(function () {
-        selectedType = $(this).data("type");
-        $("#movement-type").val(selectedType);
-        $(".movement-type").removeClass("active");
-        $(this).addClass("active");
-    });
+    // Variable global para almacenar el tipo de movimiento seleccionado
+    let selectedType = null;
 
-    // Manejar selección rápida de monto
-    $(".quick-amount").click(function () {
-        $("#amount").val($(this).data("amount"));
+    // Evento para seleccionar el tipo de movimiento
+    $(".movement-type").on("click", function () {
+        // Remover la clase activa de todos los botones
+        $(".movement-type").removeClass("btn-success btn-danger active")
+            .addClass("btn-outline-success btn-outline-danger");
+
+        // Obtener el tipo seleccionado
+        selectedType = $(this).data("type");
+
+        // Aplicar color correcto
+        if (selectedType === "carga") {
+            $(this).removeClass("btn-outline-success").addClass("btn-success active");
+        } else if (selectedType === "retiro") {
+            $(this).removeClass("btn-outline-danger").addClass("btn-danger active");
+        }
     });
 
     // Envío del formulario de registro
@@ -78,12 +85,10 @@ $(document).ready(function () {
         selectedType = null; // Reiniciar selección del tipo de movimiento
 
         // Restablecer la selección visual de los botones de tipo de movimiento
-        $(".movement-type").removeClass("active btn-success btn-danger").addClass("btn-outline-success btn-outline-danger");
-
-        // Restaurar colores originales
-        $(".movement-type[data-type='carga']").removeClass("btn-danger").addClass("btn-outline-success");
-        $(".movement-type[data-type='retiro']").removeClass("btn-success").addClass("btn-outline-danger");
+        $(".movement-type").removeClass("btn-success btn-danger active")
+            .addClass("btn-outline-success btn-outline-danger");
     }
+
 
     // Función para actualizar la tabla de registros
     function loadRecords() {
