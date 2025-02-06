@@ -72,4 +72,7 @@ class RecordController
         return ['success' => false, 'error' => 'No hay registros para este usuario en la fecha actual.'];
     }   
     
+    public function getTotalRecords($userId, $fecha) {
+        return $this->recordService->getTotalRecordsByUser($userId, $fecha);
+    }
 }

@@ -14,9 +14,35 @@ try {
     switch ($method) {
         case 'GET':
             if ($action === 'list' && isset($_GET['user_id']) && isset($_GET['token'])) {
-                $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-                $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 10;
-                echo json_encode($recordController->listRecords($_GET['user_id'], $_GET['token'], $page, $limit));
+
+                if (!isset($_GET['user_id'], $_GET['page'], $_GET['limit'])) {
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'error' => 'Faltan parámetros']);
+                    exit;
+                }
+                
+                $userId = $_GET['user_id'];
+                $page = (int) $_GET['page'];
+                $limit = (int) $_GET['limit'];
+                $offset = ($page - 1) * $limit;
+
+                // Obtener la fecha actual en formato YYYY-MM-DD
+                $fecha = date('Y-m-d');
+
+                // Obtener registros paginados
+                $records = $recordController->listRecords($userId, $fecha, $limit, $offset);
+
+                // Obtener el total de registros
+                $totalRecords = $recordController->getTotalRecords($userId, $fecha);
+
+                echo json_encode([
+                    'success' => true,
+                    'records' => $records,
+                    'totalRecords' => $totalRecords,
+                    'currentPage' => $page,
+                    'totalPages' => ceil($totalRecords / $limit)
+                ]);
+                break;
             } else {
                 throw new Exception('Acción no válida para GET', 400);
             }

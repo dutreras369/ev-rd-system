@@ -88,40 +88,32 @@ $(document).ready(function () {
     }
 
 
-    // Función para actualizar la tabla de registros
     let currentPage = 1;
-    const limit = 10;
-
+    const recordsPerPage = 5; // Número de registros por página
+    
     function loadRecords(page = 1) {
         const userId = localStorage.getItem("user_id");
-        const token = localStorage.getItem("token");
-
-        if (!userId || !token) {
-            console.error("No hay usuario autenticado.");
-            return;
-        }
-
+    
         $.ajax({
-            url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}&token=${token}&page=${page}&limit=${limit}`,
+            url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}&page=${page}&limit=${recordsPerPage}`,
             type: "GET",
             dataType: "json",
             success: function (response) {
                 if (response.success) {
                     $("#daily-records-table").empty();
-
                     response.records.forEach(record => {
                         $("#daily-records-table").append(`
-                        <tr>
-                            <td>${record.codigo_usuario}</td>
-                            <td>${record.tipo}</td>
-                            <td>$${parseFloat(record.monto).toLocaleString()}</td>
-                            <td>${record.fecha}</td>
-                        </tr>
-                    `);
+                            <tr>
+                                <td>${record.codigo_usuario}</td>
+                                <td>${record.tipo}</td>
+                                <td>$${parseFloat(record.monto).toLocaleString()}</td>
+                                <td>${record.fecha}</td>
+                            </tr>
+                        `);
                     });
-
+    
                     // Actualizar paginación
-                    updatePagination(response.pagination);
+                    updatePagination(response.currentPage, response.totalPages);
                 } else {
                     console.error("No hay registros:", response.error);
                 }
@@ -131,20 +123,30 @@ $(document).ready(function () {
             }
         });
     }
-
-    // Crear botones de paginación
-    function updatePagination(pagination) {
+    
+    function updatePagination(currentPage, totalPages) {
         $("#pagination").empty();
-
-        if (pagination.prev_page) {
-            $("#pagination").append(`<button class="btn btn-secondary me-2" onclick="loadRecords(${pagination.prev_page})">Anterior</button>`);
+    
+        // Botón anterior
+        if (currentPage > 1) {
+            $("#pagination").append(`<button class="page-btn" data-page="${currentPage - 1}">Anterior</button>`);
         }
-
-        $("#pagination").append(`<span class="fw-bold"> Página ${pagination.current_page} </span>`);
-
-        if (pagination.next_page) {
-            $("#pagination").append(`<button class="btn btn-secondary ms-2" onclick="loadRecords(${pagination.next_page})">Siguiente</button>`);
+    
+        // Números de página
+        for (let i = 1; i <= totalPages; i++) {
+            let activeClass = i === currentPage ? "active" : "";
+            $("#pagination").append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
         }
+    
+        // Botón siguiente
+        if (currentPage < totalPages) {
+            $("#pagination").append(`<button class="page-btn" data-page="${currentPage + 1}">Siguiente</button>`);
+        }
+    
+        $(".page-btn").click(function () {
+            let page = $(this).data("page");
+            loadRecords(page);
+        });
     }
 
     // Cargar registros al iniciar la página

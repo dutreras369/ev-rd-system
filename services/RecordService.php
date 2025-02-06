@@ -24,17 +24,36 @@ class RecordService {
         return ['success' => $success];
     }
 
-    public function getRecordsByUser($userId) {
+    public function getRecordsByUser($userId, $fecha, $limit, $offset) {
         $stmt = $this->pdo->prepare("
-            SELECT codigo_usuario, tipo, monto, fecha 
+            SELECT codigo_usuario, tipo, monto, fecha
             FROM registros 
             WHERE usuario_id = :user_id 
+            AND DATE(fecha) = :fecha
             ORDER BY fecha DESC
+            LIMIT :limit OFFSET :offset
         ");
-        $stmt->execute(['user_id' => $userId]);
-    
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':fecha', $fecha, PDO::PARAM_STR);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    // Contar el total de registros para la paginación
+    public function getTotalRecordsByUser($userId, $fecha) {
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*) as total FROM registros 
+            WHERE usuario_id = :user_id 
+            AND DATE(fecha) = :fecha
+        ");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':fecha' => $fecha
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+    }    
 
     public function getRecordsBySession($userId, $sessionStartTime, $limit = 10, $offset = 0) {
         $dateOnly = date('Y-m-d', strtotime($sessionStartTime)); // Extraer solo la fecha
@@ -57,6 +76,4 @@ class RecordService {
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-      
-    
 }
