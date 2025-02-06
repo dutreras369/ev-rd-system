@@ -56,12 +56,11 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    alert("Registro exitoso.");
 
                     // 🔹 Restablecer valores del formulario después del registro
                     resetRegisterForm();
 
-                    $("#registerModal").modal("hide"); // Cerrar modal
+                    // $("#registerModal").modal("hide"); // Cerrar modal
                     loadRecords(); // Recargar la lista de registros
                 } else {
                     alert("Error al registrar: " + response.error);
