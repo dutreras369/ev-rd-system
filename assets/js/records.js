@@ -93,12 +93,20 @@ $(document).ready(function () {
     
     function loadRecords(page = 1) {
         const userId = localStorage.getItem("user_id");
+        const token = localStorage.getItem("token");
     
         $.ajax({
-            url: `${BASE_URL}/routes/record.php?action=list&user_id=${userId}&page=${page}&limit=${recordsPerPage}`,
-            type: "GET",
+            url: BASE_URL + "/routes/record.php?action=list",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                user_id: userId,
+                token: token,
+                page: page,
+                limit: 5
+            }),
             dataType: "json",
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     $("#daily-records-table").empty();
                     response.records.forEach(record => {
@@ -112,17 +120,17 @@ $(document).ready(function () {
                         `);
                     });
     
-                    // Actualizar paginación
-                    updatePagination(response.currentPage, response.totalPages);
+                    // Actualizar botones de paginación
+                    updatePagination(response.current_page, response.total_pages);
                 } else {
                     console.error("No hay registros:", response.error);
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
             }
         });
-    }
+    }   
     
     function updatePagination(currentPage, totalPages) {
         $("#pagination").empty();

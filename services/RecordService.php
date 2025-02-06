@@ -26,20 +26,20 @@ class RecordService {
 
     public function getRecordsByUser($userId, $fecha, $limit, $offset) {
         $stmt = $this->pdo->prepare("
-            SELECT codigo_usuario, tipo, monto, fecha
-            FROM registros 
+            SELECT * FROM registros 
             WHERE usuario_id = :user_id 
             AND DATE(fecha) = :fecha
             ORDER BY fecha DESC
             LIMIT :limit OFFSET :offset
         ");
-        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-        $stmt->bindParam(':fecha', $fecha, PDO::PARAM_STR);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':fecha', $fecha, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
         $stmt->execute();
+    
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    }    
     
     // Contar el total de registros para la paginación
     public function getTotalRecordsByUser($userId, $fecha) {

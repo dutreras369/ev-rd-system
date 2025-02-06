@@ -35,23 +35,28 @@ class RecordController
         );
     }
 
-    public function listRecords($userId, $token, $page = 1, $limit = 10) {
+    public function listRecords($userId, $token, $page, $limit) {
+        // Validar token de sesión
         if (!$this->sessionService->validateToken($userId, $token)) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
         }
     
-        $sessionStartTime = $this->sessionService->getSessionStartTime($userId, $token);
-        if (!$sessionStartTime) {
-            return ['success' => false, 'error' => 'No se encontró una sesión activa.'];
-        }
-    
-        // Calcular `offset` para la paginación
+        // Calcular el offset para la paginación
         $offset = ($page - 1) * $limit;
-        $records = $this->recordService->getRecordsBySession($userId, $sessionStartTime, $limit, $offset);
+        $fecha = date('Y-m-d'); // Obtener solo la fecha actual
+    
+        // Obtener registros
+        $records = $this->recordService->getRecordsByUser($userId, $fecha, $limit, $offset);
+        $totalRecords = $this->recordService->getTotalRecordsByUser($userId, $fecha);
+    
+        // Calcular total de páginas
+        $totalPages = ceil($totalRecords / $limit);
     
         if ($records) {
             return [
                 'success' => true,
+                'current_page' => $page,
+                'total_pages' => $totalPages,
                 'records' => array_map(function ($record) {
                     return [
                         'codigo_usuario' => $record['codigo_usuario'],
@@ -59,18 +64,13 @@ class RecordController
                         'monto' => $record['monto'],
                         'fecha' => date('d-m-Y H:i:s', strtotime($record['fecha']))
                     ];
-                }, $records),
-                'pagination' => [
-                    'current_page' => $page,
-                    'limit' => $limit,
-                    'next_page' => count($records) === $limit ? $page + 1 : null,
-                    'prev_page' => $page > 1 ? $page - 1 : null
-                ]
+                }, $records)
             ];
         }
     
-        return ['success' => false, 'error' => 'No hay registros para este usuario en la fecha actual.'];
-    }   
+        return ['success' => false, 'error' => 'No hay registros para este usuario.'];
+    }
+    
     
     public function getTotalRecords($userId, $fecha) {
         return $this->recordService->getTotalRecordsByUser($userId, $fecha);

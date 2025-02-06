@@ -49,16 +49,19 @@ try {
             break;
 
         case 'POST':
-            if ($action === 'register') {
-                $data = json_decode(file_get_contents("php://input"), true);
+            $data = json_decode(file_get_contents("php://input"), true);
 
+            if ($action === 'register') {
                 if (!isset($data['user_id'], $data['codigo_usuario'], $data['token'], $data['movement_type'], $data['amount'], $data['timestamp'])) {
                     throw new Exception('Datos incompletos.', 400);
                 }
 
                 $response = $recordController->createRecord($data);
                 echo json_encode($response);
-            } else {
+            } else if ($action === 'list' && isset($data['user_id'], $data['token'], $data['page'], $data['limit'])) {
+                echo json_encode($recordController->listRecords($data['user_id'], $data['token'], $data['page'], $data['limit']));
+            }             
+            else {
                 throw new Exception('Acción no válida para POST', 400);
             }
             break;
