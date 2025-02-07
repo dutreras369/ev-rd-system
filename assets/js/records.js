@@ -19,7 +19,7 @@ $(document).ready(function () {
         }
     });
 
-    // Envío del formulario de registro con SweetAlert2
+    // Envío del formulario de registro
     $("#registerForm").submit(function (event) {
         event.preventDefault();
 
@@ -29,12 +29,7 @@ $(document).ready(function () {
         const amount = $("#amount").val();
 
         if (!userId || !token || !codigoUsuario || !selectedType || !amount) {
-            Swal.fire({
-                icon: "warning",
-                title: "Datos incompletos",
-                text: "Por favor, complete todos los campos antes de registrar.",
-                confirmButtonColor: "#3085d6",
-            });
+            alert("Error: Datos incompletos.");
             return;
         }
 
@@ -59,17 +54,6 @@ $(document).ready(function () {
             data: JSON.stringify(formData),
             contentType: "application/json",
             dataType: "json",
-            beforeSend: function () {
-                Swal.fire({
-                    title: "Registrando...",
-                    text: "Por favor espera...",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-            },
             success: function (response) {
                 if (response.success) {
                     Swal.fire({
@@ -77,13 +61,13 @@ $(document).ready(function () {
                         title: "Registro exitoso",
                         text: "El movimiento ha sido registrado correctamente.",
                         confirmButtonColor: "#28a745",
-                        timer: 1500,
+                        timer: 1200,
                         showConfirmButton: false
                     });
-
+    
                     // Restablecer valores del formulario
                     resetRegisterForm();
-
+    
                     // Cerrar el modal automáticamente después de un tiempo
                     setTimeout(() => {
                         $("#registerModal").modal("hide");
@@ -126,11 +110,11 @@ $(document).ready(function () {
 
     let currentPage = 1;
     const recordsPerPage = 5; // Número de registros por página
-
+    
     function loadRecords(page = 1) {
         const userId = localStorage.getItem("user_id");
         const token = localStorage.getItem("token");
-
+    
         $.ajax({
             url: BASE_URL + "/routes/record.php?action=list",
             type: "POST",
@@ -142,7 +126,7 @@ $(document).ready(function () {
                 limit: 5
             }),
             dataType: "json",
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     $("#daily-records-table").empty();
                     response.records.forEach(record => {
@@ -155,38 +139,38 @@ $(document).ready(function () {
                             </tr>
                         `);
                     });
-
+    
                     // Actualizar botones de paginación
                     updatePagination(response.current_page, response.total_pages);
                 } else {
                     console.error("No hay registros:", response.error);
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
             }
         });
-    }
-
+    }   
+    
     function updatePagination(currentPage, totalPages) {
         $("#pagination").empty();
-
+    
         // Botón anterior
         if (currentPage > 1) {
             $("#pagination").append(`<button class="page-btn" data-page="${currentPage - 1}">Anterior</button>`);
         }
-
+    
         // Números de página
         for (let i = 1; i <= totalPages; i++) {
             let activeClass = i === currentPage ? "active" : "";
             $("#pagination").append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
         }
-
+    
         // Botón siguiente
         if (currentPage < totalPages) {
             $("#pagination").append(`<button class="page-btn" data-page="${currentPage + 1}">Siguiente</button>`);
         }
-
+    
         $(".page-btn").click(function () {
             let page = $(this).data("page");
             loadRecords(page);
