@@ -56,40 +56,19 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Registro exitoso",
-                        text: "El movimiento ha sido registrado correctamente.",
-                        confirmButtonColor: "#28a745",
-                        timer: 1200,
-                        showConfirmButton: false
-                    });
-    
-                    // Restablecer valores del formulario
+
+                    // 🔹 Restablecer valores del formulario después del registro
                     resetRegisterForm();
-    
-                    // Cerrar el modal automáticamente después de un tiempo
-                    setTimeout(() => {
-                        $("#registerModal").modal("hide");
-                        loadRecords(); // Recargar la lista de registros
-                    }, 1600);
+
+                    //$("#registerModal").modal("hide"); // Cerrar modal
+                    loadRecords(); // Recargar la lista de registros
                 } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error al registrar",
-                        text: response.error,
-                        confirmButtonColor: "#d33",
-                    });
+                    alert("Error al registrar: " + response.error);
                 }
             },
             error: function (xhr) {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
-                Swal.fire({
-                    icon: "error",
-                    title: "Error en la solicitud",
-                    text: "Ver consola para más detalles.",
-                    confirmButtonColor: "#d33",
-                });
+                alert("Error en la solicitud. Ver consola.");
             },
         });
     });
