@@ -1,28 +1,132 @@
 $(document).ready(function () {
-    const userId = localStorage.getItem("user_id");
-    const token = localStorage.getItem("token");
+    // Variable global para almacenar el tipo de movimiento seleccionado
+    let selectedType = null;
 
-    let currentPage = 1;
-    const recordsPerPage = 5;
+    // Evento para seleccionar el tipo de movimiento
+    $(".movement-type").on("click", function () {
+        // Remover la clase activa de todos los botones
+        $(".movement-type").removeClass("btn-success btn-danger active")
+            .addClass("btn-outline-success btn-outline-danger");
 
-    if (!userId || !token) {
-        console.error("Usuario no autenticado.");
-        return;
+        // Obtener el tipo seleccionado
+        selectedType = $(this).data("type");
+
+        // Aplicar color correcto
+        if (selectedType === "carga") {
+            $(this).removeClass("btn-outline-success").addClass("btn-success active");
+        } else if (selectedType === "retiro") {
+            $(this).removeClass("btn-outline-danger").addClass("btn-danger active");
+        }
+    });
+
+    // Envío del formulario de registro
+    $("#registerForm").submit(function (event) {
+        event.preventDefault();
+
+        const userId = localStorage.getItem("user_id");
+        const token = localStorage.getItem("token");
+        const codigoUsuario = $("#codigo_usuario").val();
+        const amount = $("#amount").val();
+
+        if (!userId || !token || !codigoUsuario || !selectedType || !amount) {
+            alert("Error: Datos incompletos.");
+            return;
+        }
+
+        // Obtener la fecha y hora actual en formato YYYY-MM-DD HH:MM:SS
+        const now = new Date();
+        const timestamp = now.toISOString().slice(0, 19).replace("T", " ");
+
+        // Datos a enviar
+        const formData = {
+            user_id: userId,
+            codigo_usuario: codigoUsuario,
+            token: token,
+            movement_type: selectedType,
+            amount: amount,
+            timestamp: timestamp
+        };
+
+        // Enviar datos al endpoint
+        $.ajax({
+            url: BASE_URL + "/routes/record.php?action=register",
+            type: "POST",
+            data: JSON.stringify(formData),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Registro exitoso",
+                        text: "El movimiento ha sido registrado correctamente.",
+                        confirmButtonColor: "#28a745",
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+    
+                    // Restablecer valores del formulario
+                    resetRegisterForm();
+    
+                    // Cerrar el modal automáticamente después de un tiempo
+                    setTimeout(() => {
+                        $("#registerModal").modal("hide");
+                        loadRecords(); // Recargar la lista de registros
+                    }, 1600);
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error al registrar",
+                        text: response.error,
+                        confirmButtonColor: "#d33",
+                    });
+                }
+            },
+            error: function (xhr) {
+                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error en la solicitud",
+                    text: "Ver consola para más detalles.",
+                    confirmButtonColor: "#d33",
+                });
+            },
+        });
+    });
+
+    /**
+     * 🔹 Restablecer valores del formulario después de registrar
+     */
+    function resetRegisterForm() {
+        $("#codigo_usuario").val(""); // Limpiar campo de código de usuario
+        $("#amount").val(""); // Limpiar campo de monto
+        selectedType = null; // Reiniciar selección del tipo de movimiento
+
+        // Restablecer la selección visual de los botones de tipo de movimiento
+        $(".movement-type").removeClass("btn-success btn-danger active")
+            .addClass("btn-outline-success btn-outline-danger");
     }
 
-    /** 📌 Cargar registros paginados */
+
+    let currentPage = 1;
+    const recordsPerPage = 5; // Número de registros por página
+    
     function loadRecords(page = 1) {
+        const userId = localStorage.getItem("user_id");
+        const token = localStorage.getItem("token");
+    
         $.ajax({
-            url: `${BASE_URL}/record.php?action=list`,
+            url: BASE_URL + "/routes/record.php?action=list",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
                 user_id: userId,
                 token: token,
                 page: page,
-                limit: recordsPerPage
+                limit: 5
             }),
-            success: function (response) {
+            dataType: "json",
+            success: function(response) {
                 if (response.success) {
                     $("#daily-records-table").empty();
                     response.records.forEach(record => {
@@ -35,157 +139,44 @@ $(document).ready(function () {
                             </tr>
                         `);
                     });
-                    updatePagination(response.totalPages, page);
+    
+                    // Actualizar botones de paginación
+                    updatePagination(response.current_page, response.total_pages);
                 } else {
                     console.error("No hay registros:", response.error);
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
             }
         });
-    }
-
-    /** 📌 Actualizar paginación */
-    function updatePagination(totalPages, currentPage) {
-        let paginationHtml = "";
+    }   
+    
+    function updatePagination(currentPage, totalPages) {
+        $("#pagination").empty();
+    
+        // Botón anterior
+        if (currentPage > 1) {
+            $("#pagination").append(`<button class="page-btn" data-page="${currentPage - 1}">Anterior</button>`);
+        }
+    
+        // Números de página
         for (let i = 1; i <= totalPages; i++) {
-            paginationHtml += `<button class="btn ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} pagination-btn" data-page="${i}">${i}</button>`;
+            let activeClass = i === currentPage ? "active" : "";
+            $("#pagination").append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
         }
-        $("#pagination").html(paginationHtml);
-    }
-
-    /** 📌 Evento para cambiar de página */
-    $(document).on("click", ".pagination-btn", function () {
-        let page = $(this).data("page");
-        currentPage = page;
-        loadRecords(page);
-    });
-
-    /** 📌 Envío del formulario de registro */
-    $("#registerForm").submit(function (event) {
-        event.preventDefault();
-
-        const codigoUsuario = $("#codigo_usuario").val();
-        const amount = $("#amount").val();
-        const movementType = $("#movement-type").val();
-
-        if (!codigoUsuario || !movementType || !amount) {
-            alert("Error: Datos incompletos.");
-            return;
+    
+        // Botón siguiente
+        if (currentPage < totalPages) {
+            $("#pagination").append(`<button class="page-btn" data-page="${currentPage + 1}">Siguiente</button>`);
         }
-
-        const now = new Date();
-        const timestamp = now.toISOString().slice(0, 19).replace("T", " ");
-
-        const formData = {
-            user_id: userId,
-            codigo_usuario: codigoUsuario,
-            token: token,
-            movement_type: movementType,
-            amount: amount,
-            timestamp: timestamp
-        };
-
-        $.ajax({
-            url: `${BASE_URL}/record.php?action=register`,
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(formData),
-            success: function (response) {
-                if (response.success) {
-                    alert("Registro exitoso.");
-                    $("#registerModal").modal("hide");
-                    loadRecords(currentPage);
-                    resetRegisterForm();
-                } else {
-                    alert("Error al registrar: " + response.error);
-                }
-            },
-            error: function (xhr) {
-                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
-                alert("Error en la solicitud. Ver consola.");
-            },
-        });
-    });
-
-    /** 📌 Restablecer formulario después del registro */
-    function resetRegisterForm() {
-        $("#registerForm")[0].reset();
-        $("#movement-type").val("carga");
-    }
-
-    /** 📌 Cargar datos del día anterior */
-    function loadTotalRecords() {
-        $.ajax({
-            url: `${BASE_URL}/record.php?action=total_records`,
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                user_id: userId,
-                token: token
-            }),
-            success: function (response) {
-                if (response.success) {
-                    $("#daily-records").text(response.totalRecords);
-                } else {
-                    console.error("Error al obtener totales:", response.error);
-                }
-            },
-            error: function (xhr) {
-                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
-            }
+    
+        $(".page-btn").click(function () {
+            let page = $(this).data("page");
+            loadRecords(page);
         });
     }
 
-    /** 📌 Filtrar registros */
-    $("#filterDetailsForm").submit(function (event) {
-        event.preventDefault();
-
-        const dateFrom = $("#filter-date-from").val();
-        const dateTo = $("#filter-date-to").val();
-        const type = $("#filter-type").val();
-        const status = $("#filter-status").val();
-
-        $.ajax({
-            url: `${BASE_URL}/record.php?action=filter`,
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                user_id: userId,
-                token: token,
-                date_from: dateFrom,
-                date_to: dateTo,
-                status: status,
-                page: currentPage,
-                limit: recordsPerPage
-            }),
-            success: function (response) {
-                if (response.success) {
-                    $("#details-table-body").empty();
-                    response.records.forEach(record => {
-                        $("#details-table-body").append(`
-                            <tr>
-                                <td>${record.codigo_usuario}</td>
-                                <td>${record.tipo}</td>
-                                <td>$${parseFloat(record.monto).toLocaleString()}</td>
-                                <td>${record.fecha}</td>
-                                <td>${record.estado}</td>
-                            </tr>
-                        `);
-                    });
-                    updatePagination(response.totalPages, currentPage);
-                } else {
-                    console.error("Error en filtro:", response.error);
-                }
-            },
-            error: function (xhr) {
-                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
-            }
-        });
-    });
-
-    /** 📌 Cargar registros y totales al iniciar */
+    // Cargar registros al iniciar la página
     loadRecords();
-    loadTotalRecords();
 });
