@@ -1,11 +1,8 @@
 <?php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../controllers/AuthController.php';
 
-// Obtener conexión con la base de datos
-$pdo = Database::getConnection();
 $authController = new AuthController();
 
 $response = ['success' => false, 'error' => 'Acción no válida.'];

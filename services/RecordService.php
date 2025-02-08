@@ -76,4 +76,67 @@ class RecordService {
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function updateStatus($recordId, $status) {
+        $stmt = $this->pdo->prepare("UPDATE registros SET estado = :status WHERE id = :record_id");
+        $stmt->execute([
+            ':status' => $status,
+            ':record_id' => $recordId
+        ]);
+    
+        return ['success' => $stmt->rowCount() > 0];
+    }
+
+    public function getRecordDetails($recordId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM registros WHERE id = :record_id");
+        $stmt->execute([':record_id' => $recordId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }    
+
+    public function filterRecords($filters) {
+        $query = "SELECT * FROM registros WHERE 1=1";
+        $params = [];
+    
+        if (!empty($filters['user_id'])) {
+            $query .= " AND usuario_id = :user_id";
+            $params[':user_id'] = $filters['user_id'];
+        }
+    
+        if (!empty($filters['date_from'])) {
+            $query .= " AND DATE(fecha) >= :date_from";
+            $params[':date_from'] = $filters['date_from'];
+        }
+    
+        if (!empty($filters['date_to'])) {
+            $query .= " AND DATE(fecha) <= :date_to";
+            $params[':date_to'] = $filters['date_to'];
+        }
+    
+        if (!empty($filters['status'])) {
+            $query .= " AND estado = :status";
+            $params[':status'] = $filters['status'];
+        }
+    
+        // Agregar paginación
+        if (isset($filters['limit'], $filters['offset'])) {
+            $query .= " LIMIT :limit OFFSET :offset";
+            $params[':limit'] = $filters['limit'];
+            $params[':offset'] = $filters['offset'];
+        }
+    
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function getTotalRecords($userId, $fecha) {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM registros WHERE usuario_id = :user_id AND DATE(fecha) = :fecha");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':fecha' => $fecha
+        ]);
+    
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }    
 }

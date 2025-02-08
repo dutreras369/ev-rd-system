@@ -72,7 +72,22 @@ class RecordController
     }
     
     
-    public function getTotalRecords($userId, $fecha) {
+    public function getTotalRecordsByUser($userId, $fecha) {
         return $this->recordService->getTotalRecordsByUser($userId, $fecha);
+    }
+
+    public function updateStatus($recordId, $status) {
+        return $this->recordService->updateStatus($recordId, $status);
+    }
+
+    public function getRecordDetails($recordId) {
+        return $this->recordService->getRecordDetails($recordId);
+    }
+    public function filterRecords($filters) {
+        return $this->recordService->filterRecords($filters);
+    }
+        
+    public function getTotalRecords($userId, $fecha) {
+        return $this->recordService->getTotalRecords($userId, $fecha);
     }
 }

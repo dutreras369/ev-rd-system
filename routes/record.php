@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../controllers/RecordController.php';
 
 // Inicializar controlador
@@ -13,14 +12,11 @@ $action = $_GET['action'] ?? null;
 try {
     switch ($method) {
         case 'GET':
-            if ($action === 'list' && isset($_GET['user_id']) && isset($_GET['token'])) {
-
-                if (!isset($_GET['user_id'], $_GET['page'], $_GET['limit'])) {
-                    http_response_code(400);
-                    echo json_encode(['success' => false, 'error' => 'Faltan parámetros']);
-                    exit;
+            if ($action === 'list') {
+                if (!isset($_GET['user_id'], $_GET['token'], $_GET['page'], $_GET['limit'])) {
+                    throw new Exception('Datos incompletos.', 400);
                 }
-                
+
                 $userId = $_GET['user_id'];
                 $page = (int) $_GET['page'];
                 $limit = (int) $_GET['limit'];
@@ -33,7 +29,7 @@ try {
                 $records = $recordController->listRecords($userId, $fecha, $limit, $offset);
 
                 // Obtener el total de registros
-                $totalRecords = $recordController->getTotalRecords($userId, $fecha);
+                $totalRecords = $recordController->getTotalRecordsByUser($userId, $fecha);
 
                 echo json_encode([
                     'success' => true,
@@ -43,6 +39,13 @@ try {
                     'totalPages' => ceil($totalRecords / $limit)
                 ]);
                 break;
+            } elseif ($action === 'details') {
+                if (!isset($_GET['user_id'], $_GET['token'], $_GET['record_id'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+
+                $response = $recordController->getRecordDetails($_GET['record_id']);
+                echo json_encode($response);
             } else {
                 throw new Exception('Acción no válida para GET', 400);
             }
@@ -58,10 +61,42 @@ try {
 
                 $response = $recordController->createRecord($data);
                 echo json_encode($response);
-            } else if ($action === 'list' && isset($data['user_id'], $data['token'], $data['page'], $data['limit'])) {
-                echo json_encode($recordController->listRecords($data['user_id'], $data['token'], $data['page'], $data['limit']));
-            }             
-            else {
+
+            } elseif ($action === 'list') {
+                if (!isset($data['user_id'], $data['token'], $data['page'], $data['limit'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+
+                $response = $recordController->listRecords($data['user_id'], $data['token'], $data['page'], $data['limit']);
+                echo json_encode($response);
+
+            } elseif ($action === 'update_status') {
+                if (!isset($data['user_id'], $data['record_id'], $data['status'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+
+                $response = $recordController->updateStatus($data['record_id'], $data['status']);
+                echo json_encode($response);
+
+            } elseif ($action === 'filter') {
+                if (!isset($data['user_id'], $data['token'], $data['page'], $data['limit'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+
+                $response = $recordController->filterRecords($data);
+                echo json_encode($response);
+
+            } elseif ($action === 'total_records') {
+                if (!isset($data['user_id'], $data['token'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+
+                // Obtener fecha del día anterior
+                $fechaAnterior = date('Y-m-d', strtotime('-1 day'));
+
+                $response = $recordController->getTotalRecords($data['user_id'], $fechaAnterior);
+                echo json_encode($response);
+            } else {
                 throw new Exception('Acción no válida para POST', 400);
             }
             break;

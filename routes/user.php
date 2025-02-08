@@ -1,14 +1,8 @@
 <?php
 header('Content-Type: application/json');
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../controllers/UserController.php';
 
-// Inicializar conexión y controlador
-$pdo = Database::getConnection();
-$userController = new UserController($pdo);
+$userController = new UserController();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? null;

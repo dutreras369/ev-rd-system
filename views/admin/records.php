@@ -26,4 +26,4 @@
     </div>
 </div>
 
-<?php require_once __DIR__ . '/modals/user_details_modal.php'; ?>
+<?php require_once __DIR__ . '/modals/record_details_modal.php'; ?>
