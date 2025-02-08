@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     const userId = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
     let selectedType = null;
@@ -61,7 +60,7 @@ $(document).ready(function () {
                 };
 
                 $.ajax({
-                    url: `${BASE_URL}/record.php?action=register`,
+                    url: `${BASE_URL}/routes/record.php?action=register`,
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(formData),
@@ -117,7 +116,7 @@ $(document).ready(function () {
         if (!$("#daily-records-table").length) return;
 
         $.ajax({
-            url: `${BASE_URL}/record.php?action=list`,
+            url: `${BASE_URL}/routes/record.php?action=list`,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -181,7 +180,7 @@ $(document).ready(function () {
         if (!$("#daily-records").length) return;
 
         $.ajax({
-            url: `${BASE_URL}/record.php?action=total_records`,
+            url: `${BASE_URL}/routes/record.php?action=total_records`,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -214,7 +213,7 @@ $(document).ready(function () {
             const status = $("#filter-status").val();
 
             $.ajax({
-                url: `${BASE_URL}/record.php?action=filter`,
+                url: `${BASE_URL}/routes/record.php?action=filter`,
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
