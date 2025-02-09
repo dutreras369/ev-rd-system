@@ -87,15 +87,30 @@ try {
                 echo json_encode($response);
 
             } elseif ($action === 'total_records') {
-                if (!isset($data['user_id'], $data['token'])) {
-                    throw new Exception('Datos incompletos.', 400);
+                if (!$this->sessionService->validateToken($userId, $token)) {
+                    return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
                 }
-
-                // Obtener fecha del día anterior
-                $fechaAnterior = date('Y-m-d', strtotime('-1 day'));
-
-                $response = $recordController->getTotalRecords($data['user_id'], $fechaAnterior);
-                echo json_encode($response);
+            
+                $offset = ($page - 1) * $limit;
+                $fecha = date('Y-m-d');
+            
+                $records = $this->recordService->getRecordsByUser($userId, $fecha, $limit, $offset);
+                $totalRecords = $this->recordService->getTotalRecordsByUser($userId, $fecha);
+            
+                return [
+                    'success' => true,
+                    'current_page' => $page,
+                    'total_pages' => ceil($totalRecords / $limit),
+                    'records' => array_map(function ($record) {
+                        return [
+                            'codigo_usuario' => $record['codigo_usuario'],
+                            'tipo' => $record['tipo'],
+                            'monto' => $record['monto'],
+                            'fecha' => date('d-m-Y H:i:s', strtotime($record['fecha']))
+                        ];
+                    }, $records)
+                ];
+                
             } else {
                 throw new Exception('Acción no válida para POST', 400);
             }

@@ -39,22 +39,23 @@ class RecordService {
         $stmt->execute();
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }    
+    }   
     
     // Contar el total de registros para la paginación
-    public function getTotalRecordsByUser($userId, $fecha) {
+    public function getTotalRecordsByUser($userId) {
         $stmt = $this->pdo->prepare("
-            SELECT COUNT(*) as total FROM registros 
-            WHERE usuario_id = :user_id 
-            AND DATE(fecha) = :fecha
+            SELECT 
+                COUNT(*) AS total,
+                SUM(CASE WHEN estado = 'correcto' THEN 1 ELSE 0 END) AS correct,
+                SUM(CASE WHEN estado = 'incorrecto' THEN 1 ELSE 0 END) AS incorrect
+            FROM registros
+            WHERE usuario_id = :user_id AND DATE(fecha) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
         ");
-        $stmt->execute([
-            ':user_id' => $userId,
-            ':fecha' => $fecha
-        ]);
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-    }    
-
+        $stmt->execute(['user_id' => $userId]);
+    
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
     public function getRecordsBySession($userId, $sessionStartTime, $limit = 10, $offset = 0) {
         $dateOnly = date('Y-m-d', strtotime($sessionStartTime)); // Extraer solo la fecha
     
@@ -130,13 +131,18 @@ class RecordService {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function getTotalRecords($userId, $fecha) {
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM registros WHERE usuario_id = :user_id AND DATE(fecha) = :fecha");
-        $stmt->execute([
-            ':user_id' => $userId,
-            ':fecha' => $fecha
-        ]);
-    
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-    }    
+    public function getTotalRecords() {
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                COUNT(*) AS total,
+                SUM(CASE WHEN estado = 'correcto' THEN 1 ELSE 0 END) AS correct,
+                SUM(CASE WHEN estado = 'incorrecto' THEN 1 ELSE 0 END) AS incorrect
+            FROM registros
+            WHERE DATE(fecha) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        ");
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+       
+     
 }

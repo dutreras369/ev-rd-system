@@ -71,7 +71,6 @@ class RecordController
         return ['success' => false, 'error' => 'No hay registros para este usuario.'];
     }
     
-    
     public function getTotalRecordsByUser($userId, $fecha) {
         return $this->recordService->getTotalRecordsByUser($userId, $fecha);
     }
@@ -87,7 +86,14 @@ class RecordController
         return $this->recordService->filterRecords($filters);
     }
         
-    public function getTotalRecords($userId, $fecha) {
-        return $this->recordService->getTotalRecords($userId, $fecha);
-    }
+    public function getTotalRecords() {
+        $totales = $this->recordService->getTotalRecords();
+    
+        return [
+            'success' => true,
+            'total_records' => $totales['total'],
+            'total_correct' => $totales['correct'],
+            'total_incorrect' => $totales['incorrect']
+        ];
+    }    
 }

@@ -175,21 +175,19 @@ $(document).ready(function () {
         });
     }
 
-    /** 🔹 Cargar totales del día anterior */
     function loadTotalRecords() {
-        if (!$("#daily-records").length) return;
+        if (!$("#records-section").length) return;
 
         $.ajax({
-            url: `${BASE_URL}/routes/record.php?action=total_records`,
+            url: `${BASE_URL}/record.php?action=total_records`,
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({
-                user_id: userId,
-                token: token
-            }),
+            data: JSON.stringify({ user_id: userId, token: token }),
             success: function (response) {
                 if (response.success) {
-                    $("#daily-records").text(response.totalRecords);
+                    $("#daily-records").text(response.total_records);
+                    $("#correct-records").text(response.total_correct);
+                    $("#incorrect-records").text(response.total_incorrect);
                 } else {
                     console.error("Error al obtener totales:", response.error);
                 }
@@ -199,6 +197,48 @@ $(document).ready(function () {
             }
         });
     }
+
+    /** 🔹 Evento para ver registros por usuario */
+    $(document).on("click", ".view-records", function () {
+        let codigoUsuario = $(this).data("user");
+
+        $.ajax({
+            url: `${BASE_URL}/record.php?action=filter`,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                user_id: userId,
+                token: token
+                // codigo_usuario: codigoUsuario - este es un codigo del usuario foraneo que este caso no sera utilizado 
+                // Segun la fecha del presente podemos dar un rango para el filtro, de 5 dias hacia atras con paginador 
+            }),
+            success: function (response) {
+                if (response.success) {
+                    $("#details-table-body").empty();
+                    response.records.forEach((record, index) => {
+                        $("#details-table-body").append(`
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${record.codigo_usuario}</td>
+                            <td>${record.fecha}</td>
+                            <td>${record.tipo}</td>
+                            <td>$${parseFloat(record.monto).toLocaleString()}</td>
+                            <td>${record.estado}</td>
+                        </tr>
+                    `);
+                    });
+
+                    $("#viewDetailsModal").modal("show");
+                } else {
+                    console.error("Error al cargar registros:", response.error);
+                }
+            },
+            error: function (xhr) {
+                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
+            }
+        });
+    });
+
 
     /** 🔹 Filtrar registros */
     function setupFilterForm() {
