@@ -86,7 +86,7 @@ try {
                 $response = $recordController->filterRecords($data);
                 echo json_encode($response);
 
-            } else if ($action === 'total_records') {
+            } elseif ($action === 'total_records') {
                 if (!$this->sessionService->validateToken($userId, $token)) {
                     return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
                 }
@@ -110,7 +110,7 @@ try {
                         ];
                     }, $records)
                 ];
-
+                
             } else {
                 throw new Exception('Acción no válida para POST', 400);
             }

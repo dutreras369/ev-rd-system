@@ -41,8 +41,23 @@ class RecordService {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }   
     
+    
     // Contar el total de registros para la paginación
-    public function getTotalRecordsByUser($userId) {
+    public function getTotalRecordsByUser($userId, $fecha) {
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*) as total FROM registros 
+            WHERE usuario_id = :user_id 
+            AND DATE(fecha) = :fecha
+        ");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':fecha' => $fecha
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+    }    
+
+    // Contar el total de registros para la paginación
+    public function getTotalStatusRecordsByUser($userId) {
         $stmt = $this->pdo->prepare("
             SELECT 
                 COUNT(*) AS total,
@@ -131,7 +146,7 @@ class RecordService {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function getTotalRecords() {
+    public function getTotalStatusRecords() {
         $stmt = $this->pdo->prepare("
             SELECT 
                 COUNT(*) AS total,
@@ -144,5 +159,13 @@ class RecordService {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
        
-     
+    public function getTotalRecords($userId, $fecha) {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM registros WHERE usuario_id = :user_id AND DATE(fecha) = :fecha");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':fecha' => $fecha
+        ]);
+    
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }    
 }
