@@ -1,5 +1,9 @@
 
 $(document).ready(function () {
+
+    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
+    
     function loadTotalRecords() {
         if (!$("#records-section").length) return;
     
