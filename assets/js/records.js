@@ -114,7 +114,7 @@ $(document).ready(function () {
     /** 🔹 Cargar registros paginados */
     function loadRecords(page = 1) {
         if (!$("#daily-records-table").length) return;
-
+    
         $.ajax({
             url: `${BASE_URL}/routes/record.php?action=list`,
             type: "POST",
@@ -123,7 +123,7 @@ $(document).ready(function () {
                 user_id: userId,
                 token: token,
                 page: page,
-                limit: recordsPerPage
+                limit: 5
             }),
             success: function (response) {
                 if (response.success) {
@@ -138,8 +138,8 @@ $(document).ready(function () {
                             </tr>
                         `);
                     });
-
-                    updatePagination(response.currentPage, response.totalPages);
+    
+                    updatePagination(response.current_page, response.total_pages);
                 } else {
                     console.error("No hay registros:", response.error);
                 }

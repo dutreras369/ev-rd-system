@@ -24,7 +24,7 @@ class RecordService {
         return ['success' => $success];
     }
 
-    public function getRecordsByUser($userId, $fecha, $limit, $offset) {
+    public function getRecordsByUser($userId, $fecha, $limit = 10, $offset = 0) {
         $stmt = $this->pdo->prepare("
             SELECT * FROM registros 
             WHERE usuario_id = :user_id 
