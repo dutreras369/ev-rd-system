@@ -177,7 +177,7 @@ $(document).ready(function () {
 
     function loadTotalRecords() {
         if (!$("#records-section").length) return;
-
+    
         $.ajax({
             url: `${BASE_URL}/routes/record.php?action=total_records`,
             type: "POST",
@@ -196,7 +196,7 @@ $(document).ready(function () {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
             }
         });
-    }
+    }    
 
     /** 🔹 Evento para ver registros por usuario */
     $(document).on("click", ".view-records", function () {
