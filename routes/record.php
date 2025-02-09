@@ -59,13 +59,6 @@ try {
                 $response = $recordController->filterRecords($data);
                 echo json_encode($response);
 
-            } elseif ($action === 'total_records') {
-                if (!isset($data['user_id'], $data['token'])) {
-                    throw new Exception('Datos incompletos.', 400);
-                }
-
-                $response = $recordController->getTotalStatusRecords();
-                echo json_encode($response);
             } else {
                 throw new Exception('Acción no válida para POST', 400);
             }
