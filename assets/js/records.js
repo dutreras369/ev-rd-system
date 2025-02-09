@@ -179,7 +179,7 @@ $(document).ready(function () {
         if (!$("#records-section").length) return;
 
         $.ajax({
-            url: `${BASE_URL}/record.php?action=total_records`,
+            url: `${BASE_URL}/routes/record.php?action=total_records`,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({ user_id: userId, token: token }),
