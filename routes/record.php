@@ -12,34 +12,7 @@ $action = $_GET['action'] ?? null;
 try {
     switch ($method) {
         case 'GET':
-            if ($action === 'list') {
-                if (!isset($_GET['user_id'], $_GET['token'], $_GET['page'], $_GET['limit'])) {
-                    throw new Exception('Datos incompletos.', 400);
-                }
-
-                $userId = $_GET['user_id'];
-                $page = (int) $_GET['page'];
-                $limit = (int) $_GET['limit'];
-                $offset = ($page - 1) * $limit;
-
-                // Obtener la fecha actual en formato YYYY-MM-DD
-                $fecha = date('Y-m-d');
-
-                // Obtener registros paginados
-                $records = $recordController->listRecords($userId, $fecha, $limit, $offset);
-
-                // Obtener el total de registros
-                $totalRecords = $recordController->getTotalRecordsByUser($userId, $fecha);
-
-                echo json_encode([
-                    'success' => true,
-                    'records' => $records,
-                    'totalRecords' => $totalRecords,
-                    'currentPage' => $page,
-                    'totalPages' => ceil($totalRecords / $limit)
-                ]);
-                break;
-            } elseif ($action === 'details') {
+            if ($action === 'details') {
                 if (!isset($_GET['user_id'], $_GET['token'], $_GET['record_id'])) {
                     throw new Exception('Datos incompletos.', 400);
                 }
@@ -87,30 +60,12 @@ try {
                 echo json_encode($response);
 
             } elseif ($action === 'total_records') {
-                if (!$this->sessionService->validateToken($userId, $token)) {
-                    return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
+                if (!isset($data['user_id'], $data['token'])) {
+                    throw new Exception('Datos incompletos.', 400);
                 }
-            
-                $offset = ($page - 1) * $limit;
-                $fecha = date('Y-m-d');
-            
-                $records = $this->recordService->getRecordsByUser($userId, $fecha, $limit, $offset);
-                $totalRecords = $this->recordService->getTotalRecordsByUser($userId, $fecha);
-            
-                return [
-                    'success' => true,
-                    'current_page' => $page,
-                    'total_pages' => ceil($totalRecords / $limit),
-                    'records' => array_map(function ($record) {
-                        return [
-                            'codigo_usuario' => $record['codigo_usuario'],
-                            'tipo' => $record['tipo'],
-                            'monto' => $record['monto'],
-                            'fecha' => date('d-m-Y H:i:s', strtotime($record['fecha']))
-                        ];
-                    }, $records)
-                ];
-                
+
+                $response = $recordController->getTotalStatusRecords();
+                echo json_encode($response);
             } else {
                 throw new Exception('Acción no válida para POST', 400);
             }

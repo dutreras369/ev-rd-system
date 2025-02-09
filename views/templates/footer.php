@@ -12,10 +12,11 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?php echo JS_URL; ?>/app.js"></script>
-    <script src="<?php echo JS_URL; ?>/auth.js"></script>
-    <script src="<?php echo JS_URL; ?>/table.js"></script>
-    <script src="<?php echo JS_URL; ?>/user.js"></script>
-    <script src="<?php echo JS_URL; ?>/records.js"></script>
+    <script src="<?php echo JS_URL; ?>/ajax/auth.js"></script>
+    <script src="<?php echo JS_URL; ?>/ajax/user.js"></script>
+    <script src="<?php echo JS_URL; ?>/ajax/records.js"></script>
+    <script src="<?php echo JS_URL; ?>/ajax/analysis.js"></script>
+    <script src="<?php echo JS_URL; ?>/ajax/filter.js"></script>
 </body>
 
 </html>
