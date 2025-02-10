@@ -19,15 +19,14 @@ $(document).ready(function () {
                 if (response.success) {
                     console.log("📊 Totales recibidos:", response);
     
-                    // Función para formatear los valores en moneda y evitar mostrar "0"
                     function formatCurrency(value) {
                         return value > 0 ? `$${parseFloat(value).toLocaleString()}` : "$—";
                     }
     
-                    // Mapear los valores al DOM con formato
-                    $("#deposit-count").text(formatCurrency(response.total_records));
-                    $("#correct-records").text(formatCurrency(response.total_correct));
-                    $("#incorrect-records").text(formatCurrency(response.total_incorrect));
+                    $("#deposit-count").text(formatCurrency(response.total_cargas));
+                    $("#withdrawal-count").text(formatCurrency(response.total_retiros));
+                    $("#daily-records").text(response.total_registros);
+                    $("#incorrect-records").text(response.total_incorrectos);
                 } else {
                     console.error("⚠️ Error al obtener totales:", response.error);
                 }

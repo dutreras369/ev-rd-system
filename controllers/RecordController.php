@@ -91,14 +91,7 @@ class RecordController
         return $this->recordService->getTotalRecords($userId, $fecha);
     }
 
-    public function getTotalStatusRecords() {
-        $totales = $this->recordService->getTotalStatusRecords();
-    
-        return [
-            'success' => true,
-            'total_records' => $totales['total'],
-            'total_correct' => $totales['correct'],
-            'total_incorrect' => $totales['incorrect']
-        ];
+    public function getTotalStatusRecords() {    
+        return $this->recordService->getTotalStatusRecords();
     }
 }

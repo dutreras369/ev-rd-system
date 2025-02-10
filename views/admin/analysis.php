@@ -4,7 +4,7 @@
         <div class="col-md-6">
             <div class="card text-white bg-primary shadow mb-3">
                 <div class="card-body">
-                    <h6 class="card-title">Depósitos</h6>
+                    <h6 class="card-title">Cargas</h6>
                     <p class="card-text fs-4"><strong id="deposit-count">$0</strong></p>
                 </div>
             </div>
@@ -20,8 +20,8 @@
         <div class="col-md-6">
             <div class="card text-white bg-warning shadow mb-3">
                 <div class="card-body">
-                    <h6 class="card-title">Registros del Día Anterior</h6>
-                    <p class="card-text fs-4"><strong id="daily-records">$0</strong></p>
+                    <h6 class="card-title">Registros Analizados</h6>
+                    <p class="card-text fs-4"><strong id="daily-records">0</strong></p>
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@
             <div class="card text-white bg-danger shadow mb-3">
                 <div class="card-body">
                     <h6 class="card-title">Registros Incorrectos</h6>
-                    <p class="card-text fs-4"><strong id="incorrect-records">$0</strong></p>
+                    <p class="card-text fs-4"><strong id="incorrect-records">0</strong></p>
                 </div>
             </div>
         </div>
