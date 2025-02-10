@@ -27,7 +27,15 @@ try {
 
                 $response = $userController->getUser($data['user_id'], $data['token']);
                 echo json_encode($response);
-            } else {
+            } elseif ($action === 'add') {
+                if (!isset($data['user_id'], $data['token'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+
+                $response = $userController->createUser($data);
+                echo json_encode($response);
+            }
+            else {
                 throw new Exception('Acción no válida para POST', 400);
             }
             break;

@@ -103,6 +103,78 @@ $(document).ready(function () {
             }
         });
     }
+
+     /** 🔹 Manejo del formulario de agregar usuario */
+     $("#addWorkerForm").submit(function (event) {
+        event.preventDefault();
+
+        const nombre = $("#worker-name").val().trim();
+        const email = $("#worker-email").val().trim();
+        const rol_id = $("#worker-role").val();
+        const contrasena = $("#worker-password").val().trim();
+
+        if (!nombre || !email || !rol || !password) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Todos los campos son obligatorios.",
+                confirmButtonColor: "#d33",
+            });
+            return;
+        }
+
+        const formData = {
+            id: userId,
+            token: token,
+            nombre: nombre,
+            email: email,
+            rol_id: rol_id,
+            contrasena: contrasena
+        };
+
+        $.ajax({
+            url: `${BASE_URL}/routes/user.php?action=add`,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Usuario agregado",
+                        text: "El usuario ha sido registrado correctamente.",
+                        confirmButtonColor: "#28a745",
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+
+                    // Limpiar formulario y cerrar modal
+                    $("#addWorkerForm")[0].reset();
+                    $("#addWorkerModal").modal("hide");
+
+                    // Recargar la tabla de usuarios
+                    loadUsers();
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: response.error,
+                        confirmButtonColor: "#d33",
+                    });
+                }
+            },
+            error: function (xhr) {
+                console.error("Error en la solicitud:", xhr.status, xhr.responseText);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error en la solicitud",
+                    text: "Ver consola para más detalles.",
+                    confirmButtonColor: "#d33",
+                });
+            },
+        });
+    });
+
     
     // Ejecutar la función al abrir el modal
     $("#userInfoModal").on("show.bs.modal", function() {
