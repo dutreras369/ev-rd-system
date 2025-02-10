@@ -1,8 +1,8 @@
 $(document).ready(function () {
+    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
+
     function loadUserInfo() {
-        const userId = localStorage.getItem("user_id");
-        const token = localStorage.getItem("token");
-    
         console.log("Petición a getUser - userId:", userId, "token:", token);
     
         if (!userId || !token) {
@@ -35,9 +35,6 @@ $(document).ready(function () {
 
     function loadUsers() {
         if (!$("#users-table-body").length) return;
-    
-        const userId = localStorage.getItem("user_id");
-        const token = localStorage.getItem("token");
     
         $.ajax({
             url: `${BASE_URL}/routes/user.php?action=list_users`,
@@ -124,8 +121,6 @@ $(document).ready(function () {
         }
 
         const formData = {
-            id: userId,
-            token: token,
             nombre: nombre,
             email: email,
             rol_id: rol_id,
