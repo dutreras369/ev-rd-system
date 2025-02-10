@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?php echo JS_URL; ?>/app.js"></script>
     <script src="<?php echo JS_URL; ?>/ajax/auth.js"></script>
-    <script src="<?php echo JS_URL; ?>/ajax/user-management.js"></script>
+    <script src="<?php echo JS_URL; ?>/ajax/user.js"></script>
     <script src="<?php echo JS_URL; ?>/ajax/records.js"></script>
     <script src="<?php echo JS_URL; ?>/ajax/analysis.js"></script>
     <script src="<?php echo JS_URL; ?>/ajax/filter.js"></script>
