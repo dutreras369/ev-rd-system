@@ -24,6 +24,26 @@ class UserService
         return array_map(fn($data) => new User($data), $users);
     }
 
+    public function getUsers() {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT id, nombre, email, 
+                       CASE 
+                           WHEN rol_id = 1 THEN 'Administrador' 
+                           ELSE 'Usuario' 
+                       END AS rol 
+                FROM usuarios
+                ORDER BY nombre ASC
+            ");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getUsers: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    
     public function getUserById($id)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE id = :id");

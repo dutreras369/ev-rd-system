@@ -21,23 +21,21 @@ class UserController
     /**
      * Obtener todos los usuarios.
      */
-    public function listUsers()
-    {
-        try {
-            $users = $this->userService->getAllUsers();
-            return [
-                'success' => true,
-                'users' => $users
-            ];
-        } catch (Exception $e) {
-            $this->logService->addLog("Error al listar usuarios: " . $e->getMessage(), null);
-            return [
-                'success' => false,
-                'error' => 'Error al obtener la lista de usuarios.',
-                'error_details' => $e->getMessage()
-            ];
-        }
-    }
+    public function listUsers() {
+        $users = $this->userService->getUsers();
+    
+        return [
+            'success' => true,
+            'users' => array_map(function ($user) {
+                return [
+                    'id' => $user['id'],
+                    'nombre' => $user['nombre'],
+                    'email' => $user['email'],
+                    'rol' => $user['rol']
+                ];
+            }, $users)
+        ];
+    }    
 
     /**
      * Obtener un usuario por ID.

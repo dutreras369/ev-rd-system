@@ -1,60 +1,33 @@
 <?php
 header('Content-Type: application/json');
+
 require_once __DIR__ . '/../controllers/UserController.php';
 
 $userController = new UserController();
-
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? null;
 
-if (!$action) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Falta el parámetro "action".']);
-    exit;
-}
+try {
+    switch ($method) {
+        case 'POST':
+            $data = json_decode(file_get_contents("php://input"), true);
 
-switch ($action) {
-    case 'list':
-        if ($method !== 'GET') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'error' => 'Método HTTP no permitido.']);
-            exit;
-        }
-        echo json_encode($userController->listUsers());
-        break;
+            if ($action === 'list_users') {
+                if (!isset($data['user_id'], $data['token'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
 
-    case 'show':
-        if ($method !== 'GET' || !isset($_GET['id'])) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Parámetros inválidos o método no permitido.']);
-            exit;
-        }
-        echo json_encode($userController->showUser($_GET['id']));
-        break;
+                $response = $userController->listUsers();
+                echo json_encode($response);
+            } else {
+                throw new Exception('Acción no válida para POST', 400);
+            }
+            break;
 
-    case 'get_user': // Asegurar que se maneja POST correctamente
-        if ($method !== 'POST') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'error' => 'Método HTTP no permitido.']);
-            exit;
-        }
-
-        // Obtener datos enviados en POST
-        $data = json_decode(file_get_contents("php://input"), true);
-        $userId = $data['user_id'] ?? null;
-        $token = $data['token'] ?? null;
-
-        if (!$userId || !$token) {
-            echo json_encode(['success' => false, 'error' => 'Faltan datos (user_id o token).']);
-            exit;
-        }
-
-        $response = $userController->getUser($userId, $token);
-        echo json_encode($response);
-        break;
-
-    default:
-        http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'Acción no válida.']);
-        break;
+        default:
+            throw new Exception('Método HTTP no permitido', 405);
+    }
+} catch (Exception $e) {
+    http_response_code($e->getCode() ?: 500);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
