@@ -26,7 +26,7 @@ try {
                 }
 
                 $response = $userController->getUser($userId, $token);
-                                echo json_encode($response);
+                echo json_encode($response);
             } else {
                 throw new Exception('Acción no válida para POST', 400);
             }
