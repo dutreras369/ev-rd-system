@@ -25,7 +25,7 @@ try {
                     throw new Exception('Datos incompletos.', 400);
                 }
 
-                $response = $userController->getUser($userId, $token);
+                $response = $userController->getUser($data['user_id'], $data['token']);
                 echo json_encode($response);
             } else {
                 throw new Exception('Acción no válida para POST', 400);

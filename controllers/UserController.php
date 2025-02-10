@@ -144,10 +144,10 @@ class UserController
 
     public function getUser($userId, $token)
     {
-        /* 🔹 Validar si el token es válido
+        // 🔹 Validar si el token es válido
         if (!$this->sessionService->validateToken($userId, $token)) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
-        } */
+        }
     
         // 🔹 Obtener el objeto usuario
         $userData = $this->userService->getUserById($userId);
