@@ -121,6 +121,8 @@ $(document).ready(function () {
         }
 
         const formData = {
+            user_id: userId,
+            token: token,
             nombre: nombre,
             email: email,
             rol_id: rol_id,
