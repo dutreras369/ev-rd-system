@@ -14,11 +14,15 @@ class AnalysisController {
     public function getTotalStatusRecords() {
         $totales = $this->analysisService->getTotalStatusRecords();
 
+        if (!$totales) {
+            return ['success' => false, 'error' => 'No se pudieron obtener los totales'];
+        }
+
         return [
             'success' => true,
-            'total_records' => $totales['total'],
-            'total_correct' => $totales['correct'],
-            'total_incorrect' => $totales['incorrect']
+            'total_records' => $totales['total'] ?? 0,
+            'total_correct' => $totales['correct'] ?? 0,
+            'total_incorrect' => $totales['incorrect'] ?? 0
         ];
     }
 }
