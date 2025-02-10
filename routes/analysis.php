@@ -24,6 +24,13 @@ try {
 
             $response = $analysisController->getTotalStatusRecords();
             echo json_encode($response);
+        } elseif ($action === 'user_records') {
+            if (!isset($data['user_id'], $data['token'])) {
+                throw new Exception('Datos incompletos.', 400);
+            }
+
+            $response = $analysisController->getUserRecords();
+            echo json_encode($response);
         } else {
             throw new Exception('Acción no válida para POST', 400);
         }

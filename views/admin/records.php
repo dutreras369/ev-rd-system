@@ -1,5 +1,5 @@
 <div id="records-section" class="p-3 bg-light rounded shadow">
-    <h5 class="text-primary">Tablero de Registros</h5>
+    <h5 class="text-primary">Tablero de Registros por Usuario</h5>
     <!-- Cabecera de Filtro General -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="text-primary m-0">Filtro General</h5>
@@ -20,7 +20,7 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="records-table-body">
+            <tbody id="user-analysis-table-body">
             </tbody>
         </table>
     </div>

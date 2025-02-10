@@ -38,4 +38,26 @@ class AnalysisService {
         }
     }
     
+    public function getUserRecords() {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    u.id, u.nombre, 
+                    COUNT(r.id) AS registros_mes,
+                    SUM(CASE WHEN r.estado = 'correcto' THEN 1 ELSE 0 END) AS correctos,
+                    SUM(CASE WHEN r.estado = 'incorrecto' THEN 1 ELSE 0 END) AS incorrectos
+                FROM usuarios u
+                LEFT JOIN registros r ON u.id = r.usuario_id
+                WHERE MONTH(r.fecha) = MONTH(CURDATE()) AND YEAR(r.fecha) = YEAR(CURDATE())
+                GROUP BY u.id, u.nombre
+                ORDER BY registros_mes DESC
+            ");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getUserRecords: " . $e->getMessage());
+            return [];
+        }
+    }
+    
 }

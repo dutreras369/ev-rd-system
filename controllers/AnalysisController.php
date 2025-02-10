@@ -26,4 +26,22 @@ class AnalysisController {
             'total_incorrectos' => $totales['total_incorrectos'] ?? 0
         ];
     }
+
+    public function getUserRecords() {
+        $records = $this->analysisService->getUserRecords();
+    
+        return [
+            'success' => true,
+            'records' => array_map(function ($record) {
+                return [
+                    'id' => $record['id'],
+                    'nombre' => $record['nombre'],
+                    'registros_mes' => $record['registros_mes'],
+                    'correctos' => $record['correctos'],
+                    'incorrectos' => $record['incorrectos']
+                ];
+            }, $records)
+        ];
+    }
+    
 }
