@@ -113,7 +113,7 @@ $(document).ready(function () {
         const rol_id = $("#worker-role").val();
         const contrasena = $("#worker-password").val().trim();
 
-        if (!nombre || !email || !rol || !password) {
+        if (!nombre || !email || !rol_id || !contrasena) {
             Swal.fire({
                 icon: "error",
                 title: "Error",
