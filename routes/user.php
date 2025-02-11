@@ -21,8 +21,9 @@ try {
                 echo json_encode($response);
             } 
             elseif ($action === 'get_user') {
-                if (!isset($data['user_id'], $data['token'])) {
-                    throw new Exception('Datos incompletos.', 400);
+                if (!isset($data['nombre'], $data['email'], $data['rol_id'], $data['contrasena'])) {
+                    echo json_encode(['success' => false, 'error' => 'Faltan datos obligatorios.']);
+                    exit;
                 }
 
                 $response = $userController->getUser($data['user_id'], $data['token']);
