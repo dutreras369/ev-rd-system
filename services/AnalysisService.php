@@ -15,7 +15,8 @@ class AnalysisService {
                     SUM(CASE WHEN tipo = 'carga' THEN monto ELSE 0 END) AS total_cargas,
                     SUM(CASE WHEN tipo = 'retiro' THEN monto ELSE 0 END) AS total_retiros,
                     COUNT(*) AS total_registros,
-                    SUM(CASE WHEN estado = 'incorrecto' THEN 1 ELSE 0 END) AS total_incorrectos
+                    SUM(CASE WHEN estado = 'incorrecto' THEN 1 ELSE 0 END) AS total_incorrectos,
+                    SUM(CASE WHEN estado = 'incorrecto' THEN monto ELSE 0 END) AS monto_incorrectos
                 FROM registros
                 WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
             ");
@@ -27,7 +28,8 @@ class AnalysisService {
                     'total_cargas' => 0,
                     'total_retiros' => 0,
                     'total_registros' => 0,
-                    'total_incorrectos' => 0
+                    'total_incorrectos' => 0,
+                    'monto_incorrectos' => 0
                 ];
             }
     
@@ -36,7 +38,7 @@ class AnalysisService {
             error_log("Error en getTotalStatusRecords: " . $e->getMessage());
             return false;
         }
-    }
+    }    
     
     public function getUserRecords() {
         try {

@@ -26,7 +26,7 @@ $(document).ready(function () {
                     $("#deposit-count").text(formatCurrency(response.total_cargas));
                     $("#withdrawal-count").text(formatCurrency(response.total_retiros));
                     $("#daily-records").text(response.total_registros);
-                    $("#incorrect-records").text(response.total_incorrectos);
+                    $("#incorrect-records").text(formatCurrency(response.monto_incorrectos));
                 } else {
                     console.error("⚠️ Error al obtener totales:", response.error);
                 }

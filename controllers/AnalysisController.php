@@ -20,10 +20,11 @@ class AnalysisController {
 
         return [
             'success' => true,
-            'total_cargas' => $totales['total_cargas'] ?? 0,
-            'total_retiros' => $totales['total_retiros'] ?? 0,
-            'total_registros' => $totales['total_registros'] ?? 0,
-            'total_incorrectos' => $totales['total_incorrectos'] ?? 0
+            'total_cargas' => $totales['total_cargas'],
+            'total_retiros' => $totales['total_retiros'],
+            'total_registros' => $totales['total_registros'],
+            'total_incorrectos' => $totales['total_incorrectos'],
+            'monto_incorrectos' => $totales['monto_incorrectos']
         ];
     }
 

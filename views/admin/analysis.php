@@ -28,8 +28,8 @@
         <div class="col-md-6">
             <div class="card text-white bg-danger shadow mb-3">
                 <div class="card-body">
-                    <h6 class="card-title">Incorrectos</h6>
-                    <p class="card-text fs-4"><strong id="incorrect-records">0</strong></p>
+                    <h6 class="card-title">Monto de Registros Incorrectos</h6>
+                    <p class="card-text fs-4"><strong id="incorrect-records">$0</strong></p>
                 </div>
             </div>
         </div>
