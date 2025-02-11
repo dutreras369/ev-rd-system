@@ -21,19 +21,18 @@ try {
                 echo json_encode($response);
             } 
             elseif ($action === 'get_user') {
-                if (!isset($data['nombre'], $data['email'], $data['rol_id'], $data['contrasena'])) {
-                    echo json_encode(['success' => false, 'error' => 'Faltan datos obligatorios.']);
-                    exit;
+                if (!isset($data['user_id'], $data['token'])) {
+                    throw new Exception('Datos incompletos.', 400);
                 }
 
                 $response = $userController->getUser($data['user_id'], $data['token']);
                 echo json_encode($response);
             } elseif ($action === 'add') {
-                if (!isset($data['user_id'], $data['token'])) {
+                if (!isset($data['nombre'], $data['email'], $data['rol_id'], $data['contrasena'])) {
                     throw new Exception('Datos incompletos.', 400);
                 }
 
-                $response = $userController->createUser($data);
+                $response = $userController->createUser($data['user_id'], $data['token']);
                 echo json_encode($response);
             }
             else {
