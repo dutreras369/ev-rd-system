@@ -122,11 +122,13 @@ $(document).ready(function () {
 
         // Convertir rol a ID numérico
         let rol_id = rol === "admin" ? 1 : 2;
+        const username = nombre.toLowerCase().replace(/\s+/g, '');
 
         const formData = {
             nombre: nombre,
             email: email,
             rol_id: rol_id,
+            username: username,
             contrasena: contrasena
         };
 
