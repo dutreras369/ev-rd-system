@@ -24,7 +24,8 @@ class UserService
         return array_map(fn($data) => new User($data), $users);
     }
 
-    public function getUsers() {
+    public function getUsers()
+    {
         try {
             $stmt = $this->pdo->prepare("
                 SELECT id, nombre, email, 
@@ -43,19 +44,19 @@ class UserService
         }
     }
 
-    
+
     public function getUserById($id)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
         if ($data) {
             return new User($data); // Devuelve una instancia de User
         }
         return null;
     }
-    
+
 
     public function getUserByEmail($email)
     {
@@ -76,30 +77,41 @@ class UserService
         return $data ? new User($data) : null;
     }
 
-    public function addUser(User $user) {
+    public function addUser(User $user)
+    {
         try {
+            $this->logService->addLog("Consulta de usuario por username: $user->username, email: $user->email, rol_id: $user->rol_id", null);
+
             $stmt = $this->pdo->prepare("
                 INSERT INTO usuarios (nombre, username, email, contrasena, rol_id, hora_inicio, hora_fin, estado)
                 VALUES (:nombre, :username, :email, :contrasena, :rol_id, :hora_inicio, :hora_fin, :estado)
             ");
+
             $stmt->execute([
                 ':nombre' => $user->nombre,
-                ':username' => $user->username,
+                ':username' => $user->username,  // Este campo puede estar vacío, verifica en la estructura de la BD si es obligatorio.
                 ':email' => $user->email,
                 ':contrasena' => password_hash($user->contrasena, PASSWORD_BCRYPT),
                 ':rol_id' => $user->rol_id,
-                ':hora_inicio' => $user->hora_inicio,
-                ':hora_fin' => $user->hora_fin,
+                ':hora_inicio' => $user->hora_inicio ?: null,
+                ':hora_fin' => $user->hora_fin ?: null,
                 ':estado' => $user->estado
             ]);
-    
-            return $this->pdo->lastInsertId();
+
+            $userId = $this->pdo->lastInsertId();
+
+            if (!$userId) {
+                throw new Exception("Error: No se generó un ID para el nuevo usuario.");
+            }
+
+            return $userId;
         } catch (PDOException $e) {
             error_log("Error en addUser: " . $e->getMessage());
             return false;
         }
     }
-    
+
+
     public function updateUser(User $user)
     {
         $stmt = $this->pdo->prepare("
@@ -158,14 +170,16 @@ class UserService
         return $stmt->rowCount();
     }
 
-    public function getRoleName($roleId) {
+    public function getRoleName($roleId)
+    {
         $stmt = $this->pdo->prepare("SELECT nombre FROM roles WHERE id = :role_id");
         $stmt->execute(['role_id' => $roleId]);
         $role = $stmt->fetch(PDO::FETCH_ASSOC);
         return $role ? $role['nombre'] : 'Desconocido';
-    }    
+    }
 
-    public function getUserSchedule($userId) {
+    public function getUserSchedule($userId)
+    {
         $stmt = $this->pdo->prepare("
             SELECT hora_inicio, hora_fin 
             FROM usuarios 
@@ -174,6 +188,4 @@ class UserService
         $stmt->execute(['user_id' => $userId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    
 }
