@@ -32,7 +32,7 @@ try {
                     throw new Exception('Datos incompletos.', 400);
                 }
 
-                $response = $userController->createUser($data['user_id'], $data['token']);
+                $response = $userController->createUser($data);
                 echo json_encode($response);
             }
             else {
