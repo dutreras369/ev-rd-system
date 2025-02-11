@@ -21,9 +21,10 @@ class UserController
     /**
      * Obtener todos los usuarios.
      */
-    public function listUsers() {
+    public function listUsers()
+    {
         $users = $this->userService->getUsers();
-    
+
         return [
             'success' => true,
             'users' => array_map(function ($user) {
@@ -35,7 +36,7 @@ class UserController
                 ];
             }, $users)
         ];
-    }    
+    }
 
     /**
      * Obtener un usuario por ID.
@@ -66,14 +67,13 @@ class UserController
         try {
             $user = new User($data);
             $userId = $this->userService->addUser($user);
-            $this->logService->addLog("Usuario creado con ID: $userId", $userId);
+
             return [
                 'success' => true,
                 'message' => 'Usuario creado exitosamente.',
                 'user_id' => $userId
             ];
         } catch (Exception $e) {
-            $this->logService->addLog("Error al crear usuario: " . $e->getMessage(), null);
             return [
                 'success' => false,
                 'error' => 'No se pudo crear el usuario.',
@@ -81,6 +81,7 @@ class UserController
             ];
         }
     }
+
 
     /**
      * Editar un usuario existente.
@@ -148,19 +149,19 @@ class UserController
         if (!$this->sessionService->validateToken($userId, $token)) {
             return ['success' => false, 'error' => 'Token inválido o sesión expirada'];
         }
-    
+
         // 🔹 Obtener el objeto usuario
         $userData = $this->userService->getUserById($userId);
-    
+
         // 🔹 Validar que el usuario existe
         if (!$userData) {
             return ['success' => false, 'error' => 'Usuario no encontrado'];
         }
-    
+
         // 🔹 Obtener hora de inicio de sesión
         $horaInicio = $this->sessionService->getSessionStartTime($userId, $token);
         $horaInicioFormatted = $horaInicio ? date('d-m-Y H:i:s', strtotime($horaInicio)) : null;
-    
+
         // 🔹 Retornar los datos del usuario correctamente
         return [
             'success' => true,
@@ -173,5 +174,5 @@ class UserController
                 'hora_inicio' => $horaInicioFormatted // ✅ Ahora la fecha está en el formato correcto
             ]
         ];
-    }    
+    }
 }

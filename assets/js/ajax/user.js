@@ -4,19 +4,19 @@ $(document).ready(function () {
 
     function loadUserInfo() {
         console.log("Petición a getUser - userId:", userId, "token:", token);
-    
+
         if (!userId || !token) {
             console.error("No hay usuario autenticado o falta el token en localStorage.");
             return;
         }
-    
+
         $.ajax({
             url: BASE_URL + "/routes/user.php?action=get_user",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({ user_id: userId, token: token }),
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 console.log("Respuesta de get_user:", response);
                 if (response.success) {
                     $("#userName").text(response.user.nombre);
@@ -27,7 +27,7 @@ $(document).ready(function () {
                     console.error("Error al obtener usuario:", response.error);
                 }
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error("Error en la solicitud:", xhr.status, xhr.responseText);
             }
         });
@@ -35,7 +35,7 @@ $(document).ready(function () {
 
     function loadUsers() {
         if (!$("#users-table-body").length) return;
-    
+
         $.ajax({
             url: `${BASE_URL}/routes/user.php?action=list_users`,
             type: "POST",
@@ -45,7 +45,7 @@ $(document).ready(function () {
                 if (response.success) {
                     console.log("📊 Lista de usuarios:", response.users);
                     $("#users-table-body").empty();
-    
+
                     response.users.forEach((user, index) => {
                         $("#users-table-body").append(`
                             <tr>
@@ -75,18 +75,18 @@ $(document).ready(function () {
                             </tr>
                         `);
                     });
-    
+
                     // Agregar eventos a los botones
                     $(".view-user").click(function () {
                         let userId = $(this).data("user");
                         viewUserDetails(userId);
                     });
-    
+
                     $(".edit-user").click(function () {
                         let userId = $(this).data("user");
                         editUser(userId);
                     });
-    
+
                     $(".delete-user").click(function () {
                         let userId = $(this).data("user");
                         deleteUser(userId);
@@ -101,16 +101,16 @@ $(document).ready(function () {
         });
     }
 
-     /** 🔹 Manejo del formulario de agregar usuario */
-     $("#addWorkerForm").submit(function (event) {
+    /** 🔹 Manejo del formulario de agregar usuario */
+    $("#addWorkerForm").submit(function (event) {
         event.preventDefault();
 
         const nombre = $("#worker-name").val().trim();
         const email = $("#worker-email").val().trim();
-        const rol_id = $("#worker-role").val();
+        const rol = $("#worker-role").val();
         const contrasena = $("#worker-password").val().trim();
 
-        if (!nombre || !email || !rol_id || !contrasena) {
+        if (!nombre || !email || !rol || !contrasena) {
             Swal.fire({
                 icon: "error",
                 title: "Error",
@@ -120,9 +120,10 @@ $(document).ready(function () {
             return;
         }
 
+        // Convertir rol a ID numérico
+        let rol_id = rol === "admin" ? 1 : 2;
+
         const formData = {
-            user_id: userId,
-            token: token,
             nombre: nombre,
             email: email,
             rol_id: rol_id,
@@ -172,11 +173,12 @@ $(document).ready(function () {
         });
     });
 
-    
+
+
     // Ejecutar la función al abrir el modal
-    $("#userInfoModal").on("show.bs.modal", function() {
+    $("#userInfoModal").on("show.bs.modal", function () {
         loadUserInfo();
     });
-    
+
     loadUsers();
 });

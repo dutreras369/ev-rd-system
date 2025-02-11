@@ -76,29 +76,30 @@ class UserService
         return $data ? new User($data) : null;
     }
 
-    public function addUser(User $user)
-    {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO usuarios (nombre, username, email, contrasena, rol_id, hora_inicio, hora_fin, estado)
-            VALUES (:nombre, :username, :email, :contrasena, :rol_id, :hora_inicio, :hora_fin, :estado)
-        ");
-        $stmt->execute([
-            'nombre' => $user->nombre,
-            'username' => $user->username,
-            'email' => $user->email,
-            'contrasena' => password_hash($user->contrasena, PASSWORD_BCRYPT),
-            'rol_id' => $user->rol_id,
-            'hora_inicio' => $user->hora_inicio,
-            'hora_fin' => $user->hora_fin,
-            'estado' => $user->estado,
-        ]);
-
-        $userId = $this->pdo->lastInsertId();
-        $this->logService->addLog("Usuario agregado: {$user->email} (ID: $userId)", $userId);
-
-        return $userId;
+    public function addUser(User $user) {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO usuarios (nombre, username, email, contrasena, rol_id, hora_inicio, hora_fin, estado)
+                VALUES (:nombre, :username, :email, :contrasena, :rol_id, :hora_inicio, :hora_fin, :estado)
+            ");
+            $stmt->execute([
+                ':nombre' => $user->nombre,
+                ':username' => $user->username,
+                ':email' => $user->email,
+                ':contrasena' => password_hash($user->contrasena, PASSWORD_BCRYPT),
+                ':rol_id' => $user->rol_id,
+                ':hora_inicio' => $user->hora_inicio,
+                ':hora_fin' => $user->hora_fin,
+                ':estado' => $user->estado
+            ]);
+    
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            error_log("Error en addUser: " . $e->getMessage());
+            return false;
+        }
     }
-
+    
     public function updateUser(User $user)
     {
         $stmt = $this->pdo->prepare("
