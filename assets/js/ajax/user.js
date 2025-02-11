@@ -125,6 +125,7 @@ $(document).ready(function () {
         const username = nombre.toLowerCase().replace(/\s+/g, '');
 
         const formData = {
+            usuario_id: userId,
             nombre: nombre,
             email: email,
             rol_id: rol_id,

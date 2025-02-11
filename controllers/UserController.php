@@ -70,7 +70,7 @@ class UserController
             }
     
             $user = new User($data);
-            $userId = $this->userService->addUser($user);
+            $userId = $this->userService->addUser($user, $data['usuario_id']);
     
             if (!$userId) {
                 throw new Exception("No se pudo insertar el usuario en la base de datos.");

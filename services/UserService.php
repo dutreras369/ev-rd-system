@@ -77,10 +77,10 @@ class UserService
         return $data ? new User($data) : null;
     }
 
-    public function addUser(User $user)
+    public function addUser(User $user, $userId)
     {
         try {
-            $this->logService->addLog("Consulta de usuario por username: $user->username, email: $user->email, rol_id: $user->rol_id", null);
+            $this->logService->addLog("Consulta de usuario por username: $user->username, email: $user->email, rol_id: $user->rol_id", $userId);
 
 
             // 🔹 Prepara la consulta SQL
@@ -102,13 +102,12 @@ class UserService
 
             // 🔹 Verificar si se insertó correctamente
             if ($success) {
-                $userId = $this->pdo->lastInsertId();
-                error_log("Usuario insertado con ID: $userId");
-                $this->logService->addLog("Usuario insertado con ID: $userId", null);
+                $id = $this->pdo->lastInsertId();
+                $this->logService->addLog("Usuario insertado con ID: $id", $userId);
 
-                return $userId;
+                return $id;
             } else {
-                $this->logService->addLog("Error: No se pudo insertar el usuario.", null);
+                $this->logService->addLog("Error: No se pudo insertar el usuario.", $userId);
                 return false;
             }
         } catch (PDOException $e) {

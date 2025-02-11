@@ -27,10 +27,10 @@ class SessionService
                 ':token' => $token
             ]);
 
-            $this->logService->addLog("Nueva sesión creada para el usuario ID: $userId", $userId);
+            $this->logService->addLog("Nueva sesion creada para el usuario ID: $userId", $userId);
             return true;
         } catch (PDOException $e) {
-            $this->logService->addLog("Error al crear sesión para usuario ID: $userId - " . $e->getMessage(), $userId);
+            $this->logService->addLog("Error al crear sesion para usuario ID: $userId - " . $e->getMessage(), $userId);
             return false;
         }
     }
@@ -46,14 +46,14 @@ class SessionService
             ]);
 
             if ($stmt->rowCount() > 0) {
-                $this->logService->addLog("Sesión cerrada para usuario ID: $userId", $userId);
+                $this->logService->addLog("Sesion cerrada para usuario ID: $userId", $userId);
                 return true;
             } else {
                 $this->logService->addLog("Intento de cierre de sesión fallido para usuario ID: $userId", $userId);
                 return false;
             }
         } catch (PDOException $e) {
-            $this->logService->addLog("Error al cerrar sesión para usuario ID: $userId - " . $e->getMessage(), $userId);
+            $this->logService->addLog("Error al cerrar sesion para usuario ID: $userId - " . $e->getMessage(), $userId);
             return false;
         }
     }
