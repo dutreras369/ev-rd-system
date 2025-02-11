@@ -62,8 +62,13 @@ class UserController
     /**
      * Crear un nuevo usuario.
      */
-    public function createUser($data) {
+    public function createUser($data)
+    {
         try {
+            if (!isset($data['username'])) {
+                $data['username'] = strtolower(str_replace(' ', '', $data['nombre']));
+            }
+    
             $user = new User($data);
             $userId = $this->userService->addUser($user);
     
@@ -77,15 +82,14 @@ class UserController
                 'user_id' => $userId
             ];
         } catch (Exception $e) {
-            error_log("Error en createUser: " . $e->getMessage());
-    
             return [
                 'success' => false,
                 'error' => 'No se pudo crear el usuario.',
                 'error_details' => $e->getMessage()
             ];
         }
-    }   
+    }
+    
 
     /**
      * Editar un usuario existente.

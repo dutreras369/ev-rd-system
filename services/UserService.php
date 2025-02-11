@@ -82,31 +82,37 @@ class UserService
         try {
             $this->logService->addLog("Consulta de usuario por username: $user->username, email: $user->email, rol_id: $user->rol_id", null);
 
-            $stmt = $this->pdo->prepare("
-                INSERT INTO usuarios (nombre, username, email, contrasena, rol_id, hora_inicio, hora_fin, estado)
-                VALUES (:nombre, :username, :email, :contrasena, :rol_id, :hora_inicio, :hora_fin, :estado)
-            ");
 
-            $stmt->execute([
+            // 🔹 Prepara la consulta SQL
+            $stmt = $this->pdo->prepare("
+        INSERT INTO usuarios (nombre, username, email, contrasena, rol_id, hora_inicio, hora_fin, estado)
+        VALUES (:nombre, :username, :email, :contrasena, :rol_id, :hora_inicio, :hora_fin, :estado)
+    ");
+
+            $success = $stmt->execute([
                 ':nombre' => $user->nombre,
-                ':username' => $user->username,  // Este campo puede estar vacío, verifica en la estructura de la BD si es obligatorio.
+                ':username' => $user->username,
                 ':email' => $user->email,
                 ':contrasena' => password_hash($user->contrasena, PASSWORD_BCRYPT),
                 ':rol_id' => $user->rol_id,
-                ':hora_inicio' => $user->hora_inicio ?: null,
-                ':hora_fin' => $user->hora_fin ?: null,
-                ':estado' => $user->estado
+                ':hora_inicio' => $user->hora_inicio ?? null,
+                ':hora_fin' => $user->hora_fin ?? null,
+                ':estado' => $user->estado ?? 'activo',
             ]);
 
-            $userId = $this->pdo->lastInsertId();
+            // 🔹 Verificar si se insertó correctamente
+            if ($success) {
+                $userId = $this->pdo->lastInsertId();
+                error_log("Usuario insertado con ID: $userId");
+                $this->logService->addLog("Usuario insertado con ID: $userId", null);
 
-            if (!$userId) {
-                throw new Exception("Error: No se generó un ID para el nuevo usuario.");
+                return $userId;
+            } else {
+                $this->logService->addLog("Error: No se pudo insertar el usuario.", null);
+                return false;
             }
-
-            return $userId;
         } catch (PDOException $e) {
-            error_log("Error en addUser: " . $e->getMessage());
+            $this->logService->addLog("Error en addUser: " . $e->getMessage());
             return false;
         }
     }
