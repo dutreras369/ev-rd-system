@@ -190,7 +190,12 @@ $(document).ready(function () {
                     $("#edit-worker-id").val(response.user.id);
                     $("#edit-worker-name").val(response.user.nombre);
                     $("#edit-worker-email").val(response.user.email);
-                    $("#edit-worker-role").val(response.user.rol);
+
+                    // Convertir rol_id a nombre de rol y asignarlo en el selector
+                    let rol_id = parseInt(response.user.rol_id);
+                    let rol = rol_id === 1 ? "admin" : "user";
+                    
+                    $("#edit-worker-role").val(rol); // Asignar el nombre en el selector
                     $("#edit-worker-password").val(""); // Limpiar campo de contraseña
 
                     // Mostrar el modal
