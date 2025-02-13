@@ -34,6 +34,13 @@ try {
 
                 $response = $userController->createUser($data);
                 echo json_encode($response);
+            } elseif ($action === 'edit_user') {
+                if (!isset($data['user_id'], $data['token'], $data['rol'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+            
+                $response = $userController->editUser($data['user_id'], $data);
+                echo json_encode($response);
             }
             else {
                 throw new Exception('Acción no válida para POST', 400);

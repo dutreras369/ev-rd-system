@@ -177,6 +177,100 @@ $(document).ready(function () {
     });
 
 
+    /** 🔹 Función para cargar datos en el modal de edición */
+    function editUser(userId) {
+        $.ajax({
+            url: `${BASE_URL}/routes/user.php?action=get_user`,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ user_id: userId, token: token }),
+            success: function (response) {
+                if (response.success) {
+                    // Mapear datos en el modal
+                    $("#edit-worker-id").val(response.user.id);
+                    $("#edit-worker-name").val(response.user.nombre);
+                    $("#edit-worker-email").val(response.user.email);
+                    $("#edit-worker-role").val(response.user.rol);
+                    $("#edit-worker-password").val(""); // Limpiar campo de contraseña
+
+                    // Mostrar el modal
+                    $("#editWorkerModal").modal("show");
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "No se pudo obtener la información del usuario.",
+                        confirmButtonColor: "#d33",
+                    });
+                }
+            },
+            error: function (xhr) {
+                console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+            }
+        });
+    }
+
+    /** 🔹 Manejo del formulario de edición */
+    $("#editWorkerForm").submit(function (event) {
+        event.preventDefault();
+
+        const userId = $("#edit-worker-id").val();
+        const role = $("#edit-worker-role").val();
+        const password = $("#edit-worker-password").val().trim();
+
+        if (!userId || !role) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "El rol es obligatorio.",
+                confirmButtonColor: "#d33",
+            });
+            return;
+        }
+
+        const formData = {
+            user_id: userId,
+            token: token,
+            rol: role
+        };
+
+        // Solo incluir la contraseña si el usuario ingresó una nueva
+        if (password) {
+            formData.contrasena = password;
+        }
+
+        $.ajax({
+            url: `${BASE_URL}/routes/user.php?action=edit_user`,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Usuario actualizado",
+                        text: "Los cambios se han guardado correctamente.",
+                        confirmButtonColor: "#28a745",
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+
+                    $("#editWorkerModal").modal("hide");
+                    loadUsers(); // Recargar lista de usuarios
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: response.error,
+                        confirmButtonColor: "#d33",
+                    });
+                }
+            },
+            error: function (xhr) {
+                console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+            }
+        });
+    });
 
     // Ejecutar la función al abrir el modal
     $("#userInfoModal").on("show.bs.modal", function () {

@@ -94,31 +94,23 @@ class UserController
     /**
      * Editar un usuario existente.
      */
-    public function editUser($id, $data)
+    public function editUser($data)
     {
         try {
-            $user = $this->userService->getUserById($id);
-            if (!$user) {
-                return ['success' => false, 'error' => 'Usuario no encontrado.'];
-            }
-
-            foreach ($data as $key => $value) {
-                if (property_exists($user, $key)) {
-                    $user->$key = $value;
-                }
-            }
-
-            $updated = $this->userService->updateUser($user);
+            $updated = $this->userService->updateUser($data);
+    
             if ($updated) {
-                $this->logService->addLog("Usuario actualizado ID: $id", $id);
+                return [
+                    'success' => true,
+                    'message' => 'Usuario actualizado correctamente.'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'error' => 'No se realizaron cambios o hubo un error.'
+                ];
             }
-
-            return [
-                'success' => $updated,
-                'message' => $updated ? 'Usuario actualizado correctamente.' : 'No se realizaron cambios.'
-            ];
         } catch (Exception $e) {
-            $this->logService->addLog("Error al actualizar usuario ID: $id - " . $e->getMessage(), null);
             return [
                 'success' => false,
                 'error' => 'No se pudo actualizar el usuario.',

@@ -1,5 +1,4 @@
-<!-- Agregar Trabajador -->
-
+<!-- Agregar Usuario -->
 <div class="modal fade" id="addWorkerModal" tabindex="-1" aria-labelledby="addWorkerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -35,29 +34,28 @@
     </div>
 </div>
 
-<!-- Editar Trabajador -->
+<!-- Editar Usuario -->
 <div class="modal fade" id="editWorkerModal" tabindex="-1" aria-labelledby="editWorkerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editWorkerModalLabel">Editar Trabajador</h5>
+                <h5 class="modal-title" id="editWorkerModalLabel">Editar Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="editWorkerForm">
-                    <input type="hidden" id="worker-id" name="worker-id">
+                    <input type="hidden" id="edit-worker-id"> <!-- ID oculto para referencia -->
+                    
                     <div class="mb-3">
                         <label for="edit-worker-name" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="edit-worker-name" name="edit-worker-name" required>
+                        <input type="text" class="form-control" id="edit-worker-name" name="edit-worker-name" disabled>
                     </div>
+                    
                     <div class="mb-3">
                         <label for="edit-worker-email" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="edit-worker-email" name="edit-worker-email" required>
+                        <input type="email" class="form-control" id="edit-worker-email" name="edit-worker-email" disabled>
                     </div>
-                    <div class="mb-3">
-                        <label for="edit-worker-email" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="edit-worker-password" name="edit-worker-password" required>
-                    </div>
+                    
                     <div class="mb-3">
                         <label for="edit-worker-role" class="form-label">Rol</label>
                         <select class="form-select" id="edit-worker-role" name="edit-worker-role" required>
@@ -65,7 +63,13 @@
                             <option value="admin">Administrador</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-success w-100">Actualizar</button>
+                    
+                    <div class="mb-3">
+                        <label for="edit-worker-password" class="form-label">Nueva Contraseña (opcional)</label>
+                        <input type="password" class="form-control" id="edit-worker-password" name="edit-worker-password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Actualizar</button>
                 </form>
             </div>
         </div>

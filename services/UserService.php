@@ -117,27 +117,33 @@ class UserService
     }
 
 
-    public function updateUser(User $user)
+    public function updateUser($data)
     {
-        $stmt = $this->pdo->prepare("
-            UPDATE usuarios
-            SET nombre = :nombre, username = :username, email = :email, rol_id = :rol_id, hora_inicio = :hora_inicio, hora_fin = :hora_fin, estado = :estado
-            WHERE id = :id
-        ");
-        $stmt->execute([
-            'id' => $user->id,
-            'nombre' => $user->nombre,
-            'username' => $user->username,
-            'email' => $user->email,
-            'rol_id' => $user->rol_id,
-            'hora_inicio' => $user->hora_inicio,
-            'hora_fin' => $user->hora_fin,
-            'estado' => $user->estado,
-        ]);
-
-        $this->logService->addLog("Usuario actualizado: {$user->email} (ID: {$user->id})", $user->id);
-
-        return $stmt->rowCount();
+        try {
+            $query = "UPDATE usuarios SET rol_id = :rol_id";
+    
+            // Si hay contraseña, agregarla a la consulta
+            if (!empty($data['contrasena'])) {
+                $query .= ", contrasena = :contrasena";
+            }
+    
+            $query .= " WHERE id = :user_id";
+    
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':rol_id', $data['rol'], PDO::PARAM_STR);
+            $stmt->bindValue(':user_id', $data['user_id'], PDO::PARAM_INT);
+    
+            // Si hay contraseña, agregarla a la ejecución
+            if (!empty($data['contrasena'])) {
+                $stmt->bindValue(':contrasena', password_hash($data['contrasena'], PASSWORD_BCRYPT), PDO::PARAM_STR);
+            }
+    
+            $stmt->execute();
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Error en updateUser: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function canLoginToday($userId)
