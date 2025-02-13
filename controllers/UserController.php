@@ -45,10 +45,28 @@ class UserController
     {
         try {
             $user = $this->userService->getUserById($id);
+
             if (!$user) {
                 return ['success' => false, 'error' => 'Usuario no encontrado.'];
             }
-            return ['success' => true, 'user' => $user];
+
+            // Obtener el nombre del rol
+            $rol = $this->sessionService->getRoleName($user['rol_id']);
+
+            // Retornar datos del usuario incluyendo el nombre del rol
+            return [
+                'success' => true,
+                'user' => [
+                    'id' => $user['id'],
+                    'nombre' => $user['nombre'],
+                    'email' => $user['email'],
+                    'rol_id' => $user['rol_id'],
+                    'rol' => $rol, // Aquí se agrega el nombre del rol
+                    'hora_inicio' => $user['hora_inicio'] ?? null,
+                    'hora_fin' => $user['hora_fin'] ?? null,
+                    'estado' => $user['estado'] ?? 'activo'
+                ]
+            ];
         } catch (Exception $e) {
             $this->logService->addLog("Error al obtener usuario ID: $id - " . $e->getMessage(), null);
             return [
@@ -68,14 +86,14 @@ class UserController
             if (!isset($data['username'])) {
                 $data['username'] = strtolower(str_replace(' ', '', $data['nombre']));
             }
-    
+
             $user = new User($data);
             $userId = $this->userService->addUser($user, $data['usuario_id']);
-    
+
             if (!$userId) {
                 throw new Exception("No se pudo insertar el usuario en la base de datos.");
             }
-    
+
             return [
                 'success' => true,
                 'message' => 'Usuario creado exitosamente.',
@@ -89,7 +107,7 @@ class UserController
             ];
         }
     }
-    
+
 
     /**
      * Editar un usuario existente.
@@ -98,7 +116,7 @@ class UserController
     {
         try {
             $updated = $this->userService->updateUser($data);
-    
+
             if ($updated) {
                 return [
                     'success' => true,
