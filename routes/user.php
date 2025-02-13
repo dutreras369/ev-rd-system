@@ -20,7 +20,7 @@ try {
                 $response = $userController->listUsers();
                 echo json_encode($response);
             } 
-            elseif ($action === 'get_user') {
+            elseif ($action === 'user_info') {
                 if (!isset($data['user_id'], $data['token'])) {
                     throw new Exception('Datos incompletos.', 400);
                 }
@@ -41,8 +41,14 @@ try {
             
                 $response = $userController->editUser($data['user_id'], $data);
                 echo json_encode($response);
-            }
-            else {
+            } elseif ($action === 'get_user') {
+                if (!isset($data['user_id'], $data['token'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+            
+                $response = $userController->showUser($data['id']);
+                echo json_encode($response);
+            } else {
                 throw new Exception('Acción no válida para POST', 400);
             }
             break;

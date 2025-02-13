@@ -11,7 +11,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: BASE_URL + "/routes/user.php?action=get_user",
+            url: BASE_URL + "/routes/user.php?action=user_info",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({ user_id: userId, token: token }),
@@ -178,12 +178,12 @@ $(document).ready(function () {
 
 
     /** 🔹 Función para cargar datos en el modal de edición */
-    function editUser(userId) {
+    function editUser(id) {
         $.ajax({
             url: `${BASE_URL}/routes/user.php?action=get_user`,
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({ user_id: userId, token: token }),
+            data: JSON.stringify({ id: id }),
             success: function (response) {
                 if (response.success) {
                     // Mapear datos en el modal
