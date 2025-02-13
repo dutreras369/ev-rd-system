@@ -183,7 +183,7 @@ $(document).ready(function () {
             url: `${BASE_URL}/routes/user.php?action=get_user`,
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({ id: id }),
+            data: JSON.stringify({ id: id, token: token }),
             success: function (response) {
                 if (response.success) {
                     // Mapear datos en el modal
