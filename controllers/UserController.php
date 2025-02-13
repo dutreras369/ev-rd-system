@@ -57,7 +57,7 @@ class UserController
                     'nombre' => $user['nombre'],
                     'email' => $user['email'],
                     'rol_id' => $user['rol_id'],
-                    'rol' => $this->sessionService->getRoleName($user->rol_id), // Aquí se agrega el nombre del rol
+                    'rol' => $this->userService->getRoleName($user->rol_id), // Aquí se agrega el nombre del rol
                     'hora_inicio' => $user['hora_inicio'] ?? null,
                     'hora_fin' => $user['hora_fin'] ?? null,
                     'estado' => $user['estado'] ?? 'activo'
