@@ -45,24 +45,10 @@ class UserController
     {
         try {
             $user = $this->userService->getUserById($id);
-
             if (!$user) {
                 return ['success' => false, 'error' => 'Usuario no encontrado.'];
             }
-
-            return [
-                'success' => true, 
-                'user' => [
-                    'id' => $user['id'],
-                    'nombre' => $user['nombre'],
-                    'email' => $user['email'],
-                    'rol_id' => $user['rol_id'],
-                    'rol' => $this->userService->getRoleName($user->rol_id), // Aquí se agrega el nombre del rol
-                    'hora_inicio' => $user['hora_inicio'] ?? null,
-                    'hora_fin' => $user['hora_fin'] ?? null,
-                    'estado' => $user['estado'] ?? 'activo'
-                ]
-            ];
+            return ['success' => true, 'user' => $user];
         } catch (Exception $e) {
             $this->logService->addLog("Error al obtener usuario ID: $id - " . $e->getMessage(), null);
             return [
