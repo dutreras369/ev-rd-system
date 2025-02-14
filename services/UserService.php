@@ -169,31 +169,48 @@ class UserService
     {
         try {
             $this->pdo->beginTransaction();
-    
-            // Eliminar registros relacionados en la tabla sesiones
+
+            // Asegurar que el usuario existe antes de eliminar
+            $stmt = $this->pdo->prepare("SELECT id FROM usuarios WHERE id = :user_id");
+            $stmt->execute([':user_id' => $id]);
+            $userExists = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$userExists) {
+                $this->pdo->rollBack();
+                return ['success' => false, 'error' => 'El usuario no existe.'];
+            }
+
+            // Verificar si usuario tiene sesiones activas antes de eliminarlas
             $stmt = $this->pdo->prepare("DELETE FROM sesiones WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
-    
-            // Eliminar registros relacionados en la tabla registros
+
+            // Eliminar registros del usuario en la tabla de registros
             $stmt = $this->pdo->prepare("DELETE FROM registros WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
-    
-            // Eliminar registros relacionados en la tabla logs
+
+            // Eliminar registros del usuario en la tabla de logs
             $stmt = $this->pdo->prepare("DELETE FROM logs WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
-    
-            // Ahora eliminar el usuario
+
+            // Ahora eliminar al usuario
             $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :user_id");
             $stmt->execute([':user_id' => $id]);
-    
+
+            // Verificar si la eliminación se realizó correctamente
+            if ($stmt->rowCount() === 0) {
+                $this->pdo->rollBack();
+                return ['success' => false, 'error' => 'No se pudo eliminar el usuario.'];
+            }
+
             $this->pdo->commit();
-            return $stmt->rowCount() > 0;
+            return ['success' => true, 'message' => 'Usuario eliminado correctamente.'];
         } catch (PDOException $e) {
             $this->pdo->rollBack();
             error_log("Error en deleteUser: " . $e->getMessage());
-            return false;
+            return ['success' => false, 'error' => 'Error en la base de datos.', 'error_details' => $e->getMessage()];
         }
     }
+
 
     public function getRoleName($roleId)
     {

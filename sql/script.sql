@@ -59,8 +59,6 @@ CREATE TABLE roles (
     descripcion VARCHAR(255) DEFAULT NULL -- Descripción opcional
 );
 
-
-
 INSERT INTO roles (nombre, descripcion) VALUES
 ('admin', 'Administrador del sistema con acceso completo'),
 ('user', 'Usuario regular con acceso limitado a sus datos personales');
