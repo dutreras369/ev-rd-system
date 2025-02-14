@@ -35,7 +35,7 @@ try {
                 $response = $userController->createUser($data);
                 echo json_encode($response);
             } elseif ($action === 'edit_user') {
-                if (!isset($data['user_id'], $data['token'], $data['rol'])) {
+                if (!isset($data['user_id'], $data['token'], $data['rol_id'])) {
                     throw new Exception('Datos incompletos.', 400);
                 }
             
