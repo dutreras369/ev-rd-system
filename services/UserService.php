@@ -121,23 +121,23 @@ class UserService
     {
         try {
             $query = "UPDATE usuarios SET rol_id = :rol_id";
-    
+
             // Si hay contraseña, agregarla a la consulta
             if (!empty($data['contrasena'])) {
                 $query .= ", contrasena = :contrasena";
             }
-    
+
             $query .= " WHERE id = :user_id";
-    
+
             $stmt = $this->pdo->prepare($query);
             $stmt->bindValue(':rol_id', $data['rol_id'], PDO::PARAM_STR);
             $stmt->bindValue(':user_id', $data['user_id'], PDO::PARAM_INT);
-    
+
             // Si hay contraseña, agregarla a la ejecución
             if (!empty($data['contrasena'])) {
                 $stmt->bindValue(':contrasena', password_hash($data['contrasena'], PASSWORD_BCRYPT), PDO::PARAM_STR);
             }
-    
+
             $stmt->execute();
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
@@ -168,15 +168,25 @@ class UserService
     public function deleteUser($id)
     {
         try {
+            $this->pdo->beginTransaction();
+
+            // Eliminar registros relacionados en otras tablas
+            $this->pdo->prepare("DELETE FROM registros WHERE usuario_id = :user_id")->execute([':user_id' => $id]);
+            $this->pdo->prepare("DELETE FROM logs WHERE usuario_id = :user_id")->execute([':user_id' => $id]);
+
+            // Ahora eliminar el usuario
             $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :user_id");
             $stmt->execute([':user_id' => $id]);
-    
+
+            $this->pdo->commit();
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            error_log("Error en removeUser: " . $e->getMessage());
+            $this->pdo->rollBack();
+            error_log("Error en deleteUser: " . $e->getMessage());
             return false;
         }
     }
+
 
     public function getRoleName($roleId)
     {

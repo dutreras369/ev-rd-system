@@ -290,13 +290,23 @@ $(document).ready(function () {
     $("#deleteWorkerForm").submit(function (event) {
         event.preventDefault();
 
-        const userId = $("#delete-worker-id").val();
+        const id = $("#delete-worker-id").val().trim();
+
+        if (!id) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "El ID del usuario no es válido.",
+                confirmButtonColor: "#d33",
+            });
+            return;
+        }
 
         $.ajax({
             url: `${BASE_URL}/routes/user.php?action=delete_user`,
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({ user_id: userId, token: token }),
+            data: JSON.stringify({ user_id: id, token: token }),
             success: function (response) {
                 if (response.success) {
                     Swal.fire({
@@ -325,6 +335,7 @@ $(document).ready(function () {
             },
         });
     });
+
 
 
     // Ejecutar la función al abrir el modal
