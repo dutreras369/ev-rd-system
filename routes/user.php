@@ -48,7 +48,17 @@ try {
             
                 $response = $userController->showUser($data['id']);
                 echo json_encode($response);
-            } else {
+            } elseif ($action === 'delete_user') {
+                if (!isset($data['user_id'], $data['token'])) {
+                    throw new Exception('Datos incompletos.', 400);
+                }
+            
+                $response = $userController->removeUser($data['user_id']);
+                echo json_encode($response);
+            }
+             
+            
+            else {
                 throw new Exception('Acción no válida para POST', 400);
             }
             break;

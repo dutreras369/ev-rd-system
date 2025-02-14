@@ -194,7 +194,7 @@ $(document).ready(function () {
                     // Convertir rol_id a nombre de rol y asignarlo en el selector
                     let rol_id = parseInt(response.user.rol_id);
                     let rol = rol_id === 1 ? "admin" : "user";
-                    
+
                     $("#edit-worker-role").val(rol); // Asignar el nombre en el selector
                     $("#edit-worker-password").val(""); // Limpiar campo de contraseña
 
@@ -279,6 +279,53 @@ $(document).ready(function () {
             }
         });
     });
+
+    /** 🔹 Mostrar modal de confirmación para eliminar usuario */
+    function deleteUser(userId) {
+        $("#delete-worker-id").val(userId); // Asignar ID del usuario a eliminar
+        $("#deleteWorkerModal").modal("show"); // Mostrar modal
+    }
+
+    /** 🔹 Manejo del formulario para eliminar usuario */
+    $("#deleteWorkerForm").submit(function (event) {
+        event.preventDefault();
+
+        const userId = $("#delete-worker-id").val();
+
+        $.ajax({
+            url: `${BASE_URL}/routes/user.php?action=delete_user`,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ user_id: userId, token: token }),
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Usuario eliminado",
+                        text: "El usuario ha sido eliminado correctamente.",
+                        confirmButtonColor: "#28a745",
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+
+                    // Cerrar el modal y actualizar la lista de usuarios
+                    $("#deleteWorkerModal").modal("hide");
+                    loadUsers();
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: response.error,
+                        confirmButtonColor: "#d33",
+                    });
+                }
+            },
+            error: function (xhr) {
+                console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+            },
+        });
+    });
+
 
     // Ejecutar la función al abrir el modal
     $("#userInfoModal").on("show.bs.modal", function () {
