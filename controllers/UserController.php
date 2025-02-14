@@ -131,22 +131,25 @@ class UserController
         try {
             $deleted = $this->userService->deleteUser($id);
             if ($deleted) {
-                $this->logService->addLog("Usuario eliminado ID: $id", $id);
+                // No hacer ningún otro proceso después de la eliminación
+                return [
+                    'success' => true,
+                    'message' => 'Usuario eliminado correctamente.'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'error' => 'No se pudo eliminar el usuario. Tal vez ya no existe.'
+                ];
             }
-            return [
-                'success' => $deleted,
-                'message' => $deleted ? 'Usuario eliminado correctamente.' : 'Usuario no encontrado.'
-            ];
         } catch (Exception $e) {
-            $this->logService->addLog("Error al eliminar usuario ID: $id - " . $e->getMessage(), null);
             return [
                 'success' => false,
-                'error' => 'No se pudo eliminar el usuario.',
+                'error' => 'Error en la eliminación.',
                 'error_details' => $e->getMessage()
             ];
         }
     }
-
 
     public function getUser($userId, $token)
     {

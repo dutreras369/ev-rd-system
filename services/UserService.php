@@ -168,30 +168,15 @@ class UserService
     public function deleteUser($id)
     {
         try {
-            $this->pdo->beginTransaction();;
-
-            // Eliminar el usuario
             $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :user_id");
             $stmt->execute([':user_id' => $id]);
-
-            $this->pdo->commit();
-
-            return [
-                'success' => true,
-                'message' => 'Usuario eliminado correctamente.'
-            ];
+    
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            $this->pdo->rollBack();
             error_log("Error en deleteUser: " . $e->getMessage());
-
-            return [
-                'success' => false,
-                'error' => 'No se pudo eliminar el usuario.',
-                'error_details' => $e->getMessage()
-            ];
+            return false;
         }
-    }
-
+    }  
 
     public function getRoleName($roleId)
     {
