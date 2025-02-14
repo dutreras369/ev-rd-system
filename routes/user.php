@@ -24,7 +24,6 @@ try {
                 if (!isset($data['user_id'], $data['token'])) {
                     throw new Exception('Datos incompletos.', 400);
                 }
-
                 $response = $userController->getUser($data['user_id'], $data['token']);
                 echo json_encode($response);
             } elseif ($action === 'add') {

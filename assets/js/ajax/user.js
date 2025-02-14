@@ -308,20 +308,22 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify({ user_id: id, token: token }),
             success: function (response) {
+                console.log("🔹 Respuesta del servidor:", response);
+        
                 if (response.success) {
                     Swal.fire({
                         icon: "success",
                         title: "Usuario eliminado",
-                        text: "El usuario ha sido eliminado correctamente.",
+                        text: response.message,
                         confirmButtonColor: "#28a745",
                         timer: 1200,
                         showConfirmButton: false
                     });
-
-                    // Cerrar el modal y actualizar la lista de usuarios
+        
                     $("#deleteWorkerModal").modal("hide");
                     loadUsers();
                 } else {
+                    console.error("⚠️ Error en la eliminación:", response.error);
                     Swal.fire({
                         icon: "error",
                         title: "Error",
@@ -331,9 +333,9 @@ $(document).ready(function () {
                 }
             },
             error: function (xhr) {
-                console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+                console.error("🚨 Error en la solicitud AJAX:", xhr.status, xhr.responseText);
             },
-        });
+        });        
     });
 
 
