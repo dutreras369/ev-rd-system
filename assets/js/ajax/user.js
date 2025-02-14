@@ -223,7 +223,7 @@ $(document).ready(function () {
         const role = $("#edit-worker-role").val();
         const password = $("#edit-worker-password").val().trim();
 
-        let rol_id = rol === "admin" ? 1 : 2;
+        let rol_id = role === "admin" ? 1 : 2;
 
 
         if (!userId || !role) {
@@ -239,7 +239,7 @@ $(document).ready(function () {
         const formData = {
             user_id: userId,
             token: token,
-            rol_id: role
+            rol_id: rol_id
         };
 
         // Solo incluir la contraseña si el usuario ingresó una nueva
