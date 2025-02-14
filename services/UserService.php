@@ -130,7 +130,7 @@ class UserService
             $query .= " WHERE id = :user_id";
     
             $stmt = $this->pdo->prepare($query);
-            $stmt->bindValue(':rol_id', $data['rol'], PDO::PARAM_STR);
+            $stmt->bindValue(':rol_id', $data['rol_id'], PDO::PARAM_STR);
             $stmt->bindValue(':user_id', $data['user_id'], PDO::PARAM_INT);
     
             // Si hay contraseña, agregarla a la ejecución
