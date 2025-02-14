@@ -223,6 +223,9 @@ $(document).ready(function () {
         const role = $("#edit-worker-role").val();
         const password = $("#edit-worker-password").val().trim();
 
+        let rol_id = rol === "admin" ? 1 : 2;
+
+
         if (!userId || !role) {
             Swal.fire({
                 icon: "error",
@@ -236,7 +239,7 @@ $(document).ready(function () {
         const formData = {
             user_id: userId,
             token: token,
-            rol: role
+            rol_id: role
         };
 
         // Solo incluir la contraseña si el usuario ingresó una nueva
