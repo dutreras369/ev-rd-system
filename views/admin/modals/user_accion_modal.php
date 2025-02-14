@@ -124,7 +124,7 @@
             <div class="d-flex justify-content-center mt-3">
                 <nav>
                     <ul class="pagination" id="attendance-pagination">
-                        <!-- Botones de paginación dinámicos -->
+                        <!-- Los botones de paginación se generarán dinámicamente -->
                     </ul>
                 </nav>
             </div>
