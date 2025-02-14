@@ -168,19 +168,7 @@ class UserService
     public function deleteUser($id)
     {
         try {
-            $this->pdo->beginTransaction();
-
-            // Eliminar sesiones relacionadas
-            $stmt = $this->pdo->prepare("DELETE FROM sesiones WHERE usuario_id = :user_id");
-            $stmt->execute([':user_id' => $id]);
-
-            // Eliminar registros relacionados
-            $stmt = $this->pdo->prepare("DELETE FROM registros WHERE usuario_id = :user_id");
-            $stmt->execute([':user_id' => $id]);
-
-            // Eliminar logs relacionados
-            $stmt = $this->pdo->prepare("DELETE FROM logs WHERE usuario_id = :user_id");
-            $stmt->execute([':user_id' => $id]);
+            $this->pdo->beginTransaction();;
 
             // Eliminar el usuario
             $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :user_id");
