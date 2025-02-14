@@ -39,7 +39,7 @@ try {
                     throw new Exception('Datos incompletos.', 400);
                 }
             
-                $response = $userController->editUser($data['user_id'], $data);
+                $response = $userController->editUser($data);
                 echo json_encode($response);
             } elseif ($action === 'get_user') {
                 if (!isset($data['id'], $data['token'])) {
