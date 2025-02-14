@@ -384,49 +384,6 @@ $(document).ready(function () {
         });
     }
 
-    function updateAttendancePagination(currentPage, totalPages) {
-        let paginationContainer = $("#attendance-pagination");
-        paginationContainer.empty();
-    
-        if (totalPages <= 1) return; // No mostrar paginador si solo hay una página
-    
-        let prevDisabled = currentPage === 1 ? "disabled" : "";
-        let nextDisabled = currentPage === totalPages ? "disabled" : "";
-    
-        // Botón "Anterior"
-        paginationContainer.append(`
-            <li class="page-item ${prevDisabled}">
-                <a class="page-link" href="#" data-page="${currentPage - 1}">«</a>
-            </li>
-        `);
-    
-        // Números de página con efecto
-        for (let i = 1; i <= totalPages; i++) {
-            let activeClass = i === currentPage ? "active" : "";
-            paginationContainer.append(`
-                <li class="page-item ${activeClass}">
-                    <a class="page-link" href="#" data-page="${i}">${i}</a>
-                </li>
-            `);
-        }
-    
-        // Botón "Siguiente"
-        paginationContainer.append(`
-            <li class="page-item ${nextDisabled}">
-                <a class="page-link" href="#" data-page="${currentPage + 1}">»</a>
-            </li>
-        `);
-    
-        // Evento para cambiar de página
-        $(".page-link").click(function (event) {
-            event.preventDefault();
-            let page = $(this).data("page");
-            if (page && page > 0 && page <= totalPages) {
-                loadAttendance(page);
-            }
-        });
-    } 
-
     // Ejecutar la función al abrir el modal
     $("#userInfoModal").on("show.bs.modal", function () {
         loadUserInfo();
