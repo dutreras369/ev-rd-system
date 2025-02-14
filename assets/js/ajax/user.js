@@ -343,16 +343,14 @@ $(document).ready(function () {
         loadAttendance(userId, 1);
         $("#viewAttendanceModal").modal("show");
     }
-
-    function loadAttendance(page = 1) {
-        const userId = $("#viewAttendanceModal").data("user-id");
-
+    
+    function loadAttendance(id, page) {
         $.ajax({
             url: `${BASE_URL}/routes/user.php?action=get_attendance`,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                user_id: userId,
+                user_id: id,
                 token: token,
                 page: page,
                 limit: 5 // Número de registros por página
@@ -360,22 +358,21 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     $("#attendance-table-body").empty();
-                    response.records.forEach((record, index) => {
+                    response.sessions.forEach((session, index) => {
                         $("#attendance-table-body").append(`
                             <tr>
                                 <td>${index + 1}</td>
-                                <td>${record.fecha}</td>
-                                <td>${record.hora_entrada}</td>
-                                <td>${record.hora_salida}</td>
-                                <td>${record.estado}</td>
+                                <td>${new Date(session.inicio).toLocaleDateString()}</td>
+                                <td>${new Date(session.inicio).toLocaleTimeString()}</td>
+                                <td>${session.fin ? new Date(session.fin).toLocaleTimeString() : '-'}</td>
+                                <td>${session.estado}</td>
                             </tr>
                         `);
                     });
-
-                    // Actualizar el paginador
-                    updateAttendancePagination(response.current_page, response.total_pages);
+    
+                    updateAttendancePagination(userId, response.currentPage, response.totalPages);
                 } else {
-                    console.error("⚠️ Error al cargar asistencias:", response.error);
+                    console.error("Error al cargar asistencia:", response.error);
                 }
             },
             error: function (xhr) {
@@ -383,50 +380,28 @@ $(document).ready(function () {
             }
         });
     }
-
-    function updateAttendancePagination(currentPage, totalPages) {
-        let paginationContainer = $("#attendance-pagination");
-        paginationContainer.empty();
     
-        if (totalPages <= 1) return; // Si hay una sola página, no mostramos paginador
+    function updateAttendancePagination(userId, currentPage, totalPages) {
+        $("#attendance-pagination").empty();
     
-        let prevDisabled = currentPage === 1 ? "disabled" : "";
-        let nextDisabled = currentPage === totalPages ? "disabled" : "";
-    
-        // Botón "Anterior"
-        paginationContainer.append(`
-            <li class="page-item ${prevDisabled}">
-                <a class="page-link" href="#" data-page="${currentPage - 1}">«</a>
-            </li>
-        `);
-    
-        // Números de página
-        for (let i = 1; i <= totalPages; i++) {
-            let activeClass = i === currentPage ? "active" : "";
-            paginationContainer.append(`
-                <li class="page-item ${activeClass}">
-                    <a class="page-link" href="#" data-page="${i}">${i}</a>
-                </li>
-            `);
+        if (currentPage > 1) {
+            $("#attendance-pagination").append(`<button class="page-btn" data-page="${currentPage - 1}">Anterior</button>`);
         }
     
-        // Botón "Siguiente"
-        paginationContainer.append(`
-            <li class="page-item ${nextDisabled}">
-                <a class="page-link" href="#" data-page="${currentPage + 1}">»</a>
-            </li>
-        `);
+        for (let i = 1; i <= totalPages; i++) {
+            let activeClass = i === currentPage ? "active" : "";
+            $("#attendance-pagination").append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
+        }
     
-        // Evento para cambiar de página
-        $(".page-link").click(function (event) {
-            event.preventDefault();
+        if (currentPage < totalPages) {
+            $("#attendance-pagination").append(`<button class="page-btn" data-page="${currentPage + 1}">Siguiente</button>`);
+        }
+    
+        $(".page-btn").click(function () {
             let page = $(this).data("page");
-            if (page && page > 0 && page <= totalPages) {
-                loadAttendance(page);
-            }
+            loadAttendance(userId, page);
         });
     }
-
     
     // Ejecutar la función al abrir el modal
     $("#userInfoModal").on("show.bs.modal", function () {
