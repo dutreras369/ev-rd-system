@@ -180,23 +180,40 @@ class UserService
                 return ['success' => false, 'error' => 'El usuario no existe.'];
             }
 
-            // Verificar si usuario tiene sesiones activas antes de eliminarlas
+            // ELIMINAR SESIONES
             $stmt = $this->pdo->prepare("DELETE FROM sesiones WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
 
-            // Eliminar registros del usuario en la tabla de registros
+            // ELIMINAR REGISTROS
             $stmt = $this->pdo->prepare("DELETE FROM registros WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
 
-            // Eliminar registros del usuario en la tabla de logs
+            // ELIMINAR LOGS
             $stmt = $this->pdo->prepare("DELETE FROM logs WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
 
-            // Ahora eliminar al usuario
+            // Verificar que los registros han sido eliminados antes de proceder
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM sesiones WHERE usuario_id = :user_id");
+            $stmt->execute([':user_id' => $id]);
+            $sessionsRemaining = $stmt->fetchColumn();
+
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM registros WHERE usuario_id = :user_id");
+            $stmt->execute([':user_id' => $id]);
+            $recordsRemaining = $stmt->fetchColumn();
+
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM logs WHERE usuario_id = :user_id");
+            $stmt->execute([':user_id' => $id]);
+            $logsRemaining = $stmt->fetchColumn();
+
+            if ($sessionsRemaining > 0 || $recordsRemaining > 0 || $logsRemaining > 0) {
+                $this->pdo->rollBack();
+                return ['success' => false, 'error' => 'No se pudieron eliminar todos los registros antes de borrar el usuario.'];
+            }
+
+            // ELIMINAR USUARIO
             $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :user_id");
             $stmt->execute([':user_id' => $id]);
 
-            // Verificar si la eliminación se realizó correctamente
             if ($stmt->rowCount() === 0) {
                 $this->pdo->rollBack();
                 return ['success' => false, 'error' => 'No se pudo eliminar el usuario.'];
@@ -210,7 +227,6 @@ class UserService
             return ['success' => false, 'error' => 'Error en la base de datos.', 'error_details' => $e->getMessage()];
         }
     }
-
 
     public function getRoleName($roleId)
     {
