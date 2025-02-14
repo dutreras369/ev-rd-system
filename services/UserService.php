@@ -169,15 +169,23 @@ class UserService
     {
         try {
             $this->pdo->beginTransaction();
-
-            // Eliminar registros relacionados en otras tablas
-            $this->pdo->prepare("DELETE FROM registros WHERE usuario_id = :user_id")->execute([':user_id' => $id]);
-            $this->pdo->prepare("DELETE FROM logs WHERE usuario_id = :user_id")->execute([':user_id' => $id]);
-
+    
+            // Eliminar registros relacionados en la tabla sesiones
+            $stmt = $this->pdo->prepare("DELETE FROM sesiones WHERE usuario_id = :user_id");
+            $stmt->execute([':user_id' => $id]);
+    
+            // Eliminar registros relacionados en la tabla registros
+            $stmt = $this->pdo->prepare("DELETE FROM registros WHERE usuario_id = :user_id");
+            $stmt->execute([':user_id' => $id]);
+    
+            // Eliminar registros relacionados en la tabla logs
+            $stmt = $this->pdo->prepare("DELETE FROM logs WHERE usuario_id = :user_id");
+            $stmt->execute([':user_id' => $id]);
+    
             // Ahora eliminar el usuario
             $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :user_id");
             $stmt->execute([':user_id' => $id]);
-
+    
             $this->pdo->commit();
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
@@ -186,7 +194,6 @@ class UserService
             return false;
         }
     }
-
 
     public function getRoleName($roleId)
     {

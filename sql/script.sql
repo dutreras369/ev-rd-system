@@ -50,7 +50,7 @@ CREATE TABLE sesiones (
     fin DATETIME DEFAULT NULL, -- Hora de fin de la sesión
     token VARCHAR(255) NOT NULL UNIQUE, -- Token único para identificar la sesión
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE RESTRICT
+    FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 
 CREATE TABLE roles (
