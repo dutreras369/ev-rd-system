@@ -6,10 +6,6 @@ $padding: 8px 15px;
 $border-radius: 5px;
 $font-size: 14px;
 $gap-size: 10px;
-$light-bg: #f8f9fa;
-$hover-bg: darken($primary-color, 10%);
-$disabled-color: #6c757d;
-$disabled-bg: #e9ecef;
 
 #pagination {
     display: flex;
@@ -47,47 +43,30 @@ $disabled-bg: #e9ecef;
     }
 }
 
-
-// 📌 Estilos del paginador
-.pagination {
+#attendance-pagination {
     display: flex;
     justify-content: center;
-    padding: 10px 0;
+    gap: 5px;
+    margin-top: 15px;
 
-    .page-item {
-        margin: 0 4px;
-        transition: transform 0.2s ease-in-out;
+    .page-btn {
+        background-color: #007bff; // Color principal (Bootstrap Primary)
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
 
-        .page-link {
-            border-radius: 8px;
-            color: $primary-color;
-            font-weight: bold;
-            border: none;
-            padding: 8px 12px;
-            background-color: $light-bg;
-            transition: all 0.3s ease;
-
-            &:hover {
-                background-color: $hover-bg;
-                color: white;
-                transform: scale(1.1);
-            }
+        &:hover {
+            background-color: darken(#007bff, 10%);
+            transform: translateY(-2px);
         }
 
         &.active {
-            .page-link {
-                background-color: $primary-color;
-                color: white;
-                box-shadow: 0 0 10px rgba($primary-color, 0.5);
-            }
-        }
-
-        &.disabled {
-            .page-link {
-                color: $disabled-color;
-                pointer-events: none;
-                background-color: $disabled-bg;
-            }
+            background-color: #28a745; // Verde para la página actual
+            font-weight: bold;
+            pointer-events: none;
         }
     }
 }

@@ -121,12 +121,8 @@
                     </table>
                 </div>
             </div>
-            <div class="d-flex justify-content-center mt-3">
-                <nav>
-                    <ul class="pagination" id="attendance-pagination">
-                        <!-- Botones de paginación dinámicos -->
-                    </ul>
-                </nav>
+            <div class="text-center mt-3">
+                <div id="attendance-pagination" class="btn-group"></div>
             </div>
 
         </div>

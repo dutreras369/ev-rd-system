@@ -11543,40 +11543,31 @@ a {
   font-weight: bold;
 }
 #pagination .page-btn:disabled {
-  background-color: #6c757d;
+  background-color: #ccc;
   cursor: not-allowed;
 }
 
-.pagination {
+#attendance-pagination {
   display: flex;
   justify-content: center;
-  padding: 10px 0;
+  gap: 5px;
+  margin-top: 15px;
 }
-.pagination .page-item {
-  margin: 0 4px;
-  transition: transform 0.2s ease-in-out;
-}
-.pagination .page-item .page-link {
-  border-radius: 8px;
-  color: #007bff;
-  font-weight: bold;
-  border: none;
-  padding: 8px 12px;
-  background-color: #f8f9fa;
-  transition: all 0.3s ease;
-}
-.pagination .page-item .page-link:hover {
-  background-color: #0062cc;
-  color: white;
-  transform: scale(1.1);
-}
-.pagination .page-item.active .page-link {
+#attendance-pagination .page-btn {
   background-color: #007bff;
   color: white;
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
-.pagination .page-item.disabled .page-link {
-  color: #6c757d;
+#attendance-pagination .page-btn:hover {
+  background-color: #0062cc;
+  transform: translateY(-2px);
+}
+#attendance-pagination .page-btn.active {
+  background-color: #28a745;
+  font-weight: bold;
   pointer-events: none;
-  background-color: #e9ecef;
 }/*# sourceMappingURL=style.css.map */
