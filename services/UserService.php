@@ -170,63 +170,40 @@ class UserService
         try {
             $this->pdo->beginTransaction();
 
-            // Asegurar que el usuario existe antes de eliminar
-            $stmt = $this->pdo->prepare("SELECT id FROM usuarios WHERE id = :user_id");
-            $stmt->execute([':user_id' => $id]);
-            $userExists = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$userExists) {
-                $this->pdo->rollBack();
-                return ['success' => false, 'error' => 'El usuario no existe.'];
-            }
-
-            // ELIMINAR SESIONES
+            // Eliminar sesiones relacionadas
             $stmt = $this->pdo->prepare("DELETE FROM sesiones WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
 
-            // ELIMINAR REGISTROS
+            // Eliminar registros relacionados
             $stmt = $this->pdo->prepare("DELETE FROM registros WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
 
-            // ELIMINAR LOGS
+            // Eliminar logs relacionados
             $stmt = $this->pdo->prepare("DELETE FROM logs WHERE usuario_id = :user_id");
             $stmt->execute([':user_id' => $id]);
 
-            // Verificar que los registros han sido eliminados antes de proceder
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM sesiones WHERE usuario_id = :user_id");
-            $stmt->execute([':user_id' => $id]);
-            $sessionsRemaining = $stmt->fetchColumn();
-
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM registros WHERE usuario_id = :user_id");
-            $stmt->execute([':user_id' => $id]);
-            $recordsRemaining = $stmt->fetchColumn();
-
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM logs WHERE usuario_id = :user_id");
-            $stmt->execute([':user_id' => $id]);
-            $logsRemaining = $stmt->fetchColumn();
-
-            if ($sessionsRemaining > 0 || $recordsRemaining > 0 || $logsRemaining > 0) {
-                $this->pdo->rollBack();
-                return ['success' => false, 'error' => 'No se pudieron eliminar todos los registros antes de borrar el usuario.'];
-            }
-
-            // ELIMINAR USUARIO
+            // Eliminar el usuario
             $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :user_id");
             $stmt->execute([':user_id' => $id]);
 
-            if ($stmt->rowCount() === 0) {
-                $this->pdo->rollBack();
-                return ['success' => false, 'error' => 'No se pudo eliminar el usuario.'];
-            }
-
             $this->pdo->commit();
-            return ['success' => true, 'message' => 'Usuario eliminado correctamente.'];
+
+            return [
+                'success' => true,
+                'message' => 'Usuario eliminado correctamente.'
+            ];
         } catch (PDOException $e) {
             $this->pdo->rollBack();
             error_log("Error en deleteUser: " . $e->getMessage());
-            return ['success' => false, 'error' => 'Error en la base de datos.', 'error_details' => $e->getMessage()];
+
+            return [
+                'success' => false,
+                'error' => 'No se pudo eliminar el usuario.',
+                'error_details' => $e->getMessage()
+            ];
         }
     }
+
 
     public function getRoleName($roleId)
     {

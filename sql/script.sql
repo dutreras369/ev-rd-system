@@ -9,7 +9,7 @@ CREATE TABLE usuarios (
     hora_fin TIME NULL, -- Hora de fin permitida para usuarios
     estado ENUM('activo', 'inactivo') DEFAULT 'activo', -- Estado del usuario
     creado_en DATETIME DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
-    FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE RESTRICT
+    FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 
 CREATE TABLE registros (
@@ -19,7 +19,7 @@ CREATE TABLE registros (
     monto DECIMAL(10, 2) NOT NULL,
     descripcion VARCHAR(255) DEFAULT NULL, -- Descripción opcional del registro
     fecha DATETIME NOT NULL,
-    estado ENUM('pendiente', 'correcto', 'incorrecto') DEFAULT 'pendiente',
+    estado ENUM('pendiente', 'correcto', 'incorrecto') DEFAULT 'correcto',
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
