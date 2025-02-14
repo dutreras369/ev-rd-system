@@ -45,17 +45,17 @@
             <div class="modal-body">
                 <form id="editWorkerForm">
                     <input type="hidden" id="edit-worker-id"> <!-- ID oculto para referencia -->
-                    
+
                     <div class="mb-3">
                         <label for="edit-worker-name" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="edit-worker-name" name="edit-worker-name" disabled>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="edit-worker-email" class="form-label">Correo Electrónico</label>
                         <input type="email" class="form-control" id="edit-worker-email" name="edit-worker-email" disabled>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="edit-worker-role" class="form-label">Rol</label>
                         <select class="form-select" id="edit-worker-role" name="edit-worker-role" required>
@@ -63,7 +63,7 @@
                             <option value="admin">Administrador</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="edit-worker-password" class="form-label">Nueva Contraseña (opcional)</label>
                         <input type="password" class="form-control" id="edit-worker-password" name="edit-worker-password">
@@ -120,6 +120,9 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div class="text-center mt-3">
+                <div id="attendance-pagination" class="btn-group"></div>
             </div>
         </div>
     </div>

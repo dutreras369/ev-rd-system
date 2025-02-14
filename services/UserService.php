@@ -196,4 +196,38 @@ class UserService
         $stmt->execute(['user_id' => $userId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getUserSessions($userId, $limit, $offset) {
+        $stmt = $this->pdo->prepare("
+            SELECT inicio, fin, 
+                   CASE 
+                       WHEN fin IS NULL THEN 'En curso' 
+                       ELSE 'Finalizada' 
+                   END AS estado
+            FROM sesiones 
+            WHERE usuario_id = :user_id 
+            AND inicio >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            ORDER BY inicio DESC
+            LIMIT :limit OFFSET :offset
+        ");
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function countUserSessions($userId) {
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*) AS total 
+            FROM sesiones 
+            WHERE usuario_id = :user_id 
+            AND inicio >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        ");
+        $stmt->execute([':user_id' => $userId]);
+    
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+    }
+    
 }

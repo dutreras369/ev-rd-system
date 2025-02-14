@@ -309,7 +309,7 @@ $(document).ready(function () {
             data: JSON.stringify({ user_id: id, token: token }),
             success: function (response) {
                 console.log("🔹 Respuesta del servidor:", response);
-        
+
                 if (response.success) {
                     Swal.fire({
                         icon: "success",
@@ -319,7 +319,7 @@ $(document).ready(function () {
                         timer: 1200,
                         showConfirmButton: false
                     });
-        
+
                     $("#deleteWorkerModal").modal("hide");
                     loadUsers();
                 } else {
@@ -335,9 +335,73 @@ $(document).ready(function () {
             error: function (xhr) {
                 console.error("🚨 Error en la solicitud AJAX:", xhr.status, xhr.responseText);
             },
-        });        
+        });
     });
 
+    function viewUserDetails(userId) {
+        $("#attendance-table-body").empty();
+        loadAttendance(userId, 1);
+        $("#viewAttendanceModal").modal("show");
+    }
+
+    function loadAttendance(userId, page) {
+        $.ajax({
+            url: `${BASE_URL}/routes/user.php?action=get_attendance`,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                user_id: userId,
+                token: token,
+                page: page,
+                limit: 5 // Número de registros por página
+            }),
+            success: function (response) {
+                if (response.success) {
+                    $("#attendance-table-body").empty();
+                    response.sessions.forEach((session, index) => {
+                        $("#attendance-table-body").append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${new Date(session.inicio).toLocaleDateString()}</td>
+                                <td>${new Date(session.inicio).toLocaleTimeString()}</td>
+                                <td>${session.fin ? new Date(session.fin).toLocaleTimeString() : '-'}</td>
+                                <td>${session.estado}</td>
+                            </tr>
+                        `);
+                    });
+
+                    updateAttendancePagination(userId, response.currentPage, response.totalPages);
+                } else {
+                    console.error("Error al cargar asistencia:", response.error);
+                }
+            },
+            error: function (xhr) {
+                console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+            }
+        });
+    }
+
+    function updateAttendancePagination(userId, currentPage, totalPages) {
+        $("#attendance-pagination").empty();
+
+        if (currentPage > 1) {
+            $("#attendance-pagination").append(`<button class="page-btn" data-page="${currentPage - 1}">Anterior</button>`);
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            let activeClass = i === currentPage ? "active" : "";
+            $("#attendance-pagination").append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
+        }
+
+        if (currentPage < totalPages) {
+            $("#attendance-pagination").append(`<button class="page-btn" data-page="${currentPage + 1}">Siguiente</button>`);
+        }
+
+        $(".page-btn").click(function () {
+            let page = $(this).data("page");
+            loadAttendance(userId, page);
+        });
+    }
 
 
     // Ejecutar la función al abrir el modal

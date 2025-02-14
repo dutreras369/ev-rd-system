@@ -183,4 +183,26 @@ class UserController
             ]
         ];
     }
+
+    public function getUserAttendance($userId, $page, $limit) {
+        try {
+            $offset = ($page - 1) * $limit;
+            $sessions = $this->userService->getUserSessions($userId, $limit, $offset);
+            $totalSessions = $this->userService->countUserSessions($userId);
+    
+            return [
+                'success' => true,
+                'sessions' => $sessions,
+                'totalPages' => ceil($totalSessions / $limit),
+                'currentPage' => $page
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => 'No se pudieron obtener las sesiones.',
+                'error_details' => $e->getMessage()
+            ];
+        }
+    }
+    
 }
