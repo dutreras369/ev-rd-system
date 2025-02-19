@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    
     /** 🔹 Abrir modal de filtro general */
     $("#openFilterModal").click(function () {
         $("#viewDetailsModal").modal("show");
@@ -21,6 +22,7 @@ $(document).ready(function () {
 
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
+    const token = localStorage.getItem("token");
     let dateFrom = $("#filter-date-from").val() || getDefaultStartDate();
     let dateTo = $("#filter-date-to").val() || getTodayDate();
     let type = $("#filter-type").val();
