@@ -66,12 +66,6 @@ $(document).ready(function () {
                             </tr>
                         `);
                     });
-    
-                    // Agregar evento a los botones de "ver registros"
-                    $(".view-user-records").click(function () {
-                        let userId = $(this).data("user");
-                        loadFilteredRecords(userId);
-                    });
                 } else {
                     console.error("⚠️ Error al obtener registros de usuarios:", response.error);
                 }
