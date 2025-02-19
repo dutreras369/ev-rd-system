@@ -3,13 +3,13 @@ $(document).ready(function () {
 
     const userId = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
-    
+
     function loadTotalRecords() {
         if (!$("#analysis-section").length) return;
-    
+
         const userId = localStorage.getItem("user_id");
         const token = localStorage.getItem("token");
-    
+
         $.ajax({
             url: `${BASE_URL}/routes/analysis.php?action=total_records`,
             type: "POST",
@@ -18,11 +18,11 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     console.log("📊 Totales recibidos:", response);
-    
+
                     function formatCurrency(value) {
                         return value > 0 ? `$${parseFloat(value).toLocaleString()}` : "$—";
                     }
-    
+
                     $("#deposit-count").text(formatCurrency(response.total_cargas));
                     $("#withdrawal-count").text(formatCurrency(response.total_retiros));
                     $("#daily-records").text(response.total_registros);
@@ -39,7 +39,7 @@ $(document).ready(function () {
 
     function loadUserRecords() {
         if (!$("#user-analysis-table-body").length) return;
-    
+
         $.ajax({
             url: `${BASE_URL}/routes/analysis.php?action=user_records`,
             type: "POST",
@@ -49,7 +49,7 @@ $(document).ready(function () {
                 if (response.success) {
                     console.log("📊 Datos de usuarios:", response.records);
                     $("#user-analysis-table-body").empty();
-    
+
                     response.records.forEach((user, index) => {
                         $("#user-analysis-table-body").append(`
                             <tr>
@@ -66,6 +66,14 @@ $(document).ready(function () {
                             </tr>
                         `);
                     });
+
+                    /** 🔹 Evento para ver registros por usuario */
+                    $(".view-user-records").click(function () {
+                        let userId = $(this).data("user");
+                        loadFilteredRecords(userId); // Cargar datos filtrados
+                        $("#viewDetailsModal").modal("show"); // Forzar apertura del modal
+                    });
+
                 } else {
                     console.error("⚠️ Error al obtener registros de usuarios:", response.error);
                 }
@@ -75,8 +83,8 @@ $(document).ready(function () {
             }
         });
     }
-    
-   
+
+
     loadUserRecords();
     loadTotalRecords();
 });

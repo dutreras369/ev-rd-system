@@ -7,13 +7,7 @@ $(document).ready(function () {
     });
     
 
-    /** 🔹 Evento para ver registros por usuario */
-    $(".view-user-records").click(function () {
-        let userId = $(this).data("user");
-        loadFilteredRecords(userId); // Cargar datos filtrados
-        $("#viewDetailsModal").modal("show"); // Forzar apertura del modal
-    });
-    
+ 
     /** 🔹 Aplicar filtros manualmente desde el formulario */
     $("#filterDetailsForm").submit(function (event) {
         event.preventDefault();
