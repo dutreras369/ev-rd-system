@@ -12,7 +12,7 @@ try {
         $data = json_decode(file_get_contents("php://input"), true);
 
         if ($action === 'filter_records') {
-            if (!isset($data['token'], $data['page'], $data['limit'])) {
+            if (!isset($data['token'], $data['offset'], $data['limit'])) {
                 throw new Exception('Datos incompletos.', 400);
             }
             $response = $filterController->filterRecords($data);
