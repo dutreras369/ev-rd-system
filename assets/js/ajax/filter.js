@@ -23,25 +23,22 @@ $(document).ready(function () {
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
     const token = localStorage.getItem("token");
-    let dateFrom = $("#filter-date-from").val() || getDefaultStartDate();
-    let dateTo = $("#filter-date-to").val() || getTodayDate();
-    let type = $("#filter-type").val();
-    let status = $("#filter-status").val();
-    let selectedUser = userId ? userId : $("#filter-user").val();
+    let limit = 10;
+    let offset = (page - 1) * limit;
 
     $.ajax({
         url: `${BASE_URL}/routes/filter.php?action=filter_records`,
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-            user_id: selectedUser,
+            user_id: userId || null,
             token: token,
-            date_from: dateFrom,
-            date_to: dateTo,
-            type: type,
-            status: status,
-            page: page,
-            limit: 10
+            date_from: $("#filter-date-from").val() || getDefaultStartDate(),
+            date_to: $("#filter-date-to").val() || getTodayDate(),
+            type: $("#filter-type").val(),
+            status: $("#filter-status").val(),
+            limit: limit,
+            offset: offset
         }),
         success: function (response) {
             if (response.success) {
@@ -69,6 +66,7 @@ function loadFilteredRecords(userId = null, page = 1) {
         }
     });
 }
+
 
 /** 🔹 Actualizar paginación */
 function updatePagination(currentPage, totalPages, userId = null) {

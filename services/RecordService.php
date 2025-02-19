@@ -118,54 +118,50 @@ class RecordService
     }
 
     public function getFilteredRecords($filters) {
-        $query = "SELECT registros.id, usuarios.nombre AS usuario, registros.fecha, registros.tipo, registros.monto, registros.estado
-                  FROM registros 
-                  INNER JOIN usuarios ON registros.usuario_id = usuarios.id
-                  WHERE 1=1";
+        $query = "SELECT * FROM registros WHERE 1=1";
         $params = [];
     
         if (!empty($filters['user_id'])) {
-            $query .= " AND registros.usuario_id = :user_id";
+            $query .= " AND usuario_id = :user_id";
             $params[':user_id'] = $filters['user_id'];
         }
     
         if (!empty($filters['date_from'])) {
-            $query .= " AND DATE(registros.fecha) >= :date_from";
+            $query .= " AND DATE(fecha) >= :date_from";
             $params[':date_from'] = $filters['date_from'];
         }
     
         if (!empty($filters['date_to'])) {
-            $query .= " AND DATE(registros.fecha) <= :date_to";
+            $query .= " AND DATE(fecha) <= :date_to";
             $params[':date_to'] = $filters['date_to'];
         }
     
         if (!empty($filters['type'])) {
-            $query .= " AND registros.tipo = :type";
+            $query .= " AND tipo = :type";
             $params[':type'] = $filters['type'];
         }
     
         if (!empty($filters['status'])) {
-            $query .= " AND registros.estado = :status";
+            $query .= " AND estado = :status";
             $params[':status'] = $filters['status'];
         }
     
-        // Agregar paginación
-        $query .= " ORDER BY registros.fecha DESC LIMIT :limit OFFSET :offset";
-        $params[':limit'] = (int) $filters['limit'];
-        $params[':offset'] = ((int) $filters['page'] - 1) * (int) $filters['limit'];
-    
+        // Evitar error de sintaxis en LIMIT y OFFSET
+        $query .= " ORDER BY fecha DESC LIMIT :limit OFFSET :offset";
+        
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute($params);
     
-        $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Asignación correcta de valores numéricos
+        $stmt->bindValue(':limit', (int) $filters['limit'], PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $filters['offset'], PDO::PARAM_INT);
     
-        return [
-            'success' => true,
-            'records' => $records,
-            'current_page' => $filters['page'],
-            'total_pages' => ceil(count($records) / $filters['limit'])
-        ];
-    }    
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+    
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }   
 
     public function getTotalStatusRecords()
     {
