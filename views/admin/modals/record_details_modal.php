@@ -1,4 +1,4 @@
-<!-- Detalles de trabajador -->
+<!-- Filtro Modal -->
 <div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

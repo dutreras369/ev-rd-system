@@ -3,9 +3,10 @@
     <!-- Cabecera de Filtro General -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="text-primary m-0">Filtro General</h5>
-        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewDetailsModal">
+        <button type="button" class="btn btn-outline-primary" id="openFilterModal">
             <i class="bi bi-funnel"></i> Filtrar
         </button>
+
     </div>
 
     <div class="table-responsive">

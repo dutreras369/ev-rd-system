@@ -59,7 +59,7 @@ $(document).ready(function () {
                                 <td>${user.correctos}</td>
                                 <td>${user.incorrectos}</td>
                                 <td>
-                                    <button class="btn btn-outline-primary filterDetailsForm" data-user="${user.id}">
+                                    <button class="btn btn-outline-primary view-user-records" data-user="${user.id}">
                                         <i class="bi bi-eye"></i>
                                     </button>
                                 </td>
@@ -68,9 +68,9 @@ $(document).ready(function () {
                     });
     
                     // Agregar evento a los botones de "ver registros"
-                    $("#filterDetailsForm").submit(function (event) {
-                        event.preventDefault();
-                        loadFilteredRecords();
+                    $(".view-user-records").click(function () {
+                        let userId = $(this).data("user");
+                        loadFilteredRecords(userId);
                     });
                 } else {
                     console.error("⚠️ Error al obtener registros de usuarios:", response.error);
