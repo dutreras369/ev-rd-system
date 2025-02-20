@@ -8,17 +8,13 @@ $(document).ready(function () {
     
     /** 🔹 Manejo del formulario dentro del modal */
     $("#filterDetailsForm").submit(function (event) {
-        event.preventDefault(); // 🔹 Evitar recarga de página
-                
-        console.log("🔍 Enviando filtro para usuario ID:", userId);
-        
+        event.preventDefault(); // 🔹 Evitar recarga de página        
         loadFilteredRecords(); // 🔹 Recargar registros con el filtro aplicado
     });
 
    
 });
 
-/** 🔹 Cargar registros filtrados */
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
