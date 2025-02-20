@@ -15,9 +15,9 @@ $(document).ready(function () {
         let userId = $("#filter-user").val(); // Obtener usuario seleccionado
         loadFilteredRecords(userId); // 🔹 Cargar datos filtrados
     
-        // 🔹 Mantener el modal abierto después de filtrar
-        $("#viewDetailsModal").modal("show");
-    });
+        // 🔹 Asegurar que el modal permanece abierto
+        $("#viewDetailsModal").modal("show").find(".modal-body").scrollTop(0);
+    });   
    
 });
 
@@ -25,8 +25,6 @@ $(document).ready(function () {
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
     let offset = (page - 1) * limit;
-    const token = localStorage.getItem("token");
-
 
     $.ajax({
         url: `${BASE_URL}/routes/filter.php?action=filter_records`,
@@ -44,18 +42,20 @@ function loadFilteredRecords(userId = null, page = 1) {
         }),
         success: function (response) {
             let tableBody = $("#details-table-body");
-            tableBody.empty(); // 🔹 Limpiar tabla antes de agregar nuevos datos
+
+            // 🔹 Limpiar la tabla antes de agregar nuevos datos
+            tableBody.empty();
 
             if (response.success && response.records.length > 0) {
                 response.records.forEach((record, index) => {
                     tableBody.append(`
                         <tr>
                             <td>${index + 1}</td>
-                            <td>${record.usuario}</td>
+                            <td>${record.codigo_usuario}</td>
                             <td>${record.fecha}</td>
                             <td>${record.tipo}</td>
                             <td>$${parseFloat(record.monto).toLocaleString()}</td>
-                            <td>${record.estado}</td>
+                            <td>${record.estado === "true" ? "Correcto" : "Incorrecto"}</td>
                         </tr>
                     `);
                 });
@@ -70,14 +70,15 @@ function loadFilteredRecords(userId = null, page = 1) {
                 $("#pagination").empty(); // 🔹 Limpiar paginador si no hay datos
             }
 
-            // 🔹 Mantener el modal abierto después de filtrar
-            $("#viewDetailsModal").modal("show"); 
+            // 🔹 Forzar actualización del DOM (importante para Bootstrap 5)
+            $("#viewDetailsModal").modal("show").find(".modal-body").scrollTop(0);
         },
         error: function (xhr) {
             console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
         }
     });
 }
+
 
 
 /** 🔹 Actualizar paginación */
