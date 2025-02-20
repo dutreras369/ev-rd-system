@@ -70,6 +70,7 @@ $(document).ready(function () {
                     /** 🔹 Evento para ver registros por usuario */
                     $(".view-user-records").click(function () {
                         let userId = $(this).data("user");
+                        loadUsersForFilter();
                         loadFilteredRecords(userId); // Cargar datos filtrados
                         $("#viewDetailsModal").modal("show"); // Forzar apertura del modal
                     });
@@ -84,6 +85,31 @@ $(document).ready(function () {
         });
     }
 
+    function loadUsersForFilter() {
+        $.ajax({
+            url: `${BASE_URL}/routes/user.php?action=list_users`,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ user_id: userId, token: token }),
+            success: function (response) {
+                if (response.success) {
+                    let userSelect = $("#filter-user");
+                    userSelect.empty(); // Limpiar opciones previas
+                    userSelect.append(`<option value="">Todos</option>`);
+    
+                    response.users.forEach(user => {
+                        let roleName = user.rol_id === 1 ? "Administrador" : "Usuario";
+                        userSelect.append(`<option value="${user.id}">${user.nombre} (${roleName})</option>`);
+                    });
+                } else {
+                    console.error("⚠️ Error al obtener usuarios:", response.error);
+                }
+            },
+            error: function (xhr) {
+                console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+            }
+        });
+    }  
 
     loadUserRecords();
     loadTotalRecords();

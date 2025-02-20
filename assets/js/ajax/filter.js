@@ -10,9 +10,15 @@ $(document).ready(function () {
  
     /** 🔹 Aplicar filtros manualmente desde el formulario */
     $("#filterDetailsForm").submit(function (event) {
-        event.preventDefault();
-        loadFilteredRecords(); // Carga registros según filtros seleccionados
+        event.preventDefault(); // Evitar la recarga de la página
+    
+        let userId = $("#filter-user").val(); // Obtener el usuario seleccionado
+        loadFilteredRecords(userId); // Ejecutar la búsqueda con el usuario seleccionado
+    
+        // 🚀 Asegurar que el modal no se cierre automáticamente
+        $("#viewDetailsModal").modal("show");
     });
+
 });
 
 /** 🔹 Cargar registros filtrados */
