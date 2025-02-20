@@ -8,25 +8,23 @@ $(document).ready(function () {
 
     /** 🔹 Manejo del formulario dentro del modal */
     $("#filterDetailsForm").submit(function (event) {
-        event.preventDefault(); // 🔹 Evitar recarga de página
+        event.preventDefault();
 
         let userId = $("#filter-user").val() || null;
 
-        console.log("🔍 Enviando filtro para usuario ID:", userId);
+        console.log("🔍 Filtrando registros para usuario ID:", userId);
 
-        loadFilteredRecords(userId, 1); // 🔹 Recargar registros con el filtro aplicado
-
-        // 🔹 Refrescar el modal sin cerrarlo
-        setTimeout(() => {
-            $(".modal-body").scrollTop(0); // 🔹 Asegurar que el scroll regrese al inicio
-        }, 300);
+        // 🔹 Cargar datos filtrados sin cerrar el modal
+        loadFilteredRecords(userId, 1);
     });
+
 
 
 
 });
 
 /** 🔹 Cargar registros filtrados sin cerrar el modal */
+/** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
     let offset = (page - 1) * limit;
@@ -49,38 +47,36 @@ function loadFilteredRecords(userId = null, page = 1) {
         success: function (response) {
             let tableBody = $("#details-table-body");
 
-            // 🔹 Limpiar la tabla antes de agregar nuevos datos
-            tableBody.empty();
+            // 🔹 LIMPIAR la tabla antes de agregar nuevos datos
+            tableBody.html("");
 
-            if (response.success && response.records.length > 0) {
-                response.records.forEach((record, index) => {
+            if (response.length > 0) {
+                response.forEach((record, index) => {
                     tableBody.append(`
                         <tr>
-                            <td>${index + 1 + offset}</td>
+                            <td>${index + 1}</td>
                             <td>${record.codigo_usuario}</td>
                             <td>${record.fecha}</td>
                             <td>${record.tipo}</td>
                             <td>$${parseFloat(record.monto).toLocaleString()}</td>
-                            <td>${record.estado === "true" ? "Correcto" : "Incorrecto"}</td>
+                            <td>${record.estado === "correcto" ? "✅ Correcto" : "❌ Incorrecto"}</td>
                         </tr>
                     `);
                 });
 
-                // 🔹 Actualizar paginación
-                updatePagination(response.current_page, response.total_pages, userId);
-
-                console.log("✅ Tabla actualizada correctamente.");
+                console.log("✅ Registros actualizados correctamente en la tabla.");
             } else {
                 tableBody.append(`
                     <tr>
                         <td colspan="6" class="text-center text-muted">No se encontraron registros.</td>
                     </tr>
                 `);
-                $("#pagination").empty(); // 🔹 Limpiar paginador si no hay datos
             }
 
-            // 🔹 Forzar actualización del DOM
-            $("#details-table-body").trigger("change"); // Disparar evento de cambio en la tabla
+            // 🔹 Forzar que el modal permanezca abierto y actualizado
+            setTimeout(() => {
+                $("#viewDetailsModal").modal("show").find(".modal-body").scrollTop(0);
+            }, 200);
         },
         error: function (xhr) {
             console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
