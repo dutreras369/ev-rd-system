@@ -6,8 +6,6 @@ $(document).ready(function () {
         $("#viewDetailsModal").modal("show");
     });
     
-
- 
     /** 🔹 Aplicar filtros manualmente desde el formulario */
     $("#filterDetailsForm").submit(function (event) {
         event.preventDefault(); // 🔹 Evitar que el formulario recargue la página
@@ -26,7 +24,6 @@ function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
     let offset = (page - 1) * limit;
     const token = localStorage.getItem("token");
-
 
     $.ajax({
         url: `${BASE_URL}/routes/filter.php?action=filter_records`,
@@ -52,7 +49,7 @@ function loadFilteredRecords(userId = null, page = 1) {
                 response.records.forEach((record, index) => {
                     tableBody.append(`
                         <tr>
-                            <td>${index + 1}</td>
+                            <td>${index + 1 + offset}</td>
                             <td>${record.codigo_usuario}</td>
                             <td>${record.fecha}</td>
                             <td>${record.tipo}</td>
@@ -62,6 +59,7 @@ function loadFilteredRecords(userId = null, page = 1) {
                     `);
                 });
 
+                // 🔹 Actualizar paginación
                 updatePagination(response.current_page, response.total_pages, userId);
             } else {
                 tableBody.append(`
@@ -72,8 +70,9 @@ function loadFilteredRecords(userId = null, page = 1) {
                 $("#pagination").empty(); // 🔹 Limpiar paginador si no hay datos
             }
 
-            // 🔹 Forzar actualización del DOM (importante para Bootstrap 5)
-            $("#viewDetailsModal").modal("show").find(".modal-body").scrollTop(0);
+            // 🔹 Asegurar que el modal se mantenga abierto y actualizado
+            $("#viewDetailsModal").modal("show");
+            $(".modal-body").scrollTop(0);
         },
         error: function (xhr) {
             console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
@@ -81,30 +80,36 @@ function loadFilteredRecords(userId = null, page = 1) {
     });
 }
 
+/** 🔹 Función para actualizar la paginación */
+function updatePagination(currentPage, totalPages, userId) {
+    let pagination = $("#pagination");
+    pagination.empty();
 
+    if (totalPages > 1) {
+        let prevDisabled = currentPage === 1 ? "disabled" : "";
+        let nextDisabled = currentPage === totalPages ? "disabled" : "";
 
-/** 🔹 Actualizar paginación */
-function updatePagination(currentPage, totalPages, userId = null) {
-    $("#pagination").empty();
+        pagination.append(`
+            <li class="page-item ${prevDisabled}">
+                <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${currentPage - 1})">Anterior</a>
+            </li>
+        `);
 
-    if (currentPage > 1) {
-        $("#pagination").append(`<button class="page-btn" data-page="${currentPage - 1}" data-user="${userId}">Anterior</button>`);
+        for (let i = 1; i <= totalPages; i++) {
+            let active = i === currentPage ? "active" : "";
+            pagination.append(`
+                <li class="page-item ${active}">
+                    <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${i})">${i}</a>
+                </li>
+            `);
+        }
+
+        pagination.append(`
+            <li class="page-item ${nextDisabled}">
+                <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${currentPage + 1})">Siguiente</a>
+            </li>
+        `);
     }
-
-    for (let i = 1; i <= totalPages; i++) {
-        let activeClass = i === currentPage ? "active" : "";
-        $("#pagination").append(`<button class="page-btn ${activeClass}" data-page="${i}" data-user="${userId}">${i}</button>`);
-    }
-
-    if (currentPage < totalPages) {
-        $("#pagination").append(`<button class="page-btn" data-page="${currentPage + 1}" data-user="${userId}">Siguiente</button>`);
-    }
-
-    $(".page-btn").click(function () {
-        let page = $(this).data("page");
-        let userId = $(this).data("user");
-        loadFilteredRecords(userId, page);
-    });
 }
 
 /** 🔹 Obtener la fecha de hoy */
