@@ -10,23 +10,21 @@ $(document).ready(function () {
  
     /** 🔹 Aplicar filtros manualmente desde el formulario */
     $("#filterDetailsForm").submit(function (event) {
-        event.preventDefault(); // Evitar la recarga de la página
+        event.preventDefault(); // 🔹 Evitar que el formulario recargue la página
     
-        let userId = $("#filter-user").val(); // Obtener el usuario seleccionado
-        loadFilteredRecords(userId); // Ejecutar la búsqueda con el usuario seleccionado
+        let userId = $("#filter-user").val(); // Obtener usuario seleccionado
+        loadFilteredRecords(userId); // 🔹 Cargar datos filtrados
     
-        // 🚀 Asegurar que el modal no se cierre automáticamente
+        // 🔹 Mantener el modal abierto después de filtrar
         $("#viewDetailsModal").modal("show");
     });
-
+   
 });
 
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
     let offset = (page - 1) * limit;
-    const token = localStorage.getItem("token");
-
 
     $.ajax({
         url: `${BASE_URL}/routes/filter.php?action=filter_records`,
@@ -43,11 +41,12 @@ function loadFilteredRecords(userId = null, page = 1) {
             offset: offset
         }),
         success: function (response) {
-            $("#details-table-body").empty(); // Limpiar tabla antes de insertar
+            let tableBody = $("#details-table-body");
+            tableBody.empty(); // 🔹 Limpiar tabla antes de agregar nuevos datos
 
             if (response.success && response.records.length > 0) {
                 response.records.forEach((record, index) => {
-                    $("#details-table-body").append(`
+                    tableBody.append(`
                         <tr>
                             <td>${index + 1}</td>
                             <td>${record.usuario}</td>
@@ -61,25 +60,23 @@ function loadFilteredRecords(userId = null, page = 1) {
 
                 updatePagination(response.current_page, response.total_pages, userId);
             } else {
-                // Mostrar mensaje si no hay registros
-                $("#details-table-body").append(`
+                tableBody.append(`
                     <tr>
                         <td colspan="6" class="text-center text-muted">No se encontraron registros.</td>
                     </tr>
                 `);
-
-                // Asegurar que el paginador se limpia
-                $("#pagination").empty();
+                $("#pagination").empty(); // 🔹 Limpiar paginador si no hay datos
             }
 
-            // 🚀 **Asegurar que el modal siempre se muestra**
-            $("#viewDetailsModal").modal("show");
+            // 🔹 Mantener el modal abierto después de filtrar
+            $("#viewDetailsModal").modal("show"); 
         },
         error: function (xhr) {
             console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
         }
     });
 }
+
 
 /** 🔹 Actualizar paginación */
 function updatePagination(currentPage, totalPages, userId = null) {
