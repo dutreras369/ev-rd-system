@@ -6,19 +6,19 @@ $(document).ready(function () {
         $("#viewDetailsModal").modal("show");
     });
     
-    /** 🔹 Aplicar filtros manualmente desde el formulario */
+    /** 🔹 Manejo del formulario dentro del modal */
     $("#filterDetailsForm").submit(function (event) {
-        event.preventDefault(); // 🔹 Evitar que el formulario recargue la página
-    
-        let userId = $("#filter-user").val(); // Obtener usuario seleccionado
-        loadFilteredRecords(userId); // 🔹 Cargar datos filtrados
-    
-        // 🔹 Asegurar que el modal permanece abierto
-        $("#viewDetailsModal").modal("show").find(".modal-body").scrollTop(0);
-    });   
+        event.preventDefault(); // 🔹 Evitar recarga de página
+                
+        console.log("🔍 Enviando filtro para usuario ID:", userId);
+        
+        loadFilteredRecords(); // 🔹 Recargar registros con el filtro aplicado
+    });
+
    
 });
 
+/** 🔹 Cargar registros filtrados */
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
@@ -40,6 +40,8 @@ function loadFilteredRecords(userId = null, page = 1) {
             offset: offset
         }),
         success: function (response) {
+            console.log("🔍 Respuesta del filtro:", response); // Depuración
+
             let tableBody = $("#details-table-body");
 
             // 🔹 Limpiar la tabla antes de agregar nuevos datos
@@ -70,9 +72,11 @@ function loadFilteredRecords(userId = null, page = 1) {
                 $("#pagination").empty(); // 🔹 Limpiar paginador si no hay datos
             }
 
-            // 🔹 Asegurar que el modal se mantenga abierto y actualizado
+            // 🔹 Forzar actualización del DOM
             $("#viewDetailsModal").modal("show");
             $(".modal-body").scrollTop(0);
+
+            console.log("✅ Tabla actualizada dentro del modal.");
         },
         error: function (xhr) {
             console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
