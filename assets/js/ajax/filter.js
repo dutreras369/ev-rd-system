@@ -16,16 +16,17 @@ $(document).ready(function () {
 
         loadFilteredRecords(userId, 1); // 🔹 Recargar registros con el filtro aplicado
 
-        // 🔹 Asegurar que el modal permanece abierto y se refresca
+        // 🔹 Refrescar el modal sin cerrarlo
         setTimeout(() => {
-            $("#viewDetailsModal").modal("show");
-        }, 200);
+            $(".modal-body").scrollTop(0); // 🔹 Asegurar que el scroll regrese al inicio
+        }, 300);
     });
+
 
 
 });
 
-/** 🔹 Cargar registros filtrados */
+/** 🔹 Cargar registros filtrados sin cerrar el modal */
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
     let offset = (page - 1) * limit;
@@ -46,8 +47,6 @@ function loadFilteredRecords(userId = null, page = 1) {
             offset: offset
         }),
         success: function (response) {
-            console.log("🔍 Respuesta del filtro:", response); // Depuración
-
             let tableBody = $("#details-table-body");
 
             // 🔹 Limpiar la tabla antes de agregar nuevos datos
@@ -69,6 +68,8 @@ function loadFilteredRecords(userId = null, page = 1) {
 
                 // 🔹 Actualizar paginación
                 updatePagination(response.current_page, response.total_pages, userId);
+
+                console.log("✅ Tabla actualizada correctamente.");
             } else {
                 tableBody.append(`
                     <tr>
@@ -79,19 +80,14 @@ function loadFilteredRecords(userId = null, page = 1) {
             }
 
             // 🔹 Forzar actualización del DOM
-            $("#viewDetailsModal").modal("hide"); // 🔹 Cerrar modal antes de actualizar
-            setTimeout(() => {
-                $("#viewDetailsModal").modal("show"); // 🔹 Volver a abrir para refrescar
-                $(".modal-body").scrollTop(0);
-            }, 300);
-
-            console.log("✅ Tabla actualizada dentro del modal.");
+            $("#details-table-body").trigger("change"); // Disparar evento de cambio en la tabla
         },
         error: function (xhr) {
             console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
         }
     });
 }
+
 
 /** 🔹 Función para actualizar la paginación */
 function updatePagination(currentPage, totalPages, userId) {
