@@ -1,18 +1,28 @@
 $(document).ready(function () {
-    
+
     /** 🔹 Abrir modal de filtro general */
     $("#openFilterModal").click(function () {
         loadFilteredRecords(); // Cargar datos generales
         $("#viewDetailsModal").modal("show");
     });
-    
+
     /** 🔹 Manejo del formulario dentro del modal */
     $("#filterDetailsForm").submit(function (event) {
-        event.preventDefault(); // 🔹 Evitar recarga de página        
-        loadFilteredRecords(); // 🔹 Recargar registros con el filtro aplicado
+        event.preventDefault(); // 🔹 Evitar recarga de página
+
+        let userId = $("#filter-user").val() || null;
+
+        console.log("🔍 Enviando filtro para usuario ID:", userId);
+
+        loadFilteredRecords(userId, 1); // 🔹 Recargar registros con el filtro aplicado
+
+        // 🔹 Asegurar que el modal permanece abierto y se refresca
+        setTimeout(() => {
+            $("#viewDetailsModal").modal("show");
+        }, 200);
     });
 
-   
+
 });
 
 /** 🔹 Cargar registros filtrados */
@@ -69,8 +79,11 @@ function loadFilteredRecords(userId = null, page = 1) {
             }
 
             // 🔹 Forzar actualización del DOM
-            $("#viewDetailsModal").modal("show");
-            $(".modal-body").scrollTop(0);
+            $("#viewDetailsModal").modal("hide"); // 🔹 Cerrar modal antes de actualizar
+            setTimeout(() => {
+                $("#viewDetailsModal").modal("show"); // 🔹 Volver a abrir para refrescar
+                $(".modal-body").scrollTop(0);
+            }, 300);
 
             console.log("✅ Tabla actualizada dentro del modal.");
         },
