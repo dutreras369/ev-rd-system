@@ -25,6 +25,8 @@ $(document).ready(function () {
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
     let offset = (page - 1) * limit;
+    const token = localStorage.getItem("token");
+
 
     $.ajax({
         url: `${BASE_URL}/routes/filter.php?action=filter_records`,
