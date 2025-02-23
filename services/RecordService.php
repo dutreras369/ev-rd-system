@@ -118,78 +118,98 @@ class RecordService
     }
 
     public function getFilteredRecords($filters) {
-        $query = "
-            SELECT 
-                r.id, 
-                u.nombre AS trabajador_nombre, 
-                c.nombre AS usuario_nombre, 
-                r.codigo_usuario,
-                r.tipo, 
-                r.monto, 
-                r.descripcion, 
-                r.fecha, 
-                r.estado
-            FROM registros r
-            LEFT JOIN usuarios u ON r.usuario_id = u.id 
-            LEFT JOIN usuarios c ON r.codigo_usuario = c.id 
-            WHERE 1=1";
-        
-        $params = [];
+        try {
+            // Consulta para obtener registros con paginación
+            $query = "
+                SELECT 
+                    r.id, 
+                    u.nombre AS trabajador_nombre, 
+                    c.nombre AS usuario_nombre, 
+                    r.codigo_usuario,
+                    r.tipo, 
+                    r.monto, 
+                    r.descripcion, 
+                    r.fecha, 
+                    r.estado
+                FROM registros r
+                LEFT JOIN usuarios u ON r.usuario_id = u.id 
+                LEFT JOIN usuarios c ON r.codigo_usuario = c.id 
+                WHERE 1=1";
+            
+            $params = [];
     
-        if (!empty($filters['user_id'])) {
-            $query .= " AND r.usuario_id = :user_id";
-            $params[':user_id'] = $filters['user_id'];
+            if (!empty($filters['user_id'])) {
+                $query .= " AND r.usuario_id = :user_id";
+                $params[':user_id'] = $filters['user_id'];
+            }
+    
+            if (!empty($filters['date_from'])) {
+                $query .= " AND DATE(r.fecha) >= :date_from";
+                $params[':date_from'] = $filters['date_from'];
+            }
+    
+            if (!empty($filters['date_to'])) {
+                $query .= " AND DATE(r.fecha) <= :date_to";
+                $params[':date_to'] = $filters['date_to'];
+            }
+    
+            if (!empty($filters['type'])) {
+                $query .= " AND r.tipo = :type";
+                $params[':type'] = $filters['type'];
+            }
+    
+            if (!empty($filters['status'])) {
+                $query .= " AND r.estado = :status";
+                $params[':status'] = $filters['status'];
+            }
+    
+            // Query para contar el total de registros (sin paginación)
+            $countQuery = "SELECT COUNT(*) as total FROM registros r WHERE 1=1";
+            
+            if (!empty($filters['user_id'])) {
+                $countQuery .= " AND r.usuario_id = :user_id";
+            }
+            if (!empty($filters['date_from'])) {
+                $countQuery .= " AND DATE(r.fecha) >= :date_from";
+            }
+            if (!empty($filters['date_to'])) {
+                $countQuery .= " AND DATE(r.fecha) <= :date_to";
+            }
+            if (!empty($filters['type'])) {
+                $countQuery .= " AND r.tipo = :type";
+            }
+            if (!empty($filters['status'])) {
+                $countQuery .= " AND r.estado = :status";
+            }
+    
+            // Ejecutar conteo total
+            $countStmt = $this->pdo->prepare($countQuery);
+            foreach ($params as $key => $value) {
+                $countStmt->bindValue($key, $value);
+            }
+            $countStmt->execute();
+            $totalRecords = $countStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+    
+            // Agregar orden y paginación
+            $query .= " ORDER BY r.fecha DESC LIMIT :limit OFFSET :offset";
+    
+            $stmt = $this->pdo->prepare($query);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+            $stmt->bindValue(':limit', (int) $filters['limit'], PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int) $filters['offset'], PDO::PARAM_INT);
+    
+            $stmt->execute();
+            
+            return [
+                'records' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+                'total_records' => $totalRecords
+            ];
+        } catch (PDOException $e) {
+            error_log("Error en getFilteredRecords: " . $e->getMessage());
+            return false;
         }
-    
-        if (!empty($filters['date_from'])) {
-            $query .= " AND DATE(r.fecha) >= :date_from";
-            $params[':date_from'] = $filters['date_from'];
-        }
-    
-        if (!empty($filters['date_to'])) {
-            $query .= " AND DATE(r.fecha) <= :date_to";
-            $params[':date_to'] = $filters['date_to'];
-        }
-    
-        if (!empty($filters['type'])) {
-            $query .= " AND r.tipo = :type";
-            $params[':type'] = $filters['type'];
-        }
-    
-        if (!empty($filters['status'])) {
-            $query .= " AND r.estado = :status";
-            $params[':status'] = $filters['status'];
-        }
-    
-        // Obtener el total de registros sin paginación
-        $countQuery = "SELECT COUNT(*) as total FROM registros r WHERE 1=1";
-        foreach ($params as $key => $value) {
-            $countQuery .= str_replace("r.", "", $query);
-        }
-    
-        $countStmt = $this->pdo->prepare($countQuery);
-        foreach ($params as $key => $value) {
-            $countStmt->bindValue($key, $value);
-        }
-        $countStmt->execute();
-        $totalRecords = $countStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-    
-        // Aplicar orden y paginación
-        $query .= " ORDER BY r.fecha DESC LIMIT :limit OFFSET :offset";
-        
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':limit', (int) $filters['limit'], PDO::PARAM_INT);
-        $stmt->bindValue(':offset', (int) $filters['offset'], PDO::PARAM_INT);
-    
-        foreach ($params as $key => $value) {
-            $stmt->bindValue($key, $value);
-        }
-    
-        $stmt->execute();
-        return [
-            'records' => $stmt->fetchAll(PDO::FETCH_ASSOC),
-            'total_records' => $totalRecords
-        ];
     }
     
     public function getTotalStatusRecords()

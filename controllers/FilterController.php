@@ -14,6 +14,10 @@ class FilterController
         try {
             $result = $this->recordService->getFilteredRecords($filters);
     
+            if ($result === false) {
+                throw new Exception("Error en la consulta SQL.");
+            }
+    
             return [
                 'success' => true,
                 'records' => $result['records'],
@@ -28,5 +32,6 @@ class FilterController
                 'error_details' => $e->getMessage()
             ];
         }
-    }    
+    }
+    
 }
