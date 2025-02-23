@@ -39,7 +39,7 @@ $(document).on("change", ".toggle-switch", function () {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: `${BASE_URL}/routes/record.php?action=update_status`,
+                url: `${BASE_URL}/routes/filter.php?action=update_status`,
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({ record_id: recordId, status: newStatus, token: token }),
