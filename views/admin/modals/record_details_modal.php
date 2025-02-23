@@ -38,8 +38,8 @@
                             <label for="filter-status" class="form-label">Estado</label>
                             <select class="form-select" id="filter-status">
                                 <option value="">Todos</option>
-                                <option value="true">Correcto</option>
-                                <option value="false">Incorrecto</option>
+                                <option value="correcto">Correcto</option>
+                                <option value="incorrecto">Incorrecto</option>
                             </select>
                         </div>
                     </div>
