@@ -51,7 +51,7 @@ function loadFilteredRecords(userId = null, page = 1) {
                     tableBody.append(`
                         <tr>
                             <td>${record.trabajador_nombre || "N/A"}</td>
-                            <td>${record.usuario_nombre || "N/A"}</td>
+                            <td>${record.codigo_usuario || "N/A"}</td>
                             <td>${record.fecha}</td>
                             <td>${record.tipo}</td>
                             <td>$${parseFloat(record.monto).toLocaleString()}</td>
