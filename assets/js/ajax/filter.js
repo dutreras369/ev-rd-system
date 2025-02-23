@@ -23,7 +23,6 @@ $(document).ready(function () {
 
 });
 
-/** 🔹 Cargar registros filtrados sin cerrar el modal */
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
@@ -51,19 +50,18 @@ function loadFilteredRecords(userId = null, page = 1) {
             tableBody.html("");
 
             if (response.length > 0) {
-                response.forEach((record, index) => {
-                    tableBody.append(`
+                response.records.forEach((record, index) => {
+                    $("#details-table-body").append(`
                         <tr>
-                            <td>${index + 1}</td>
-                            <td>${record.codigo_usuario}</td>
+                            <td>${record.trabajador_nombre || "N/A"}</td>
+                            <td>${record.usuario_nombre || "N/A"}</td>
                             <td>${record.fecha}</td>
                             <td>${record.tipo}</td>
                             <td>$${parseFloat(record.monto).toLocaleString()}</td>
-                            <td>${record.estado === "correcto" ? "✅ Correcto" : "❌ Incorrecto"}</td>
+                            <td>${record.estado === "correcto" ? "Correcto" : "Incorrecto"}</td>
                         </tr>
                     `);
                 });
-
                 console.log("✅ Registros actualizados correctamente en la tabla.");
             } else {
                 tableBody.append(`
@@ -86,36 +84,48 @@ function loadFilteredRecords(userId = null, page = 1) {
 
 
 /** 🔹 Función para actualizar la paginación */
-function updatePagination(currentPage, totalPages, userId) {
-    let pagination = $("#pagination");
-    pagination.empty();
+function updatePagination(currentPage, totalPages, userId = null) {
+    let paginationContainer = $("#pagination");
+    paginationContainer.empty();
 
     if (totalPages > 1) {
         let prevDisabled = currentPage === 1 ? "disabled" : "";
         let nextDisabled = currentPage === totalPages ? "disabled" : "";
 
-        pagination.append(`
-            <li class="page-item ${prevDisabled}">
-                <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${currentPage - 1})">Anterior</a>
-            </li>
-        `);
+        let paginationHtml = `
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item ${prevDisabled}">
+                        <a class="page-link" href="#" data-page="${currentPage - 1}">« Anterior</a>
+                    </li>`;
 
         for (let i = 1; i <= totalPages; i++) {
-            let active = i === currentPage ? "active" : "";
-            pagination.append(`
-                <li class="page-item ${active}">
-                    <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${i})">${i}</a>
-                </li>
-            `);
+            let activeClass = i === currentPage ? "active" : "";
+            paginationHtml += `
+                <li class="page-item ${activeClass}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>`;
         }
 
-        pagination.append(`
-            <li class="page-item ${nextDisabled}">
-                <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${currentPage + 1})">Siguiente</a>
-            </li>
-        `);
+        paginationHtml += `
+                    <li class="page-item ${nextDisabled}">
+                        <a class="page-link" href="#" data-page="${currentPage + 1}">Siguiente »</a>
+                    </li>
+                </ul>
+            </nav>`;
+
+        paginationContainer.html(paginationHtml);
+
+        $(".page-link").click(function (event) {
+            event.preventDefault();
+            let selectedPage = $(this).data("page");
+            if (selectedPage > 0 && selectedPage <= totalPages) {
+                loadFilteredRecords(userId, selectedPage);
+            }
+        });
     }
 }
+
 
 /** 🔹 Obtener la fecha de hoy */
 function getTodayDate() {

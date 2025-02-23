@@ -54,7 +54,7 @@
                     <table id="dynamic-table" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Trabajador</th>
                                 <th>Usuario</th>
                                 <th>Fecha</th>
                                 <th>Tipo</th>

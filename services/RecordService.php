@@ -118,40 +118,66 @@ class RecordService
     }
 
     public function getFilteredRecords($filters) {
-        $query = "SELECT * FROM registros WHERE 1=1";
+        $query = "
+            SELECT 
+                r.id, 
+                u.nombre AS trabajador_nombre, 
+                c.nombre AS usuario_nombre, 
+                r.codigo_usuario,
+                r.tipo, 
+                r.monto, 
+                r.descripcion, 
+                r.fecha, 
+                r.estado
+            FROM registros r
+            LEFT JOIN usuarios u ON r.usuario_id = u.id 
+            LEFT JOIN usuarios c ON r.codigo_usuario = c.id 
+            WHERE 1=1";
+        
         $params = [];
     
         if (!empty($filters['user_id'])) {
-            $query .= " AND usuario_id = :user_id";
+            $query .= " AND r.usuario_id = :user_id";
             $params[':user_id'] = $filters['user_id'];
         }
     
         if (!empty($filters['date_from'])) {
-            $query .= " AND DATE(fecha) >= :date_from";
+            $query .= " AND DATE(r.fecha) >= :date_from";
             $params[':date_from'] = $filters['date_from'];
         }
     
         if (!empty($filters['date_to'])) {
-            $query .= " AND DATE(fecha) <= :date_to";
+            $query .= " AND DATE(r.fecha) <= :date_to";
             $params[':date_to'] = $filters['date_to'];
         }
     
         if (!empty($filters['type'])) {
-            $query .= " AND tipo = :type";
+            $query .= " AND r.tipo = :type";
             $params[':type'] = $filters['type'];
         }
     
         if (!empty($filters['status'])) {
-            $query .= " AND estado = :status";
+            $query .= " AND r.estado = :status";
             $params[':status'] = $filters['status'];
         }
     
-        // Evitar error de sintaxis en LIMIT y OFFSET
-        $query .= " ORDER BY fecha DESC LIMIT :limit OFFSET :offset";
+        // Obtener el total de registros sin paginación
+        $countQuery = "SELECT COUNT(*) as total FROM registros r WHERE 1=1";
+        foreach ($params as $key => $value) {
+            $countQuery .= str_replace("r.", "", $query);
+        }
+    
+        $countStmt = $this->pdo->prepare($countQuery);
+        foreach ($params as $key => $value) {
+            $countStmt->bindValue($key, $value);
+        }
+        $countStmt->execute();
+        $totalRecords = $countStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+    
+        // Aplicar orden y paginación
+        $query .= " ORDER BY r.fecha DESC LIMIT :limit OFFSET :offset";
         
         $stmt = $this->pdo->prepare($query);
-    
-        // Asignación correcta de valores numéricos
         $stmt->bindValue(':limit', (int) $filters['limit'], PDO::PARAM_INT);
         $stmt->bindValue(':offset', (int) $filters['offset'], PDO::PARAM_INT);
     
@@ -160,9 +186,12 @@ class RecordService
         }
     
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }   
-
+        return [
+            'records' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            'total_records' => $totalRecords
+        ];
+    }
+    
     public function getTotalStatusRecords()
     {
         $stmt = $this->pdo->prepare("
