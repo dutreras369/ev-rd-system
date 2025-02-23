@@ -25,6 +25,7 @@ $(document).on("change", ".toggle-switch", function () {
     let switchInput = $(this);
     let recordId = switchInput.data("id");
     let newStatus = switchInput.is(":checked") ? "correcto" : "incorrecto";
+    const token = localStorage.getItem("token");
 
     // Mostrar confirmación antes de cambiar el estado
     Swal.fire({
