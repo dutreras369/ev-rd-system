@@ -99,6 +99,9 @@ class RecordService
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * 🔹 Actualizar el estado de un registro.
+     */
     public function updateStatus($recordId, $newStatus) {
         try {
             $stmt = $this->pdo->prepare("UPDATE registros SET estado = :status WHERE id = :record_id");
@@ -106,10 +109,14 @@ class RecordService
                 ':status' => $newStatus,
                 ':record_id' => $recordId
             ]);
-    
-            return ['success' => true, 'message' => 'Estado actualizado correctamente.'];
+
+            if ($stmt->rowCount() > 0) {
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'error' => 'No se encontró el registro o el estado ya estaba actualizado.'];
+            }
         } catch (PDOException $e) {
-            return ['success' => false, 'error' => 'No se pudo actualizar el estado.', 'error_details' => $e->getMessage()];
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 

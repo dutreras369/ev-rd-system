@@ -38,14 +38,23 @@ class FilterController
     /**
      * 🔹 Actualizar el estado de un registro.
      */
+   /**
+     * 🔹 Actualizar el estado de un registro filtrado.
+     */
     public function updateRecordStatus($data) {
         try {
             if (!isset($data['record_id'], $data['status'])) {
                 throw new Exception('Datos incompletos.');
             }
 
+            // Verificar que el estado sea válido según ENUM ('pendiente', 'correcto', 'incorrecto')
+            $validStatuses = ['pendiente', 'correcto', 'incorrecto'];
+            if (!in_array($data['status'], $validStatuses)) {
+                throw new Exception('Estado no válido.');
+            }
+
             $recordId = (int) $data['record_id'];
-            $newStatus = in_array($data['status'], ['correcto', 'incorrecto']) ? $data['status'] : 'incorrecto';
+            $newStatus = $data['status'];
 
             $result = $this->recordService->updateStatus($recordId, $newStatus);
 

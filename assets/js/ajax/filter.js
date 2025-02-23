@@ -20,63 +20,62 @@ $(document).ready(function () {
 
 });
 
-/** 🔹 Evento para cambiar estado con confirmación */
-$(document).on("change", ".toggle-switch", function () {
-    let switchInput = $(this);
-    let recordId = switchInput.data("id");
-    let newStatus = switchInput.is(":checked") ? "correcto" : "incorrecto";
-    const token = localStorage.getItem("token");
+/** 🔹 Evento para actualizar el estado del registro */
+$(document).on("change", ".toggle-status", function () {
+    let recordId = $(this).data("record");
+    let newStatus = $(this).is(":checked") ? "correcto" : "incorrecto";
 
-    // Mostrar confirmación antes de cambiar el estado
     Swal.fire({
-        title: "¿Confirmar cambio de estado?",
-        text: `Estás a punto de marcar este registro como "${newStatus.toUpperCase()}".`,
+        title: "¿Estás seguro?",
+        text: "Cambiarás el estado de este registro.",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Sí, actualizar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#28a745",
-        cancelButtonColor: "#d33"
+        confirmButtonText: "Sí, cambiar",
+        cancelButtonText: "Cancelar"
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
                 url: `${BASE_URL}/routes/filter.php?action=update_status`,
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify({ record_id: recordId, status: newStatus, token: token }),
+                data: JSON.stringify({
+                    record_id: recordId,
+                    status: newStatus,
+                    token: localStorage.getItem("token")
+                }),
                 success: function (response) {
                     if (response.success) {
-                        // Actualizar visualmente el switch y el texto
-                        switchInput.next("label").text(newStatus === "correcto" ? "Correcto" : "Incorrecto");
-
                         Swal.fire({
-                            title: "Estado actualizado",
-                            text: "El estado del registro ha sido cambiado exitosamente.",
                             icon: "success",
-                            timer: 1500,
+                            title: "Estado actualizado",
+                            text: response.message,
+                            confirmButtonColor: "#28a745",
+                            timer: 1200,
                             showConfirmButton: false
                         });
 
-                        // Refrescar SOLO la fila editada sin recargar toda la tabla
-                        updateSingleRecord(recordId);
+                        // 🔹 Refrescar solo el registro cambiado
+                        $(`#status-${recordId}`).prop("checked", newStatus === "correcto");
                     } else {
-                        Swal.fire("Error", response.error, "error");
-                        // Restaurar el estado anterior si falla la actualización
-                        switchInput.prop("checked", !switchInput.is(":checked"));
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: response.error,
+                            confirmButtonColor: "#d33"
+                        });
                     }
                 },
                 error: function (xhr) {
                     console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
-                    Swal.fire("Error", "No se pudo actualizar el estado.", "error");
-                    switchInput.prop("checked", !switchInput.is(":checked")); // Restaurar estado anterior
                 }
             });
         } else {
-            // Restaurar el estado anterior si se cancela la acción
-            switchInput.prop("checked", !switchInput.is(":checked"));
+            // Revertir cambio si el usuario cancela
+            $(this).prop("checked", !$(this).is(":checked"));
         }
     });
 });
+
 
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
@@ -113,12 +112,12 @@ function loadFilteredRecords(userId = null, page = 1) {
                             <td>${record.fecha}</td>
                             <td>${record.tipo}</td>
                             <td>$${parseFloat(record.monto).toLocaleString()}</td>
-                            <td class="text-center">
+                            <td>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input toggle-switch" type="checkbox" id="switch${record.id}" data-id="${record.id}" ${record.estado === "correcto" ? "checked" : ""}>
-                                    <label class="form-check-label" for="switch${record.id}">${record.estado === "correcto" ? "Correcto" : "Incorrecto"}</label>
+                                    <input class="form-check-input toggle-status" type="checkbox" id="status-${record.id}" data-record="${record.id}" ${record.estado === "correcto" ? "checked" : ""}>
+                                    <label class="form-check-label" for="status-${record.id}">${record.estado}</label>
                                 </div>
-                            </td>                        
+                            </td>
                         </tr>
                     `);
                 });
