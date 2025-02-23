@@ -20,6 +20,63 @@ $(document).ready(function () {
 
 });
 
+/** 🔹 Evento para cambiar estado con confirmación */
+$(document).on("change", ".toggle-switch", function () {
+    let switchInput = $(this);
+    let recordId = switchInput.data("id");
+    let newStatus = switchInput.is(":checked") ? "correcto" : "incorrecto";
+
+    // Mostrar confirmación antes de cambiar el estado
+    Swal.fire({
+        title: "¿Confirmar cambio de estado?",
+        text: `Estás a punto de marcar este registro como "${newStatus.toUpperCase()}".`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, actualizar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#d33"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `${BASE_URL}/routes/record.php?action=update_status`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ record_id: recordId, status: newStatus, token: token }),
+                success: function (response) {
+                    if (response.success) {
+                        // Actualizar visualmente el switch y el texto
+                        switchInput.next("label").text(newStatus === "correcto" ? "Correcto" : "Incorrecto");
+
+                        Swal.fire({
+                            title: "Estado actualizado",
+                            text: "El estado del registro ha sido cambiado exitosamente.",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        // Refrescar SOLO la fila editada sin recargar toda la tabla
+                        updateSingleRecord(recordId);
+                    } else {
+                        Swal.fire("Error", response.error, "error");
+                        // Restaurar el estado anterior si falla la actualización
+                        switchInput.prop("checked", !switchInput.is(":checked"));
+                    }
+                },
+                error: function (xhr) {
+                    console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+                    Swal.fire("Error", "No se pudo actualizar el estado.", "error");
+                    switchInput.prop("checked", !switchInput.is(":checked")); // Restaurar estado anterior
+                }
+            });
+        } else {
+            // Restaurar el estado anterior si se cancela la acción
+            switchInput.prop("checked", !switchInput.is(":checked"));
+        }
+    });
+});
+
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
     let limit = 10;
@@ -55,7 +112,12 @@ function loadFilteredRecords(userId = null, page = 1) {
                             <td>${record.fecha}</td>
                             <td>${record.tipo}</td>
                             <td>$${parseFloat(record.monto).toLocaleString()}</td>
-                            <td>${record.estado === "correcto" ? "Correcto" : "Incorrecto"}</td>
+                            <td class="text-center">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input toggle-switch" type="checkbox" id="switch${record.id}" data-id="${record.id}" ${record.estado === "correcto" ? "checked" : ""}>
+                                    <label class="form-check-label" for="switch${record.id}">${record.estado === "correcto" ? "Correcto" : "Incorrecto"}</label>
+                                </div>
+                            </td>                        
                         </tr>
                     `);
                 });
@@ -165,4 +227,40 @@ function getDefaultStartDate() {
     let date = new Date();
     date.setDate(date.getDate() - 7);
     return date.toISOString().split("T")[0];
+}
+
+/** 🔹 Refrescar SOLO la fila del registro editado */
+function updateSingleRecord(recordId) {
+    $.ajax({
+        url: `${BASE_URL}/routes/record.php?action=get_record`,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ record_id: recordId, token: token }),
+        success: function (response) {
+            if (response.success) {
+                let record = response.record;
+                let row = $(`#switch${recordId}`).closest("tr");
+
+                // Actualizar los datos en la fila correspondiente
+                row.html(`
+                    <td>${record.trabajador_nombre || "N/A"}</td>
+                    <td>${record.codigo_usuario || "N/A"}</td>
+                    <td>${record.fecha}</td>
+                    <td>${record.tipo}</td>
+                    <td>$${parseFloat(record.monto).toLocaleString()}</td>
+                    <td class="text-center">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input toggle-switch" type="checkbox" id="switch${record.id}" data-id="${record.id}" ${record.estado === "correcto" ? "checked" : ""}>
+                            <label class="form-check-label" for="switch${record.id}">${record.estado === "correcto" ? "Correcto" : "Incorrecto"}</label>
+                        </div>
+                    </td>
+                `);
+            } else {
+                console.error("⚠️ No se pudo actualizar el registro en la tabla.");
+            }
+        },
+        error: function (xhr) {
+            console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+        }
+    });
 }

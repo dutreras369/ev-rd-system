@@ -33,5 +33,40 @@ class FilterController
             ];
         }
     }
-    
+
+
+    /**
+     * 🔹 Actualizar el estado de un registro.
+     */
+    public function updateRecordStatus($data) {
+        try {
+            if (!isset($data['record_id'], $data['status'])) {
+                throw new Exception('Datos incompletos.');
+            }
+
+            $recordId = (int) $data['record_id'];
+            $newStatus = in_array($data['status'], ['correcto', 'incorrecto']) ? $data['status'] : 'incorrecto';
+
+            $result = $this->recordService->updateStatus($recordId, $newStatus);
+
+            if ($result['success']) {
+                return [
+                    'success' => true,
+                    'message' => 'Estado actualizado correctamente.',
+                    'record' => [
+                        'id' => $recordId,
+                        'estado' => $newStatus
+                    ]
+                ];
+            } else {
+                throw new Exception($result['error']);
+            }
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => 'No se pudo actualizar el estado.',
+                'error_details' => $e->getMessage()
+            ];
+        }
+    }
 }

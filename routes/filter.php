@@ -17,10 +17,18 @@ try {
             }
             $response = $filterController->filterRecords($data);
             echo json_encode($response);
+        } 
+        elseif ($action === 'update_status') {
+            if (!isset($data['record_id'], $data['status'], $data['token'])) {
+                throw new Exception('Datos incompletos.', 400);
+            }
+            $response = $recordController->updateRecordStatus($data);
+            echo json_encode($response);
         } else {
             throw new Exception('Acción no válida para POST', 400);
         }
-    } else {
+    }  
+    else {
         throw new Exception('Método HTTP no permitido', 405);
     }
 } catch (Exception $e) {
