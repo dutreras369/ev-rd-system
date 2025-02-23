@@ -67,7 +67,7 @@
                         </tbody>
                     </table>
                 </div>
-
+                <div id="pagination" class="d-flex justify-content-center align-items-center mt-3"></div>
             </div>
         </div>
     </div>
