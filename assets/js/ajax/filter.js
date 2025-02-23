@@ -18,9 +18,6 @@ $(document).ready(function () {
         loadFilteredRecords(userId, 1);
     });
 
-
-
-
 });
 
 /** 🔹 Cargar registros filtrados */
@@ -47,11 +44,11 @@ function loadFilteredRecords(userId = null, page = 1) {
             let tableBody = $("#details-table-body");
 
             // 🔹 LIMPIAR la tabla antes de agregar nuevos datos
-            tableBody.html("");
+            tableBody.empty();
 
-            if (response.length > 0) {
+            if (response.success && response.records.length > 0) {
                 response.records.forEach((record, index) => {
-                    $("#details-table-body").append(`
+                    tableBody.append(`
                         <tr>
                             <td>${record.trabajador_nombre || "N/A"}</td>
                             <td>${record.usuario_nombre || "N/A"}</td>
@@ -62,6 +59,7 @@ function loadFilteredRecords(userId = null, page = 1) {
                         </tr>
                     `);
                 });
+
                 console.log("✅ Registros actualizados correctamente en la tabla.");
             } else {
                 tableBody.append(`
@@ -71,10 +69,11 @@ function loadFilteredRecords(userId = null, page = 1) {
                 `);
             }
 
-            // 🔹 Forzar que el modal permanezca abierto y actualizado
-            setTimeout(() => {
-                $("#viewDetailsModal").modal("show").find(".modal-body").scrollTop(0);
-            }, 200);
+            // 🔹 Actualizar el paginador si hay más de 10 registros
+            updatePagination(response.current_page, response.total_pages, userId);
+
+            // 🔹 Asegurar que el modal permanece abierto y actualizado
+            $("#viewDetailsModal").modal("show");
         },
         error: function (xhr) {
             console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
@@ -82,49 +81,23 @@ function loadFilteredRecords(userId = null, page = 1) {
     });
 }
 
-
-/** 🔹 Función para actualizar la paginación */
-function updatePagination(currentPage, totalPages, userId = null) {
+/** 🔹 Función para actualizar el paginador */
+function updatePagination(currentPage, totalPages, userId) {
     let paginationContainer = $("#pagination");
     paginationContainer.empty();
 
     if (totalPages > 1) {
-        let prevDisabled = currentPage === 1 ? "disabled" : "";
-        let nextDisabled = currentPage === totalPages ? "disabled" : "";
-
-        let paginationHtml = `
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item ${prevDisabled}">
-                        <a class="page-link" href="#" data-page="${currentPage - 1}">« Anterior</a>
-                    </li>`;
-
         for (let i = 1; i <= totalPages; i++) {
             let activeClass = i === currentPage ? "active" : "";
-            paginationHtml += `
+            paginationContainer.append(`
                 <li class="page-item ${activeClass}">
-                    <a class="page-link" href="#" data-page="${i}">${i}</a>
-                </li>`;
+                    <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${i})">${i}</a>
+                </li>
+            `);
         }
-
-        paginationHtml += `
-                    <li class="page-item ${nextDisabled}">
-                        <a class="page-link" href="#" data-page="${currentPage + 1}">Siguiente »</a>
-                    </li>
-                </ul>
-            </nav>`;
-
-        paginationContainer.html(paginationHtml);
-
-        $(".page-link").click(function (event) {
-            event.preventDefault();
-            let selectedPage = $(this).data("page");
-            if (selectedPage > 0 && selectedPage <= totalPages) {
-                loadFilteredRecords(userId, selectedPage);
-            }
-        });
     }
 }
+
 
 
 /** 🔹 Obtener la fecha de hoy */
