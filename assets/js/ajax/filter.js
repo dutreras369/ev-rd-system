@@ -87,18 +87,72 @@ function updatePagination(currentPage, totalPages, userId) {
     paginationContainer.empty();
 
     if (totalPages > 1) {
-        for (let i = 1; i <= totalPages; i++) {
+        let paginationHTML = `<ul class="pagination">`;
+
+        // Botón Anterior
+        if (currentPage > 1) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${currentPage - 1})">«</a>
+                </li>`;
+        } else {
+            paginationHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">«</span>
+                </li>`;
+        }
+
+        // Mostrar siempre la primera página
+        if (currentPage > 3) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, 1)">1</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>`;
+        }
+
+        // Mostrar las páginas cercanas al actual
+        let start = Math.max(1, currentPage - 2);
+        let end = Math.min(totalPages, currentPage + 2);
+
+        for (let i = start; i <= end; i++) {
             let activeClass = i === currentPage ? "active" : "";
-            paginationContainer.append(`
+            paginationHTML += `
                 <li class="page-item ${activeClass}">
                     <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${i})">${i}</a>
-                </li>
-            `);
+                </li>`;
         }
+
+        // Mostrar siempre la última página
+        if (currentPage < totalPages - 2) {
+            paginationHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${totalPages})">${totalPages}</a>
+                </li>`;
+        }
+
+        // Botón Siguiente
+        if (currentPage < totalPages) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="loadFilteredRecords(${userId}, ${currentPage + 1})">»</a>
+                </li>`;
+        } else {
+            paginationHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">»</span>
+                </li>`;
+        }
+
+        paginationHTML += `</ul>`;
+        paginationContainer.html(paginationHTML);
     }
 }
-
-
 
 /** 🔹 Obtener la fecha de hoy */
 function getTodayDate() {
