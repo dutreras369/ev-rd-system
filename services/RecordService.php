@@ -127,9 +127,9 @@ class RecordService
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getFilteredRecords($filters, $forExport = false) {
+    public function getFilteredRecords($filters) {
         try {
-            // Consulta para obtener registros
+            // Consulta para obtener registros con paginación
             $query = "
                 SELECT 
                     r.id, 
@@ -173,30 +173,54 @@ class RecordService
                 $params[':status'] = $filters['status'];
             }
     
-            // Solo agregar paginación si **NO** es una exportación
-            if (!$forExport) {
-                $query .= " ORDER BY r.fecha DESC LIMIT :limit OFFSET :offset";
-                $stmt = $this->pdo->prepare($query);
-                $stmt->bindValue(':limit', (int) $filters['limit'], PDO::PARAM_INT);
-                $stmt->bindValue(':offset', (int) $filters['offset'], PDO::PARAM_INT);
-            } else {
-                $query .= " ORDER BY r.fecha DESC"; // Sin limit ni offset para exportación
-                $stmt = $this->pdo->prepare($query);
+            // Query para contar el total de registros (sin paginación)
+            $countQuery = "SELECT COUNT(*) as total FROM registros r WHERE 1=1";
+            
+            if (!empty($filters['user_id'])) {
+                $countQuery .= " AND r.usuario_id = :user_id";
+            }
+            if (!empty($filters['date_from'])) {
+                $countQuery .= " AND DATE(r.fecha) >= :date_from";
+            }
+            if (!empty($filters['date_to'])) {
+                $countQuery .= " AND DATE(r.fecha) <= :date_to";
+            }
+            if (!empty($filters['type'])) {
+                $countQuery .= " AND r.tipo = :type";
+            }
+            if (!empty($filters['status'])) {
+                $countQuery .= " AND r.estado = :status";
             }
     
+            // Ejecutar conteo total
+            $countStmt = $this->pdo->prepare($countQuery);
+            foreach ($params as $key => $value) {
+                $countStmt->bindValue($key, $value);
+            }
+            $countStmt->execute();
+            $totalRecords = $countStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+    
+            // Agregar orden y paginación
+            $query .= " ORDER BY r.fecha DESC LIMIT :limit OFFSET :offset";
+    
+            $stmt = $this->pdo->prepare($query);
             foreach ($params as $key => $value) {
                 $stmt->bindValue($key, $value);
             }
+            $stmt->bindValue(':limit', (int) $filters['limit'], PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int) $filters['offset'], PDO::PARAM_INT);
     
             $stmt->execute();
+            
             return [
-                'records' => $stmt->fetchAll(PDO::FETCH_ASSOC)
+                'records' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+                'total_records' => $totalRecords
             ];
         } catch (PDOException $e) {
             error_log("Error en getFilteredRecords: " . $e->getMessage());
             return false;
         }
-    }    
+    }
     
     public function getTotalStatusRecords()
     {
