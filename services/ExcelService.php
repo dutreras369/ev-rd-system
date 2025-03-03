@@ -87,7 +87,7 @@ class ExcelService {
         $sheet = $spreadsheet->getActiveSheet();
     
         // 🔹 Encabezados de la tabla
-        $headers = ["Trabajador", "Usuario", "Código Usuario", "Fecha", "Tipo", "Monto", "Estado"];
+        $headers = ["Trabajador", "Código Usuario", "Fecha", "Tipo", "Monto", "Estado"];
         $sheet->fromArray([$headers], NULL, 'A1');
     
         // 🔹 Agregar datos a la tabla
@@ -95,7 +95,6 @@ class ExcelService {
         foreach ($records as $record) {
             $sheet->fromArray([
                 $record['trabajador_nombre'] ?? 'N/A',
-                $record['usuario_nombre'] ?? 'N/A',
                 $record['codigo_usuario'] ?? 'N/A',
                 $record['fecha'],
                 $record['tipo'],
