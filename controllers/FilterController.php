@@ -1,13 +1,18 @@
 <?php
 require_once __DIR__ . '/../services/RecordService.php';
+require_once __DIR__ . '/../services/ExcelService.php';
+
 
 class FilterController
 {
     private $recordService;
+    private $excelService;
 
     public function __construct()
     {
         $this->recordService = new RecordService();
+        $this->excelService = new ExcelService();
+
     }
 
     public function filterRecords($filters) {
@@ -74,6 +79,30 @@ class FilterController
             return [
                 'success' => false,
                 'error' => 'No se pudo actualizar el estado.',
+                'error_details' => $e->getMessage()
+            ];
+        }
+    }
+
+      /**
+     * 🔹 Generar y descargar el archivo Excel.
+     */
+    public function exportRecordsToExcel($filters) {
+        try {
+            $records = $this->recordService->getFilteredRecords($filters);
+            if (empty($records)) {
+                throw new Exception("No hay registros para exportar.");
+            }
+
+            $filePath = $this->excelService->generateExcel($records);
+            return [
+                'success' => true,
+                'file_url' => $filePath
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => 'Error al generar el archivo Excel.',
                 'error_details' => $e->getMessage()
             ];
         }

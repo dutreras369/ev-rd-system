@@ -22,3 +22,4 @@
 </div>
 
 <?php require_once __DIR__ . '/modals/user_accion_modal.php'; ?>
+<?php require_once __DIR__ . '/modals/massive_download_modal.php'; ?>

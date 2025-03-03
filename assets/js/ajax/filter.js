@@ -18,6 +18,13 @@ $(document).ready(function () {
         loadFilteredRecords(userId, 1);
     });
 
+    /** 🔹 Manejo del formulario de exportacion a excel */
+    $("#exportExcelForm").submit(function (event) {
+        event.preventDefault(); // Evitar recarga de la página
+        exportRecordsToExcel(); // Llamar a la función para exportar
+    });
+    
+
 });
 
 /** 🔹 Evento para actualizar el estado del registro */
@@ -257,6 +264,47 @@ function updateSingleRecord(recordId) {
                 `);
             } else {
                 console.error("⚠️ No se pudo actualizar el registro en la tabla.");
+            }
+        },
+        error: function (xhr) {
+            console.error("🚨 Error en la solicitud:", xhr.status, xhr.responseText);
+        }
+    });
+}
+
+
+/** 🔹 Función para exportar registros a Excel */
+function exportRecordsToExcel() {
+    let token = localStorage.getItem("token");
+
+    $.ajax({
+        url: `${BASE_URL}/routes/filter.php?action=export_excel`,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+            user_id: $("#export-user").val(),
+            date_from: $("#export-date-from").val() || getDefaultStartDate(),
+            date_to: $("#export-date-to").val() || getTodayDate(),
+            type: $("#export-type").val(),
+            status: $("#export-status").val(),
+            token: token
+        }),
+        success: function (response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Excel generado",
+                    text: "Haz clic en el botón para descargar.",
+                    confirmButtonText: '<a href="' + BASE_URL + '/' + response.file_url + '" download class="btn btn-success">Descargar</a>',
+                    showConfirmButton: true
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: response.error,
+                    confirmButtonColor: "#d33"
+                });
             }
         },
         error: function (xhr) {

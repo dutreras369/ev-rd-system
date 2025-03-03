@@ -24,7 +24,14 @@ try {
             }
             $response = $filterController->updateRecordStatus($data);
             echo json_encode($response);
-        } else {
+        } elseif ($action === 'export_excel') {
+            if (!isset($data['token'])) {
+                throw new Exception('Datos incompletos.', 400);
+            }
+            $response = $filterController->exportRecordsToExcel($data);
+            echo json_encode($response);
+        } 
+        else {
             throw new Exception('Acción no válida para POST', 400);
         }
     }  
