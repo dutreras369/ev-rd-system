@@ -26,7 +26,7 @@ try {
             echo json_encode($response);
         } elseif ($method === 'POST') {
             $data = json_decode(file_get_contents("php://input"), true);
-    
+
             if ($action === 'export_excel') {
                 if (!isset($data['token'])) {
                     throw new Exception('Token no proporcionado.', 400);
