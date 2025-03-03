@@ -87,23 +87,18 @@ class FilterController
       /**
      * 🔹 Generar y descargar el archivo Excel.
      */
-    public function exportRecordsToExcel($filters) {
-        try {
-            $records = $this->recordService->getFilteredRecords($filters);
-            if (empty($records)) {
-                throw new Exception("No hay registros para exportar.");
-            }
+    public function exportExcel($filters) {
+        $filePath = $this->excelService->generateExcel($filters);
 
-            $filePath = $this->excelService->generateExcel($records);
+        if ($filePath) {
             return [
                 'success' => true,
                 'file_url' => $filePath
             ];
-        } catch (Exception $e) {
+        } else {
             return [
                 'success' => false,
-                'error' => 'Error al generar el archivo Excel.',
-                'error_details' => $e->getMessage()
+                'error' => 'No se encontraron registros para exportar.'
             ];
         }
     }

@@ -19,10 +19,15 @@ $(document).ready(function () {
     });
 
     /** 🔹 Manejo del formulario de exportacion a excel */
+    /*
     $("#exportExcelForm").submit(function (event) {
         event.preventDefault(); // Evitar recarga de la página
         exportRecordsToExcel(); // Llamar a la función para exportar
-    });
+    }); */
+
+    // Asociar el evento al botón de exportar
+    $("#export-excel-btn").click(exportToExcel);
+
     
 
 });
@@ -273,10 +278,8 @@ function updateSingleRecord(recordId) {
 }
 
 
-/** 🔹 Función para exportar registros a Excel */
-function exportRecordsToExcel() {
-    let token = localStorage.getItem("token");
-
+/** 🔹 Función para solicitar la exportación de Excel */
+function exportToExcel() {
     $.ajax({
         url: `${BASE_URL}/routes/filter.php?action=export_excel`,
         type: "POST",
@@ -287,7 +290,7 @@ function exportRecordsToExcel() {
             date_to: $("#export-date-to").val() || getTodayDate(),
             type: $("#export-type").val(),
             status: $("#export-status").val(),
-            token: token
+            token: localStorage.getItem("token")
         }),
         success: function (response) {
             if (response.success) {
@@ -312,3 +315,4 @@ function exportRecordsToExcel() {
         }
     });
 }
+

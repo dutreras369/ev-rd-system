@@ -24,14 +24,17 @@ try {
             }
             $response = $filterController->updateRecordStatus($data);
             echo json_encode($response);
-        } elseif ($action === 'export_excel') {
-            if (!isset($data['token'])) {
-                throw new Exception('Datos incompletos.', 400);
+        } elseif ($method === 'POST') {
+            $data = json_decode(file_get_contents("php://input"), true);
+    
+            if ($action === 'export_excel') {
+                if (!isset($data['token'])) {
+                    throw new Exception('Token no proporcionado.', 400);
+                }
+                $response = $filterController->exportExcel($data);
+                echo json_encode($response);
             }
-            $response = $filterController->exportRecordsToExcel($data);
-            echo json_encode($response);
-        } 
-        else {
+        } else {
             throw new Exception('Acción no válida para POST', 400);
         }
     }  
