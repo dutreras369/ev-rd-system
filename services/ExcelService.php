@@ -81,9 +81,7 @@ class ExcelService {
         if (!$records || empty($records)) {
             return false; // No hay registros para exportar
         }
-        
-        $records = $data['records'];
-    
+            
         // 🔹 Crear hoja de cálculo
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
