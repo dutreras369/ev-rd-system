@@ -1,26 +1,87 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/RecordService.php'; // Incluir el servicio que obtiene los registros
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ExcelService {
-    private $recordService;
+
+    private $pdo;
 
     public function __construct() {
-        $this->recordService = new RecordService();
+        $this->pdo = Database::getConnection();
+    }
+
+    public function getAllFilteredRecords($filters) {
+        try {
+            // Consulta sin paginación
+            $query = "
+                SELECT 
+                    r.id, 
+                    u.nombre AS trabajador_nombre, 
+                    c.nombre AS usuario_nombre, 
+                    r.codigo_usuario,
+                    r.tipo, 
+                    r.monto, 
+                    r.descripcion, 
+                    r.fecha, 
+                    r.estado
+                FROM registros r
+                LEFT JOIN usuarios u ON r.usuario_id = u.id 
+                LEFT JOIN usuarios c ON r.codigo_usuario = c.id 
+                WHERE 1=1";
+
+            $params = [];
+
+            if (!empty($filters['user_id'])) {
+                $query .= " AND r.usuario_id = :user_id";
+                $params[':user_id'] = $filters['user_id'];
+            }
+
+            if (!empty($filters['date_from'])) {
+                $query .= " AND DATE(r.fecha) >= :date_from";
+                $params[':date_from'] = $filters['date_from'];
+            }
+
+            if (!empty($filters['date_to'])) {
+                $query .= " AND DATE(r.fecha) <= :date_to";
+                $params[':date_to'] = $filters['date_to'];
+            }
+
+            if (!empty($filters['type'])) {
+                $query .= " AND r.tipo = :type";
+                $params[':type'] = $filters['type'];
+            }
+
+            if (!empty($filters['status'])) {
+                $query .= " AND r.estado = :status";
+                $params[':status'] = $filters['status'];
+            }
+
+            $query .= " ORDER BY r.fecha DESC"; // Sin paginación
+
+            $stmt = $this->pdo->prepare($query);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getAllFilteredRecords: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function generateExcel($filters) {
-        // Obtener registros SIN paginación
-        $data = $this->recordService->getFilteredRecords($filters, true);
-    
-        if (!$data || empty($data['records'])) {
+        // Obtener registros sin paginación
+        $records = $this->getAllFilteredRecords($filters);
+
+        if (!$records || empty($records)) {
             return false; // No hay registros para exportar
         }
-    
+        
         $records = $data['records'];
     
         // 🔹 Crear hoja de cálculo
