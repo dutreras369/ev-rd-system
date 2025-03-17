@@ -123,7 +123,7 @@ $(document).ready(function () {
                 user_id: userId,
                 token: token,
                 page: page,
-                limit: 5
+                limit: 100
             }),
             success: function (response) {
                 if (response.success) {

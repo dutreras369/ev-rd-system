@@ -86,7 +86,7 @@ $(document).on("change", ".toggle-status", function () {
 
 /** 🔹 Cargar registros filtrados */
 function loadFilteredRecords(userId = null, page = 1) {
-    let limit = 10;
+    let limit = 50;
     let offset = (page - 1) * limit;
     const token = localStorage.getItem("token");
 
