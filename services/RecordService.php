@@ -10,18 +10,16 @@ class RecordService
         $this->pdo = Database::getConnection();
     }
 
-    public function addRecord($userId, $codigoUsuario, $movementType, $amount, $timestamp)
+    public function addRecord($userId, $codigoUsuario, $movementType, $amount)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO registros (usuario_id, codigo_usuario, tipo, monto, fecha) 
-                                     VALUES (:usuario_id, :codigo_usuario, :tipo, :monto, :fecha)");
+        $stmt = $this->pdo->prepare("INSERT INTO registros (usuario_id, codigo_usuario, tipo, monto) 
+                                     VALUES (:usuario_id, :codigo_usuario, :tipo, :monto)");
 
         $success = $stmt->execute([
             ':usuario_id' => $userId,
             ':codigo_usuario' => $codigoUsuario,
             ':tipo' => $movementType,
-            ':monto' => $amount,
-            ':fecha' => $timestamp
-        ]);
+            ':monto' => $amount        ]);
 
         return ['success' => $success];
     }

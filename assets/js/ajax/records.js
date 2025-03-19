@@ -47,16 +47,12 @@ $(document).ready(function () {
                     return;
                 }
 
-                const now = new Date();
-                const timestamp = now.toISOString().slice(0, 19).replace("T", " ");
-
                 const formData = {
                     user_id: userId,
                     codigo_usuario: codigoUsuario,
                     token: token,
                     movement_type: selectedType,
-                    amount: amount,
-                    timestamp: timestamp
+                    amount: amount
                 };
 
                 $.ajax({

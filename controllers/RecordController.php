@@ -30,8 +30,7 @@ class RecordController
             $data['user_id'],
             $data['codigo_usuario'],
             $data['movement_type'],
-            $data['amount'],
-            $data['timestamp']
+            $data['amount']
         );
     }
 
@@ -79,14 +78,9 @@ class RecordController
     public function updateStatus($recordId, $status) {
         return $this->recordService->updateStatus($recordId, $status);
     }
-
     public function getRecordDetails($recordId) {
         return $this->recordService->getRecordDetails($recordId);
-    }
-    public function filterRecords($filters) {
-        return $this->recordService->filterRecords($filters);
-    }
-        
+    }        
     public function getTotalRecords($userId, $fecha) {
         return $this->recordService->getTotalRecords($userId, $fecha);
     }

@@ -28,7 +28,7 @@ try {
             $data = json_decode(file_get_contents("php://input"), true);
 
             if ($action === 'register') {
-                if (!isset($data['user_id'], $data['codigo_usuario'], $data['token'], $data['movement_type'], $data['amount'], $data['timestamp'])) {
+                if (!isset($data['user_id'], $data['codigo_usuario'], $data['token'], $data['movement_type'], $data['amount'])) {
                     throw new Exception('Datos incompletos.', 400);
                 }
 
@@ -49,14 +49,6 @@ try {
                 }
 
                 $response = $recordController->updateStatus($data['record_id'], $data['status']);
-                echo json_encode($response);
-
-            } elseif ($action === 'filter') {
-                if (!isset($data['user_id'], $data['token'], $data['page'], $data['limit'])) {
-                    throw new Exception('Datos incompletos.', 400);
-                }
-
-                $response = $recordController->filterRecords($data);
                 echo json_encode($response);
 
             } else {
