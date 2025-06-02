@@ -1,3 +1,7 @@
+<?php
+$mostrar_mensaje = (new DateTime() < new DateTime('2025-07-01'));
+?>
+
 <main>
     <section id="loginSection" class="login py-5">
         <div class="container">
@@ -7,9 +11,24 @@
                 </div>
                 <h2 class="text-primary">Bienvenido/a RD</h2>
             </div>
+
+            <?php if ($mostrar_mensaje): ?>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="alert alert-warning text-center shadow-sm mb-4" role="alert">
+                        El administrador del sistema solicita tomar contacto vía <strong>Telegram</strong> para actualizar los datos de acceso.<br>
+                        Puedes escribirnos directamente a:
+                        <a href="https://t.me/TU_USUARIO_TELEGRAM" class="d-block mt-2 btn btn-outline-primary btn-sm" target="_blank">
+                            <i class="bi bi-telegram"></i> Contactar vía Telegram
+                        </a>
+                        <div class="mt-2 small text-muted">Este mensaje estará disponible hasta el 01/07/2025</div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <!-- Sección para mostrar alertas -->
                     <div id="loginAlert"></div>
                     <div class="p-4 bg-light rounded shadow-lg">
                         <form id="loginForm" class="needs-validation mt-4" novalidate action="" method="POST">
