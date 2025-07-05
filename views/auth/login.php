@@ -1,5 +1,5 @@
 <?php
-$mostrar_mensaje = (new DateTime() < new DateTime('2025-07-01'));
+$mostrar_mensaje = (new DateTime() < new DateTime('2025-07-07'));
 ?>
 
 <main>
@@ -16,17 +16,24 @@ $mostrar_mensaje = (new DateTime() < new DateTime('2025-07-01'));
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="alert alert-warning text-center shadow-sm mb-4" role="alert">
-                        El administrador del sistema solicita tomar contacto vía <strong>Telegram</strong> para actualizar los datos de acceso.<br>
-                        Puedes escribirnos directamente a:
-                        <a href="https://t.me/TU_USUARIO_TELEGRAM" class="d-block mt-2 btn btn-outline-primary btn-sm" target="_blank">
-                            <i class="bi bi-telegram"></i> Contactar vía Telegram
+                        El administrador del sistema solicita tomar contacto vía <strong>Telegram</strong> para migrar el servicio a hosting y dominio propio.<br>
+                        Contactar directamente a:
+                        <a href="https://t.me/dutreras" class="d-block mt-2 btn btn-outline-primary btn-sm" target="_blank">
+                            <i class="bi bi-telegram"></i> David Utreras
                         </a>
-                        <div class="mt-2 small text-muted">Este mensaje estará disponible hasta el 01/07/2025</div>
+                        <div class="mt-2 small text-muted">el sistema será bloqueado a partir del 07/07/2025</div>
                     </div>
                 </div>
             </div>
-            <?php endif; ?>
+            <?php endif; 
 
+            if (!(new DateTime() < new DateTime('2025-07-07'))) {
+                die('<div style="padding:2rem;text-align:center;font-family:sans-serif;">
+                    <h2>Acceso suspendido</h2>
+                    <p>Por favor contacta con el administrador del sistema para restablecer tu acceso.</p>
+                    <a href="https://t.me/dutreras" target="_blank">Contactar por Telegram</a>
+                </div>');
+            } else { ?>
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div id="loginAlert"></div>
@@ -46,7 +53,7 @@ $mostrar_mensaje = (new DateTime() < new DateTime('2025-07-01'));
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> <?php } ?>
         </div>
     </section>
 </main>
