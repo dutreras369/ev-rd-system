@@ -1,6 +1,6 @@
-# EV-RD-System
+# EV-RG-System
 
-**EV-RD-System** es un sistema de registro de ingresos y egresos diseñado en PHP con un enfoque minimalista y responsivo. Su principal objetivo es facilitar la gestión de registros por usuarios y administradores, ofreciendo funcionalidades dinámicas e intuitivas.
+**EV-RG-System** es un sistema de registro de ingresos y egresos diseñado en PHP con un enfoque minimalista y responsivo. Su principal objetivo es facilitar la gestión de registros por usuarios y administradores, ofreciendo funcionalidades dinámicas e intuitivas.
 
 ---
 
