@@ -79,4 +79,4 @@ Las contribuciones al proyecto son bienvenidas. Si deseas colaborar, sigue estos
 (https://espaciosvirtuales.cl)
 
 **Repositorio Oficial:**  
-[GitHub - EV-RD-System](https://github.com/dutreras369/ev-rd-system)
+[GitHub - EV-RG-System](https://github.com/dutreras369/ev-rg-system)
